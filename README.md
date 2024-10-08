@@ -7,6 +7,14 @@ Este proyecto es una plataforma interactiva para compartir cuentos, donde los us
 
 Los administradores pueden subir y gestionar cuentos, mientras que los visitantes pueden leerlos y disfrutar de las funcionalidades interactivas.
 
+## Características Principales 🌟
+- Subir y gestionar cuentos en formato de texto (con opción para importar archivos de Word).
+- Sonido ambiental con los cuentos. 🎶
+- Integración de playlists de Spotify. 🎧
+- Animaciones con Framer Motion. ✨
+- Sistema de autenticación para administradores (JWT). 🔒
+- Secciones separadas para administradores y visitantes.
+
 ## Tecnologías Utilizadas 🛠️
 
 - **Frontend:**
@@ -24,13 +32,5 @@ Los administradores pueden subir y gestionar cuentos, mientras que los visitante
 - **Otras Herramientas:**
   - TypeScript
   - Spotify API (para integración de playlists)
-
-## Características Principales 🌟
-- Subir y gestionar cuentos en formato de texto (con opción para importar archivos de Word).
-- Sonido ambiental con los cuentos. 🎶
-- Integración de playlists de Spotify. 🎧
-- Animaciones con Framer Motion. ✨
-- Sistema de autenticación para administradores (JWT). 🔒
-- Secciones separadas para administradores y visitantes.
 
 ![Gif-Hallowenezco](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3VvNTE3ODZzczB1YXQ0YjVlZXZmb2U0bjJveGN2MmhkYzJjbHczeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9wG8hpQRkHMoDbCqzu/giphy.gif)
