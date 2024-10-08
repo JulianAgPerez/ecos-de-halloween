@@ -3,9 +3,9 @@
 
 ## Descripción 📝
 
-Este proyecto es una plataforma interactiva para compartir cuentos, donde los usuarios pueden disfrutar de textos acompañados de sonido ambiental y música. Los cuentos incluyen animaciones dinámicas, y es posible adjuntar playlists de Spotify para complementar la experiencia de lectura.
+Este proyecto surje de commbinar mi pasión por programar, por la escritura y mmi amor por el halloween. Es una plataforma tipo blog en la que publicare unos cuantos cuentos cortos que he escrito hace tiempo, pero con la característica de tener animaciones de fondo, sonido ambiental y la posibilidad de escuchar canciones/playlist de spotify con las que he escrito cada cuento (o en su defecto, que siento que es compatible con la historia y el ritmo de lectura).
 
-Los administradores pueden subir y gestionar cuentos, mientras que los visitantes pueden leerlos y disfrutar de las funcionalidades interactivas.
+Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visitantes pueden leerlos y disfrutar de las funcionalidades interactivas.
 
 ## Características Principales 🌟
 - Subir y gestionar cuentos en formato de texto (con opción para importar archivos de Word).
