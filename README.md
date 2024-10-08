@@ -1,4 +1,4 @@
-# [Ecos de Halloween]    
+# [Ecos de Halloween]    ![Gif-Hallowenezco](https://giphy.com/gifs/halloween-happy-cute-9wG8hpQRkHMoDbCqzu)
 
 ## Descripción
 Este proyecto es una plataforma interactiva para compartir cuentos, donde los usuarios pueden disfrutar de textos acompañados de sonido ambiental y música. Los cuentos incluyen animaciones dinámicas, y es posible adjuntar playlists de Spotify para complementar la experiencia de lectura.
