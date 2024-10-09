@@ -1,50 +1,36 @@
-# React + TypeScript + Vite
+# [Ecos de Halloween] 🎃
+<img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3Z2emgxbmZlczR3c2s4bjNiMjBwb2FvNzQ4eDMxdDh0bWU5MWlldyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ow7TbhjmovnmhBomuN/giphy.gif" alt="gatito espeluznante" width= "150" />
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción 📝
 
-Currently, two official plugins are available:
+Este proyecto surje de commbinar mi pasión por programar, por la escritura y mmi amor por el halloween. Es una plataforma tipo blog en la que publicare unos cuantos cuentos cortos que he escrito hace tiempo, pero con la característica de tener animaciones de fondo, sonido ambiental y la posibilidad de escuchar canciones/playlist de spotify con las que he escrito cada cuento (o en su defecto, que siento que es compatible con la historia y el ritmo de lectura).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visitantes pueden leerlos y disfrutar de las funcionalidades interactivas.
 
-## Expanding the ESLint configuration
+## Características Principales 🌟
+- Subir y gestionar cuentos en formato de texto (con opción para importar archivos de Word).
+- Sonido ambiental con los cuentos. 🎶
+- Integración de playlists de Spotify. 🎧
+- Animaciones con Framer Motion. ✨
+- Sistema de autenticación para administradores (JWT). 🔒
+- Secciones separadas para administradores y visitantes.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tecnologías Utilizadas 🛠️
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend:**
+  - Vite + React
+  - Tailwind CSS
+  - Framer Motion (para animaciones)
+  - Howler.js (para sonido)
+  
+- **Backend:**
+  - Java (con Spring Boot)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Autenticación:**
+  - JWT (JSON Web Tokens)
+  
+- **Otras Herramientas:**
+  - TypeScript
+  - Spotify API (para integración de playlists)
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+![Gif-Hallowenezco](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3VvNTE3ODZzczB1YXQ0YjVlZXZmb2U0bjJveGN2MmhkYzJjbHczeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9wG8hpQRkHMoDbCqzu/giphy.gif)
