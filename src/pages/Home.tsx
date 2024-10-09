@@ -19,6 +19,8 @@ const Home = ({}) => {
           <p className="mt-4 text-lg text-white text-center">Lorem ipsum</p>
         </div>
       </div>
+      <div className="layer crust">Corteza</div>
+      <div className="layer hell">Infierno</div>
     </div>
   );
 };

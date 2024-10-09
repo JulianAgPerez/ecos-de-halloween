@@ -6,3 +6,32 @@ body {
     font-family: 'Crimson Text', serif;
   }
   
+.crust {
+    bottom: 0;
+    height: 40vh;
+    background: linear-gradient(to bottom, #1E193A, #472004); /* Gradiente de arriba hacia abajo */
+    position: relative; 
+}
+
+.crust::before, .crust::after {
+    content: '';
+    position: absolute;
+    background-color: #fff; /* Color de los huesos */
+    border-radius: 5px; 
+}
+
+.crust::before {
+    width: 60px;
+    height: 10px;
+    bottom: 20%;
+    left: 20px;
+    transform: rotate(30deg); 
+}
+
+.crust::after {
+    width: 80px;
+    height: 10px;
+    bottom: 15%;
+    left: 100px;
+    transform: rotate(-15deg); 
+}
