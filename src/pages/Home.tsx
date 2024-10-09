@@ -4,10 +4,7 @@ const Home = ({}) => {
       {/* Contenedor con la imagen de fondo y efecto parallax */}
       <div className="bg-home-principal relative h-screen bg-fixed bg-cover bg-center">
         <div className="flex justify-center items-center h-[40vh]">
-          <h1
-            className="text-white text-6xl md:text-9xl font-bold text-center"
-            style={{ fontFamily: "'Creepster', cursive" }}
-          >
+          <h1 className="font-creepster text-white text-6xl md:text-9xl font-bold text-center">
             Feliz Halloween
           </h1>
         </div>
