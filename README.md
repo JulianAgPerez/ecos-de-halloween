@@ -22,6 +22,7 @@ Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visi
   - Tailwind CSS
   - Framer Motion (para animaciones)
   - API HTML5 de audio
+    
   ~~- Howler.js (para sonido)~~
   
 - **Backend:**
