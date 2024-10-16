@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AmbientSound from "../components/AmbientSound";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import { sounds } from "../assets/sounds/sounds";
 
 const Home = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,10 +12,7 @@ const Home = () => {
 
   return (
     <div>
-      <AmbientSound
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-        isPlaying={isPlaying}
-      />
+      <AmbientSound src={sounds.wind} isPlaying={isPlaying} />
       {/* Contenedor con la imagen de fondo y efecto parallax */}
       <div className="bg-home-principal relative h-screen bg-fixed bg-cover bg-center">
         <div className="relative flex justify-between items-start">
