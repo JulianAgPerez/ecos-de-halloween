@@ -10,6 +10,12 @@ const ContentSection = () => {
       <p className="mt-4 text-lg text-white">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       </p>
+      <h3 className="mt-2 text-2xl text-white">
+        ¿Por qué desarrollé esta web?
+      </h3>
+      <p className="mt-4 text-lg text-white">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
     </div>
   );
 };
