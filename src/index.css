@@ -12,3 +12,7 @@ body {
     background: linear-gradient(to bottom, #1E193A, #472004); /* Gradiente de arriba hacia abajo */
     position: relative; 
 }
+
+.paragraph {
+  @apply mt-4 text-lg;
+}
