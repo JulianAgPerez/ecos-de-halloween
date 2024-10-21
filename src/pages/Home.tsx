@@ -59,12 +59,14 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold text-center z-10 relative">
-        Más contenido
-      </h2>
-      <p className="mt-4 text-lg text-white text-center z-10 relative">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </p>
+      <div className="bg-custom-purple">
+        <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold text-center z-10 relative">
+          Más contenido
+        </h2>
+        <p className="mt-4 text-lg text-white text-center z-10 relative">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+      </div>
       {/* Sección de "Corteza" */}
       <div className="layer crust">Corteza</div>
       <div className="layer hell">Infierno</div>
