@@ -14,6 +14,9 @@ export default {
     fontFamily: {
       creepster: ["'Creepster'", "cursive"],
       //crimson: ["'Crimson Text'", "serif"], /* ya lo aplico en index.css, en caso de agregar una 3ra fuente: descomentar*/
+    },
+    colors: {
+      'custom-purple': '#1E193A',
     },},
   },
   plugins: [],
