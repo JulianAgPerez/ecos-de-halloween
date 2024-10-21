@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 
 interface VolumeButtonProps {
