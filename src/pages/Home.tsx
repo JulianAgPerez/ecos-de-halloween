@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { sounds } from "../assets/sounds/sounds";
+import ContentSection from "../components/ContentSection";
 
 const Home = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -59,14 +60,7 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <div className="bg-custom-purple">
-        <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold text-center z-10 relative">
-          Más contenido
-        </h2>
-        <p className="mt-4 text-lg text-white text-center z-10 relative">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p>
-      </div>
+      <ContentSection />
       {/* Sección de "Corteza" */}
       <div className="layer crust">Corteza</div>
       <div className="layer hell">Infierno</div>
