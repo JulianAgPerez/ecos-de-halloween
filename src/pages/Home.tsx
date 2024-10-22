@@ -49,7 +49,8 @@ const Home = () => {
       <ContentSection />
       {/* Sección de "Corteza" */}
       <div className="layer crust">Corteza</div>
-      <div className="layer hell">Infierno</div>
+      {/*       <div className="layer hell">Infierno</div>
+       */}{" "}
     </div>
   );
 };
