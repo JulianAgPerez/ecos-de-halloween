@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
-import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/ContentSection";
 import { DropdownMenu } from "../components/DropdownMenu";
