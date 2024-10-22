@@ -1,11 +1,11 @@
-import Home from "./pages/Home";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import AppRoutes from "./utils/AppRoutes";
 
 function App() {
   return (
     <>
       <SpeedInsights />
-      <Home />
+      <AppRoutes />
     </>
   );
 }

@@ -27,7 +27,6 @@ const Home = () => {
   return (
     <div ref={ref}>
       <AmbientSound src={sounds.wind} isPlaying={isPlaying} />
-
       {/* Contenedor con la imagen de fondo y efecto parallax */}
       <div className="relative h-screen overflow-hidden grid place-items-center ">
         <motion.h1
