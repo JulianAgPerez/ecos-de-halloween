@@ -44,7 +44,7 @@ export const DropdownMenu = () => {
               {storyNames.map((name) => (
                 <li
                   key={name.id}
-                  className="p-2 hover:bg-gray-300 bg-gray-100 rounded-md transition "
+                  className="p-2 hover:bg-gray-300 bg-gray-100 rounded-md transition cursor-pointer"
                   onClick={() => handleStoryClick(name.id)}
                 >
                   {name.title}
