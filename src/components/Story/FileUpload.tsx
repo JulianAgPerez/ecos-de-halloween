@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useState } from "react";
-import { uploadFileService } from "../services/UploadFileService";
+import { uploadFileService } from "../../services/UploadFileService";
 
 const FileUpload: FC = () => {
   const [file, setFile] = useState<File | null>(null);
