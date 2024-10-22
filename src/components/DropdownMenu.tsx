@@ -32,11 +32,14 @@ export const DropdownMenu = () => {
         Cuentos
       </button>
       {isOpen && (
-        <div className="absolute bg-white text-black shadow-md rounded mt-2">
+        <div className="absolute bg-white text-black shadow-lg rounded ">
           {storyNames.length > 0 ? (
-            <ul>
+            <ul className="divide-y divide-gray-200">
               {storyNames.map((name, index) => (
-                <li key={index} className="p-2 hover:bg-gray-200 bg-gray-50">
+                <li
+                  key={index}
+                  className="p-2 hover:bg-gray-300 bg-gray-100 rounded-md transition "
+                >
                   {name.title}
                 </li>
               ))}
