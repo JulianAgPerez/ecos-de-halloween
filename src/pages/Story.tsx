@@ -24,18 +24,18 @@ export const Story = () => {
     return <div>Cargando...</div>;
   }
 
+  const backgroundStyle = story.backgroundImageUrl
+    ? { backgroundImage: `url(${story.backgroundImageUrl})` }
+    : {};
+
   return (
     <div
       className={`container mx-auto p-4 h-screen bg-cover bg-center ${
         story.backgroundImageUrl ? "" : defaultBackgroundClass
       }`}
-      style={{
-        backgroundImage: story.backgroundImageUrl
-          ? `url(${story.backgroundImageUrl})`
-          : "",
-      }}
+      style={backgroundStyle}
     >
-      <h1 className="font-creepster text-white text-6xl md:text-9xl font-bold text-center z-20 relative">
+      <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
         {story.title}
       </h1>
       <p>{story.body}</p>
