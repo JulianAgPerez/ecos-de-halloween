@@ -1,7 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllStoryTitles } from "../services/StoryService";
+import { StoryTitleDTO } from "../types";
 
 export const DropdownMenu = () => {
+  const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchStoryNames = async () => {
+      try {
+        const names = await getAllStoryTitles();
+        setStoryNames(names);
+      } catch (error) {
+        console.error("Error fetching story Titles");
+        setStoryNames([]);
+      }
+    };
+    fetchStoryNames();
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -17,11 +33,17 @@ export const DropdownMenu = () => {
       </button>
       {isOpen && (
         <div className="absolute bg-white text-black shadow-md rounded mt-2">
-          <ul>
-            <li className="p-2 hover:bg-gray-200">Cuento 1</li>
-            <li className="p-2 hover:bg-gray-200">Cuento 2</li>
-            <li className="p-2 hover:bg-gray-200">Cuento 3</li>
-          </ul>
+          {storyNames.length > 0 ? (
+            <ul>
+              {storyNames.map((name, index) => (
+                <li key={index} className="p-2 hover:bg-gray-200 bg-gray-50">
+                  {name.title}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="p-2">No hay cuentos disponibles</div>
+          )}
         </div>
       )}
     </div>
