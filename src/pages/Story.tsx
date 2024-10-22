@@ -3,6 +3,8 @@ import { StoryDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { useParams } from "react-router-dom";
 
+const defaultBackgroundClass = "bg-home-principal";
+
 export const Story = () => {
   const { id } = useParams<{ id: string }>();
   const [story, setStory] = useState<StoryDTO | null>(null);
@@ -21,9 +23,21 @@ export const Story = () => {
   if (!story) {
     return <div>Cargando...</div>;
   }
+
   return (
-    <div>
-      <h1>{story.title}</h1>
+    <div
+      className={`container mx-auto p-4 h-screen bg-cover bg-center ${
+        story.backgroundImageUrl ? "" : defaultBackgroundClass
+      }`}
+      style={{
+        backgroundImage: story.backgroundImageUrl
+          ? `url(${story.backgroundImageUrl})`
+          : "",
+      }}
+    >
+      <h1 className="font-creepster text-white text-6xl md:text-9xl font-bold text-center z-20 relative">
+        {story.title}
+      </h1>
       <p>{story.body}</p>
     </div>
   );
