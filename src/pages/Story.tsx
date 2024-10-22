@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { StoryDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { useParams } from "react-router-dom";
+import GhostLoader from "../components/GhostLoader";
 
 const defaultBackgroundClass = "bg-home-principal";
 
@@ -21,7 +22,7 @@ export const Story = () => {
   }, [id]);
 
   if (!story) {
-    return <div>Cargando...</div>;
+    return <GhostLoader />;
   }
 
   const backgroundStyle = story.backgroundImageUrl

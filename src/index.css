@@ -16,3 +16,72 @@ body {
 .paragraph {
   @apply mt-4 text-lg;
 }
+
+.ghost-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.ghost {
+  width: 100px;
+  height: 100px;
+  background: #fff;
+  border-radius: 50% 50% 0 0;
+  position: relative;
+  animation: bounce 2s infinite;
+}
+
+.ghost::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.ghost .face {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 30%;
+  background: #000;
+  border-radius: 50%;
+}
+
+.shadow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  animation: shadow 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes shadow {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.7);
+  }
+}
