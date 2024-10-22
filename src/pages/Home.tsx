@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
-import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/ContentSection";
+import { DropdownMenu } from "../components/DropdownMenu";
+import VolumeButton from "../components/VolumeButton";
 
 const Home = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -43,22 +44,8 @@ const Home = () => {
           }}
         />
         <div className=" absolute inset-0 z-19 bg-home-piso md:bg-home-secundaria-clean bg-cover bg-bottom" />
-
-        {/* Botón de volumen */}
-        <div className="relative flex justify-between items-start">
-          <button
-            onClick={toggleSound}
-            className="fixed top-5 right-5 p-0.5 bg-gradient-to-br from-purple-600 to-purple-900 rounded-full flex items-center justify-center overflow-hidden"
-          >
-            <span className="px-5 py-2.5 text-amber-600">
-              {isPlaying ? (
-                <FaVolumeUp size={24} />
-              ) : (
-                <FaVolumeMute size={24} />
-              )}
-            </span>
-          </button>
-        </div>
+        <DropdownMenu />
+        <VolumeButton isPlaying={isPlaying} toggleSound={toggleSound} />
       </div>
       <ContentSection />
       {/* Sección de "Corteza" */}
