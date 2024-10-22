@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getAllStoryTitles } from "../services/StoryService";
 import { StoryTitleDTO } from "../types";
+import { useNavigate } from "react-router-dom";
 
 export const DropdownMenu = () => {
   const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStoryNames = async () => {
@@ -23,6 +25,10 @@ export const DropdownMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleStoryClick = (id: number) => {
+    navigate(`/story/${id}`);
+  };
+
   return (
     <div className="fixed top-5 left-5 p-0.5 z-30">
       <button
@@ -35,10 +41,11 @@ export const DropdownMenu = () => {
         <div className="absolute bg-white text-black shadow-lg rounded ">
           {storyNames.length > 0 ? (
             <ul className="divide-y divide-gray-200">
-              {storyNames.map((name, index) => (
+              {storyNames.map((name) => (
                 <li
-                  key={index}
+                  key={name.id}
                   className="p-2 hover:bg-gray-300 bg-gray-100 rounded-md transition "
+                  onClick={() => handleStoryClick(name.id)}
                 >
                   {name.title}
                 </li>
