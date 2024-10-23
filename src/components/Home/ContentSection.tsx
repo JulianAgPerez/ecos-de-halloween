@@ -5,8 +5,10 @@ const ContentSection = () => {
         Más contenido
       </h2>
 
-      <section id="explicacion-halloween" className="text-white">
-        <h3 className="mt-2 text-2xl">¿Por qué se celebra el Halloween?</h3>
+      <section id="explicacion-halloween" className="text-gray-300">
+        <h3 className="mt-2 text-2xl text-white">
+          ¿Por qué se celebra el Halloween?
+        </h3>
 
         <p className="paragraph">
           Halloween se celebra el 31 de octubre y tiene raíces en la antigua
@@ -35,10 +37,17 @@ const ContentSection = () => {
           cambio de estaciones.
         </p>
       </section>
-      <section id="explicacion-desarrollo" className="text-white">
-        <h3 className="mt-2 text-2xl ">¿Por qué desarrollé esta web?</h3>
+      <section id="explicacion-desarrollo" className="text-gray-300">
+        <h3 className="mt-2 text-2xl text-white">
+          ¿Por qué desarrollé esta web?
+        </h3>
         <p className="mt-4 text-lg ">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Siempre he querido poder transmitir lo mejor posible las emociones que
+          quiero causar en las historias que escribo, por lo cual siempre quize
+          una web en la cuál poder subir mis escritos y poder elegir sonidos de
+          ambiente, fondos, incluso la playlist que me arme para escribir
+          inspirado, todo para aumentar lo máximo posible la inmersión con la
+          historia.
         </p>
       </section>
     </section>

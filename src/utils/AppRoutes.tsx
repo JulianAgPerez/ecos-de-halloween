@@ -2,14 +2,18 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import { Story } from "../pages/Story";
+import SidebarMenu from "../components/SidebarMenu";
+import Footer from "../components/Footer";
 
 const AppRoutes: React.FC = () => {
   return (
     <Router>
+      <SidebarMenu />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/story/:id" element={<Story />} />
       </Routes>
+      <Footer />
     </Router>
   );
 };

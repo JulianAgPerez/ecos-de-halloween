@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/Home/ContentSection";
-import { DropdownMenu } from "../components/DropdownMenu";
 import VolumeButton from "../components/VolumeButton";
 
 const Home = () => {
@@ -43,7 +42,8 @@ const Home = () => {
           }}
         />
         <div className=" absolute inset-0 z-19 bg-home-piso md:bg-home-secundaria-clean bg-cover bg-bottom" />
-        <DropdownMenu />
+
+        {/* <DropdownMenu /> */}
         <VolumeButton isPlaying={isPlaying} toggleSound={toggleSound} />
       </div>
       <ContentSection />
