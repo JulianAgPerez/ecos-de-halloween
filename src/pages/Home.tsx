@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/Home/ContentSection";
-import { DropdownMenu } from "../components/DropdownMenu";
 import VolumeButton from "../components/VolumeButton";
 
 const Home = () => {
