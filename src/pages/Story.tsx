@@ -39,7 +39,11 @@ export const Story = () => {
       <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
         {story.title}
       </h1>
-      <p>{story.body}</p>
+      <div className="mt-2 font-bold text-2xl content-center text-center text-white">
+        {" "}
+        {/* No se si dejar text-center */}
+        <p>{story.body}</p>
+      </div>
     </div>
   );
 };
