@@ -31,7 +31,7 @@ export const Story = () => {
 
   return (
     <div
-      className={`container mx-auto p-4 h-screen bg-cover bg-center ${
+      className={` w-full p-4 min-h-screen bg-cover bg-center ${
         story.backgroundImageUrl ? "" : defaultBackgroundClass
       }`}
       style={backgroundStyle}
@@ -39,10 +39,10 @@ export const Story = () => {
       <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
         {story.title}
       </h1>
-      <div className="mt-2 font-bold text-2xl content-center text-center text-white">
+      <div className="note-background mt-2 font-bold text-2xl content-center text-left ">
         {" "}
         {/* No se si dejar text-center */}
-        <p>{story.body}</p>
+        <pre>{story.body}</pre>
       </div>
     </div>
   );
