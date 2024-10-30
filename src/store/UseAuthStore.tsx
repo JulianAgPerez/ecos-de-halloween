@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 interface AuthState {
-  user: any | null;
+  user: string | null;
   token: string | null;
-  login: (user: any, token: string) => void;
+  login: (user: string, token: string) => void;
   logout: () => void;
 }
 
