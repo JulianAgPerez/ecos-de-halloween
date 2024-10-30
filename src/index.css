@@ -85,3 +85,24 @@ body {
     transform: scaleX(0.7);
   }
 }
+
+/* Para body en Story */
+.note-background {
+  background-image: url('/src/assets/images/pergamino.jpg');
+  background-size: cover; /* Ajusta la imagen para cubrir todo el div */
+  background-repeat: no-repeat; 
+  background-position: center; 
+  padding: 20px; 
+  border: 1px solid #c2b280; /* color similar al papel viejo */
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  color: #4a4a4a; 
+}
+
+.note-background pre {
+  white-space: pre-wrap; /* Permite ajustar el texto dentro del contenedor */
+  word-wrap: break-word; /* Rompe palabras largas para ajustarse al contenedor */
+  font-family: 'Times New Roman', Times, serif; /* Fuente que parezca escrita a mano, borrar y usar default? */
+  line-height: 1.6; /* ajusta altura de lineas == mas espaciado entre lineas */
+  color: #4a4a4a;
+}
