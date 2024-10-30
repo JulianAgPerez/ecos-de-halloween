@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useSpotifyStore from "../store/UseSpotifyStore";
+import useSpotifyStore from "../store/useSpotifyStore";
 
 declare global {
   interface Window {
