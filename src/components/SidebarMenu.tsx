@@ -18,7 +18,6 @@ export const SidebarMenu: FC = () => {
         setStoryNames([]);
       }
     };
-
     fetchStoryNames();
   }, []);
 
@@ -48,15 +47,15 @@ export const SidebarMenu: FC = () => {
           <h1 className="text-4xl text-amber-400 font-creepster mb-6">
             Cuentos de Terror
           </h1>
-          {storyNames.length > 0 ? (
-            <ul className="divide-y divide-gray-700 text-center text-2xl">
-              <li
-                className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
-                onClick={() => handleStoryClick(0)}
-              >
-                Home
-              </li>
-              {storyNames.map((name) => (
+          <ul className="divide-y divide-gray-700 text-center text-2xl">
+            <li
+              className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
+              onClick={() => handleStoryClick(0)}
+            >
+              Home
+            </li>
+            {storyNames.length > 0 ? (
+              storyNames.map((name) => (
                 <li
                   key={name.id}
                   className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
@@ -64,13 +63,13 @@ export const SidebarMenu: FC = () => {
                 >
                   {name.title}
                 </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="p-3 text-amber-400 text-center">
-              No hay cuentos disponibles
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="p-3 text-amber-400 text-center">
+                No hay cuentos disponibles
+              </div>
+            )}
+          </ul>
         </div>
       </div>
     </div>

@@ -47,8 +47,8 @@ const Home = () => {
         <VolumeButton />
       </div>
       <ContentSection />
-      {/* Sección de "Corteza" */}
-      <div className="layer crust">Corteza</div>
+      {/* Sección de "Corteza" No se si agregar imagenes o que */}
+      <div className="layer crust"></div>
       {/*       <div className="layer hell">Infierno</div>
        */}{" "}
     </div>
