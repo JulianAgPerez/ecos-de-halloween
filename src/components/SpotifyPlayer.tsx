@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useSpotifyStore from "../store/UseSpotifyStore";
 
 declare global {
@@ -9,9 +9,7 @@ declare global {
 }
 
 const SpotifyPlayer: React.FC = () => {
-  const { token, setDeviceId } = useSpotifyStore();
-  const [player, setPlayer] = useState<any | null>(null);
-  const [currentTrack, setCurrentTrack] = useState<any | null>(null);
+  const { token, setDeviceId, playlistId } = useSpotifyStore();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -33,25 +31,7 @@ const SpotifyPlayer: React.FC = () => {
         console.log("Ready with Device ID", device_id);
       });
 
-      player.addListener("player_state_changed", (state: any) => {
-        if (state) {
-          setCurrentTrack(state.track_window.current_track);
-        }
-      });
-
-      player.addListener(
-        "not_ready",
-        ({ device_id }: { device_id: string }) => {
-          console.log("Device ID has gone offline", device_id);
-        }
-      );
-
       player.connect();
-      setPlayer(player);
-
-      return () => {
-        player.disconnect();
-      };
     };
 
     return () => {
@@ -59,54 +39,18 @@ const SpotifyPlayer: React.FC = () => {
     };
   }, [token, setDeviceId]);
 
-  const handlePlayPause = () => {
-    if (player) {
-      player.togglePlay();
-    }
-  };
-
-  const handleNextTrack = () => {
-    if (player) {
-      player.nextTrack();
-    }
-  };
-
-  const handlePreviousTrack = () => {
-    if (player) {
-      player.previousTrack();
-    }
-  };
-
   return (
-    <div className="fixed top-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg w-full max-w-md flex items-center">
-      <div className="flex items-center">
-        {currentTrack && (
-          <img
-            src={currentTrack.album.images[0].url}
-            alt={currentTrack.name}
-            className="w-16 h-16 rounded-lg"
-          />
-        )}
-        <div className="ml-4">
-          <h3 className="text-lg font-semibold">
-            {currentTrack ? currentTrack.name : "Loading..."}
-          </h3>
-          <p className="text-sm">
-            {currentTrack ? currentTrack.artists[0].name : ""}
-          </p>
-        </div>
-      </div>
-      <div className="ml-auto flex items-center">
-        <button onClick={handlePreviousTrack} className="p-2">
-          ⏮️
-        </button>
-        <button onClick={handlePlayPause} className="p-2 mx-2">
-          ⏯️
-        </button>
-        <button onClick={handleNextTrack} className="p-2">
-          ⏭️
-        </button>
-      </div>
+    <div className="fixed top-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg w-80">
+      <h2 className="text-lg font-semibold">Spotify Player</h2>
+      <iframe
+        src={`https://open.spotify.com/embed/playlist/${playlistId}`}
+        width="100%"
+        height="380"
+        frameBorder="0"
+        allow="encrypted-media"
+        title="Spotify Player"
+        className="rounded-md"
+      ></iframe>
     </div>
   );
 };
