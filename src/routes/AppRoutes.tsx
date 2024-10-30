@@ -4,6 +4,8 @@ import Home from "../pages/Home";
 import { Story } from "../pages/Story";
 import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -11,6 +13,8 @@ const AppRoutes: React.FC = () => {
       <SidebarMenu />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/story/:id" element={<Story />} />
       </Routes>
       <Footer />
