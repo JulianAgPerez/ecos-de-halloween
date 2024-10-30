@@ -3,6 +3,7 @@ import { StoryDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
+import SpotifyPlayer from "../components/SpotifyPlayer";
 
 const defaultBackgroundClass = "bg-home-principal";
 
@@ -36,6 +37,7 @@ export const Story = () => {
       }`}
       style={backgroundStyle}
     >
+      <SpotifyPlayer />
       <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
         {story.title}
       </h1>
