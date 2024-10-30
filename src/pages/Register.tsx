@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/AuthService";
-import useAuthStore from "../store/UseAuthStore"; // Asegúrate de que la ruta sea correcta
+import useAuthStore from "../store/useAuthStore";
 import GhostLoader from "../components/GhostLoader";
 
 const Register: React.FC = () => {

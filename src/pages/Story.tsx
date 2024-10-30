@@ -37,10 +37,10 @@ export const Story = () => {
       }`}
       style={backgroundStyle}
     >
-      <SpotifyPlayer />
       <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
         {story.title}
       </h1>
+      <SpotifyPlayer />
       <div className="note-background mt-2 font-bold text-2xl content-center text-left ">
         {" "}
         {/* No se si dejar text-center */}

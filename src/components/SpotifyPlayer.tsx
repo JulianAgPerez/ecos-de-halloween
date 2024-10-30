@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useSpotifyStore from "../store/UseSpotifyStore";
+import useSpotifyStore from "../store/useSpotifyStore";
 
 declare global {
   interface Window {
@@ -40,8 +40,8 @@ const SpotifyPlayer: React.FC = () => {
   }, [token, setDeviceId]);
 
   return (
-    <div className="fixed top-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg w-80">
-      <h2 className="text-lg font-semibold">Spotify Player</h2>
+    <div className="bg-gray-800 text-white p-4 rounded-lg shadow-lg mx-auto w-80">
+      <h2 className="text-lg font-semibold">Playlist sugerida</h2>
       <iframe
         src={`https://open.spotify.com/embed/playlist/${playlistId}`}
         width="100%"
