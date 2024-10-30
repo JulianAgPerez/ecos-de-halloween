@@ -4,7 +4,7 @@ import AmbientSound from "../components/AmbientSound";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/Home/ContentSection";
 import VolumeButton from "../components/VolumeButton";
-import useSoundStore from "../store/useSoundStore";
+import useSoundStore from "../store/UseSoundStore";
 
 const Home = () => {
   const { addSound } = useSoundStore();

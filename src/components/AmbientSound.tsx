@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import useSoundStore from "../store/useSoundStore";
+import useSoundStore from "../store/UseSoundStore";
 
 const AmbientSound: FC<{ src: string }> = ({ src }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
