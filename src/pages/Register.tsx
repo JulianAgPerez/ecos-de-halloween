@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/AuthService";
-import useAuthStore from "../store/useAuthStore";
 import GhostLoader from "../components/GhostLoader";
+import useAuthStore from "../store/useAuthStore_temp";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
