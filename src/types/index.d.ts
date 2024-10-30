@@ -9,5 +9,5 @@ export interface StoryDTO {
     description?: string;
     audioUrl?: string;
     backgroundImageUrl?: string;
-    body: string;
+    body: string | file;
 }
