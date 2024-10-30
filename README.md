@@ -22,6 +22,7 @@ Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visi
   - Tailwind CSS
   - Framer Motion (para animaciones)
   - API HTML5 de audio
+  - Zustand
     
   ~~- Howler.js (para sonido)~~
   
@@ -33,6 +34,7 @@ Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visi
   
 - **Otras Herramientas:**
   - TypeScript
-  - Spotify API (para integración de playlists)
+  - Spotify SDK (para integración de playlists)
+  - Supabase
 
 ![Gif-Hallowenezco](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3VvNTE3ODZzczB1YXQ0YjVlZXZmb2U0bjJveGN2MmhkYzJjbHczeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9wG8hpQRkHMoDbCqzu/giphy.gif)
