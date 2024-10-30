@@ -6,6 +6,7 @@ import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import UploadForm from "../pages/UploadForm";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const AppRoutes: React.FC = () => {
       <SidebarMenu />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/form" element={<UploadForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/story/:id" element={<Story />} />
