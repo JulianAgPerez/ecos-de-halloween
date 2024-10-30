@@ -4,10 +4,10 @@ export interface StoryTitleDTO{
 }
 
 export interface StoryDTO {
-    id:number;
+    id?:number;
     title: string;
-    description: string;
-    audioUrl: string;
-    backgroundImageUrl: string;
+    description?: string;
+    audioUrl?: string;
+    backgroundImageUrl?: string;
     body: string;
 }
