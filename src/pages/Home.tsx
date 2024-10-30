@@ -44,7 +44,7 @@ const Home = () => {
         <div className=" absolute inset-0 z-19 bg-home-piso md:bg-home-secundaria-clean bg-cover bg-bottom" />
 
         {/* <DropdownMenu /> */}
-        <VolumeButton isPlaying={isPlaying} toggleSound={toggleSound} />
+        <VolumeButton />
       </div>
       <ContentSection />
       {/* Sección de "Corteza" */}
