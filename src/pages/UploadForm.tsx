@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { uploadStoryWithBody } from "../services/UploadFileService"; // Asegúrate de importar la función
+import { uploadStoryWithBody } from "../services/UploadFileService";
 
 declare global {
   interface Window {
@@ -25,7 +25,7 @@ const UploadForm: React.FC = () => {
         cloudName: "diauphrb6",
         uploadPreset: "main_upload",
       },
-      (error: any, result: any) => {
+      (_error: any, result: any) => {
         if (result.event === "success") {
           setImageUrl(result.info.secure_url);
         }
