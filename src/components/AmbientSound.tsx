@@ -1,18 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
+import useSoundStore from "../store/useSoundStore";
 
-interface AmbientSoundProps {
-  src: string;
-  isPlaying: boolean;
-}
-
-const AmbientSound: React.FC<AmbientSoundProps> = ({ src, isPlaying }) => {
+const AmbientSound: FC<{ src: string }> = ({ src }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isPlaying } = useSoundStore();
 
   useEffect(() => {
     if (audioRef.current) {
-      isPlaying
-        ? ((audioRef.current.volume = 0.5), audioRef.current.play())
-        : (audioRef.current.volume = 0);
+      if (isPlaying) {
+        audioRef.current.volume = 0.5;
+        audioRef.current.play();
+      } else {
+        audioRef.current.volume = 0;
+        audioRef.current.pause();
+      }
     }
   }, [isPlaying]);
 

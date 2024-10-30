@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import AmbientSound from "../components/AmbientSound";
 import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/Home/ContentSection";
 import VolumeButton from "../components/VolumeButton";
+import useSoundStore from "../store/useSoundStore";
 
 const Home = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { addSound } = useSoundStore();
 
   // setup de Parallax
   const ref = useRef(null);
@@ -19,13 +20,15 @@ const Home = () => {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
 
-  const toggleSound = () => {
-    setIsPlaying(!isPlaying);
-  };
+  useEffect(() => {
+    Object.values(sounds).forEach((sound) => addSound(sound));
+  }, [addSound]);
 
   return (
     <div ref={ref}>
-      <AmbientSound src={sounds.wind} isPlaying={isPlaying} />
+      {Object.values(sounds).map((sound) => (
+        <AmbientSound key={sound} src={sound} />
+      ))}
       {/* Contenedor con la imagen de fondo y efecto parallax */}
       <div className="relative h-screen overflow-hidden grid place-items-center ">
         <motion.h1
