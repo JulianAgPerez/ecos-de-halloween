@@ -53,7 +53,10 @@ export const SidebarMenu: FC = () => {
           <ul className="divide-y divide-gray-700 text-center text-2xl">
             <li
               className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
-              onClick={() => handleStoryClick(0)}
+              onClick={() => {
+                handleStoryClick(0);
+                toggleMenu();
+              }}
             >
               Home
             </li>
