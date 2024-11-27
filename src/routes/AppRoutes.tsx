@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UploadForm from "../pages/UploadForm";
 import VolumeButton from "../components/VolumeButton";
+import PersistentLayout from "../components/PersistentLayaout";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -15,11 +16,13 @@ const AppRoutes: React.FC = () => {
       <SidebarMenu />
       <VolumeButton />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/form" element={<UploadForm />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/story/:id" element={<Story />} />
+        <Route path="/" element={<PersistentLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/form" element={<UploadForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/story/:id" element={<Story />} />
+        </Route>
       </Routes>
       <Footer />
     </Router>
