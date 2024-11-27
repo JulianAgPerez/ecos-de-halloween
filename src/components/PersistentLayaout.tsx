@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AmbientSound from "../components/AmbientSound";
 import { sounds } from "../assets/sounds/sounds";
