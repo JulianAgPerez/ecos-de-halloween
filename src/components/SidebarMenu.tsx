@@ -27,7 +27,10 @@ export const SidebarMenu: FC = () => {
 
   const handleStoryClick = (id: number) => {
     if (id == 0) navigate("/");
-    else navigate(`/story/${id}`);
+    else {
+      navigate(`/story/${id}`);
+      toggleMenu();
+    }
   };
 
   return (
@@ -44,13 +47,16 @@ export const SidebarMenu: FC = () => {
         } transition-transform duration-300 ease-in-out`}
       >
         <div className="pt-20 px-4">
-          <h1 className="text-4xl text-amber-400 font-creepster mb-6">
+          <h1 className="text-4xl text-amber-400 font-creepster mb-6 text-center">
             Cuentos de Terror
           </h1>
           <ul className="divide-y divide-gray-700 text-center text-2xl">
             <li
               className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
-              onClick={() => handleStoryClick(0)}
+              onClick={() => {
+                handleStoryClick(0);
+                toggleMenu();
+              }}
             >
               Home
             </li>
