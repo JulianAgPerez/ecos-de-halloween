@@ -27,7 +27,10 @@ export const SidebarMenu: FC = () => {
 
   const handleStoryClick = (id: number) => {
     if (id == 0) navigate("/");
-    else navigate(`/story/${id}`);
+    else {
+      navigate(`/story/${id}`);
+      toggleMenu();
+    }
   };
 
   return (
