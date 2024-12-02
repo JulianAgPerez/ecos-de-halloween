@@ -42,7 +42,7 @@ const ContentSection = () => {
         src={witchGif}
         className=" z-20 inset-0 "
       />
-      <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold">
+      <h2 className="bg-texto-gif bg-clip-text text-transparent text-8xl font-bold p-5">
         Más contenido
       </h2>
       <section id="explicacion-halloween" className="text-gray-300">
