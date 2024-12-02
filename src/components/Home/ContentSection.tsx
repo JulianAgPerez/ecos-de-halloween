@@ -1,10 +1,29 @@
+import { useRef } from "react";
+import witchGif from "../../assets/images/witch-gif.gif";
+import { motion, useScroll, useTransform } from "framer-motion";
+
 const ContentSection = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+
+  //Transformaciones para mov de gif
+  const yTransform = useTransform(scrollYProgress, [0, 1], ["-100%", "200%"]);
+  const xTransform = useTransform(scrollYProgress, [0, 1], ["-100%", "900%"]);
   return (
-    <section className="bg-custom-purple text-center z-10 relative px-5 py-3">
+    <section
+      ref={containerRef}
+      className="bg-custom-purple text-center z-10 relative px-5 py-3 overflow-hidden"
+    >
+      <motion.img
+        style={{ y: yTransform, x: xTransform, cursor: "pointer" }}
+        drag
+        dragConstraints={{ top: 100, bottom: 300, left: 100, right: 1000 }}
+        src={witchGif}
+        className="absolute z-20 inset-0 "
+      />
       <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold">
         Más contenido
       </h2>
-
       <section id="explicacion-halloween" className="text-gray-300">
         <h3 className="mt-2 text-2xl text-white">
           ¿Por qué se celebra el Halloween?
