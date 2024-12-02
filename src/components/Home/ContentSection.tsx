@@ -1,14 +1,30 @@
 import { useRef } from "react";
 import witchGif from "../../assets/images/witch-gif.gif";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
 
 const ContentSection = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll();
 
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-width: 800px)",
+  });
+
   //Transformaciones para mov de gif
-  const yTransform = useTransform(scrollYProgress, [0, 1], ["-100%", "200%"]);
-  const xTransform = useTransform(scrollYProgress, [0, 1], ["-100%", "900%"]);
+  const yTransform = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    isDesktopOrLaptop
+      ? ["-150px", "50%", "50%", "400%"]
+      : ["-100%", "200%", "200%", "700%"]
+  );
+  const xTransform = useTransform(
+    scrollYProgress,
+    [0, 0.4, 1],
+    isDesktopOrLaptop ? ["-100%", "0%", "900%"] : ["-100px", "0px", "320px"]
+  );
+
   return (
     <section
       ref={containerRef}
