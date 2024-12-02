@@ -31,11 +31,16 @@ const ContentSection = () => {
       className="bg-custom-purple text-center z-10 relative px-5 py-3 overflow-hidden"
     >
       <motion.img
-        style={{ y: yTransform, x: xTransform, cursor: "pointer" }}
+        style={{
+          y: yTransform,
+          x: xTransform,
+          position: "absolute",
+          cursor: "pointer",
+        }}
         drag
         dragConstraints={{ top: 100, bottom: 300, left: 100, right: 1000 }}
         src={witchGif}
-        className="absolute z-20 inset-0 "
+        className=" z-20 inset-0 "
       />
       <h2 className="bg-texto-gif bg-clip-text text-transparent text-3xl font-bold">
         Más contenido
