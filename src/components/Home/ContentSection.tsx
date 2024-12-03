@@ -17,12 +17,12 @@ const ContentSection = () => {
     [0, 0.3, 0.7, 1],
     isDesktopOrLaptop
       ? ["-150px", "50%", "50%", "400%"]
-      : ["-100%", "200%", "200%", "700%"]
+      : ["-100%", "240%", "240%", "700%"]
   );
   const xTransform = useTransform(
     scrollYProgress,
     [0, 0.4, 1],
-    isDesktopOrLaptop ? ["-100%", "0%", "900%"] : ["-100px", "0px", "320px"]
+    isDesktopOrLaptop ? ["-100%", "0%", "900%"] : ["-100px", "0px", "330px"]
   );
 
   return (
@@ -42,7 +42,7 @@ const ContentSection = () => {
         src={witchGif}
         className=" z-20 inset-0 "
       />
-      <h2 className="bg-texto-gif bg-clip-text text-transparent text-8xl font-bold p-5">
+      <h2 className="bg-texto-gif bg-clip-text text-transparent md:text-8xl text-5xl font-bold p-5">
         Más contenido
       </h2>
       <section id="explicacion-halloween" className="text-gray-300">
