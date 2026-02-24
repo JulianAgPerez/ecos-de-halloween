@@ -12,7 +12,7 @@ export const SidebarMenu: FC = () => {
     const fetchStoryNames = async () => {
       try {
         const names = await getAllStoryTitles();
-        setStoryNames(names);
+        setStoryNames(Array.isArray(names) ? names : []);
       } catch (error) {
         console.error("Error fetching story titles");
         setStoryNames([]);
