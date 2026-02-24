@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
 import SpotifyPlayer from "../components/SpotifyPlayer";
 import ScrollingCircle from "../components/Story/ScrollingCircle";
+import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
 
 const defaultBackgroundClass = "bg-home-principal";
 
@@ -14,14 +15,28 @@ export const Story = () => {
   const [story, setStory] = useState<StoryDTO | null>(null);
 
   useEffect(() => {
+    if (!id) return;
+
+    const timeout = setTimeout(() => {
+      const fallback = getFallbackStoryById(parseInt(id)) ?? fallbackStories[0];
+      setStory(fallback);
+    }, 5000);
+
     const fetchStory = async () => {
-      if (id) {
+      try {
         const storyData = await getStoryById(parseInt(id));
+        clearTimeout(timeout);
         setStory(storyData);
+      } catch (error) {
+        clearTimeout(timeout);
+        const fallback =
+          getFallbackStoryById(parseInt(id)) ?? fallbackStories[0];
+        setStory(fallback);
       }
     };
 
     fetchStory();
+    return () => clearTimeout(timeout);
   }, [id]);
 
   if (!story) {

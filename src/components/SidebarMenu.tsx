@@ -2,31 +2,47 @@ import { FC, useEffect, useState } from "react";
 import { getAllStoryTitles } from "../services/StoryService";
 import { StoryTitleDTO } from "../types";
 import { useNavigate } from "react-router-dom";
+import { fallbackTitles } from "../data/fallbackData";
 
 export const SidebarMenu: FC = () => {
   const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
+  const [isFallback, setIsFallback] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (storyNames.length === 0) {
+        setStoryNames(fallbackTitles);
+        setIsFallback(true);
+      }
+    }, 5000);
+
     const fetchStoryNames = async () => {
       try {
         const names = await getAllStoryTitles();
-        setStoryNames(Array.isArray(names) ? names : []);
+        clearTimeout(timeout);
+        if (Array.isArray(names) && names.length > 0) {
+          setStoryNames(names);
+        } else {
+          setStoryNames(fallbackTitles);
+          setIsFallback(true);
+        }
       } catch (error) {
-        console.error("Error fetching story titles");
-        setStoryNames([]);
+        clearTimeout(timeout);
+        setStoryNames(fallbackTitles);
+        setIsFallback(true);
       }
     };
+
     fetchStoryNames();
+    return () => clearTimeout(timeout);
   }, []);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleStoryClick = (id: number) => {
-    if (id == 0) navigate("/");
+    if (id === 0) navigate("/");
     else {
       navigate(`/story/${id}`);
       toggleMenu();
@@ -50,6 +66,11 @@ export const SidebarMenu: FC = () => {
           <h1 className="text-4xl text-amber-400 font-creepster mb-6 text-center">
             Cuentos de Terror
           </h1>
+          {isFallback && (
+            <p className="text-yellow-500 text-xs text-center mb-3">
+              ⚠️ Modo sin conexión
+            </p>
+          )}
           <ul className="divide-y divide-gray-700 text-center text-2xl">
             <li
               className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
@@ -60,21 +81,15 @@ export const SidebarMenu: FC = () => {
             >
               Home
             </li>
-            {storyNames.length > 0 ? (
-              storyNames.map((name) => (
-                <li
-                  key={name.id}
-                  className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
-                  onClick={() => handleStoryClick(name.id)}
-                >
-                  {name.title}
-                </li>
-              ))
-            ) : (
-              <div className="p-3 text-amber-400 text-center">
-                No hay cuentos disponibles
-              </div>
-            )}
+            {storyNames.map((name) => (
+              <li
+                key={name.id}
+                className="p-4 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
+                onClick={() => handleStoryClick(name.id)}
+              >
+                {name.title}
+              </li>
+            ))}
           </ul>
         </div>
       </div>

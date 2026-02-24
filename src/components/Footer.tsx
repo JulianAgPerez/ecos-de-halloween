@@ -20,14 +20,6 @@ function Footer() {
         >
           <FaLinkedin className="text-amber-400 hover:text-amber-500" />
         </a>
-        <a
-          href="https://x.com/D_Juli_ev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="social-icon"
-        >
-          <FaTwitter className="text-yellow-400 hover:text-yellow-500" />
-        </a>
       </div>
     </footer>
   );
