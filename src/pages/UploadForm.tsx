@@ -1,9 +1,23 @@
 import React, { useState } from "react";
 import { uploadStoryWithBody } from "../services/UploadFileService";
 
+interface CloudinaryWidget {
+  open: () => void;
+}
+
+interface CloudinaryResult {
+  event: string;
+  info: { secure_url: string };
+}
+
 declare global {
   interface Window {
-    cloudinary: any;
+    cloudinary: {
+      createUploadWidget: (
+        options: Record<string, unknown>,
+        callback: (error: unknown, result: CloudinaryResult) => void,
+      ) => CloudinaryWidget;
+    };
   }
 }
 
@@ -12,6 +26,9 @@ const UploadForm: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -19,13 +36,18 @@ const UploadForm: React.FC = () => {
     }
   };
 
-  const handleCloudinaryUpload = async () => {
+  const handleCloudinaryUpload = () => {
+    setError(null);
+    if (!window.cloudinary) {
+      setError("El widget de Cloudinary no está disponible.");
+      return;
+    }
     const cloudinaryWidget = window.cloudinary.createUploadWidget(
       {
         cloudName: "diauphrb6",
         uploadPreset: "main_upload",
       },
-      (_error: any, result: any) => {
+      (_error, result) => {
         if (result.event === "success") {
           setImageUrl(result.info.secure_url);
         }
@@ -36,56 +58,111 @@ const UploadForm: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!file || !title) return;
+    setError(null);
+    setSuccess(false);
+
+    if (!file) {
+      setError("Selecciona un archivo con el contenido del cuento.");
+      return;
+    }
+    if (!title.trim()) {
+      setError("El título es obligatorio.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      await uploadStoryWithBody(title, description, imageUrl, file);
-      console.log("Historia cargada con éxito");
-    } catch (error) {
-      console.error("Error al cargar la historia", error);
+      await uploadStoryWithBody(title.trim(), description, imageUrl, file);
+      setSuccess(true);
+    } catch {
+      setError("Error al subir la historia. Intenta de nuevo.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-home-principal p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-lg"
+        className="w-full max-w-lg bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8"
       >
-        <h2 className="text-2xl font-bold mb-4">Upload Story</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mb-4 p-2 border border-gray-300 rounded"
-          required
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="mb-4 p-2 border border-gray-300 rounded"
-        />
+        <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
+          Subir Cuento
+        </h2>
+        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+        {success && (
+          <p className="text-green-400 text-center mb-4">
+            Historia subida con éxito.
+          </p>
+        )}
+        <div className="mb-4">
+          <label className="block text-gray-300 mb-2" htmlFor="title">
+            Título
+          </label>
+          <input
+            type="text"
+            id="title"
+            placeholder="Título del cuento"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-300 mb-2" htmlFor="description">
+            Descripción
+          </label>
+          <textarea
+            id="description"
+            placeholder="Descripción breve"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
+            rows={3}
+          />
+        </div>
         <button
           type="button"
           onClick={handleCloudinaryUpload}
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+          disabled={loading}
+          className="w-full bg-gradient-to-br from-blue-600 to-blue-900 text-white px-4 py-2 rounded mb-4 hover:from-blue-700 hover:to-blue-800 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Upload Image from Cloudinary
+          Subir imagen desde Cloudinary
         </button>
         {imageUrl && (
           <img
             src={imageUrl}
-            alt="Selected from Cloudinary"
-            className="mb-4 max-w-full h-auto"
+            alt="Seleccionada desde Cloudinary"
+            className="mb-4 max-w-full h-auto rounded"
           />
         )}
-        <input type="file" onChange={handleFileChange} className="mb-4" />
+        <div className="mb-4">
+          <label className="block text-gray-300 mb-2" htmlFor="file">
+            Archivo del cuento
+          </label>
+          <input
+            type="file"
+            id="file"
+            onChange={handleFileChange}
+            disabled={loading}
+            className="block w-full text-gray-300 file:mr-4 file:px-4 file:py-2 file:rounded file:border-0 file:bg-purple-700 file:text-amber-400 file:cursor-pointer hover:file:bg-purple-800 disabled:opacity-50"
+          />
+        </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          disabled={loading}
+          className="w-full bg-gradient-to-br from-purple-600 to-purple-900 text-amber-400 px-4 py-2 rounded hover:from-purple-700 hover:to-purple-800 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Upload
+          {loading ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <span className="inline-block w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+              Subiendo...
+            </span>
+          ) : (
+            "Subir"
+          )}
         </button>
       </form>
     </div>
