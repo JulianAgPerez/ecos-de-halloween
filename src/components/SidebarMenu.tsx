@@ -1,12 +1,16 @@
 import { FC, useEffect, useState } from "react";
 import { getAllStoryTitles } from "../services/StoryService";
-import { StoryTitleDTO } from "../types";
+import { getAllClassicTitles } from "../services/ClassicStoryService";
+import { StoryTitleDTO, ClassicStoryTitleDTO } from "../types";
 import { useNavigate } from "react-router-dom";
 import { fallbackTitles } from "../data/fallbackData";
+import { classicFallbackTitles } from "../data/classicFallback";
 
 export const SidebarMenu: FC = () => {
   const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
   const [isFallback, setIsFallback] = useState(false);
+  const [classicNames, setClassicNames] = useState<ClassicStoryTitleDTO[]>([]);
+  const [isClassicFallback, setIsClassicFallback] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -28,7 +32,7 @@ export const SidebarMenu: FC = () => {
           setStoryNames(fallbackTitles);
           setIsFallback(true);
         }
-      } catch (error) {
+      } catch {
         clearTimeout(timeout);
         setStoryNames(fallbackTitles);
         setIsFallback(true);
@@ -36,6 +40,35 @@ export const SidebarMenu: FC = () => {
     };
 
     fetchStoryNames();
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (classicNames.length === 0) {
+        setClassicNames(classicFallbackTitles);
+        setIsClassicFallback(true);
+      }
+    }, 5000);
+
+    const fetchClassicNames = async () => {
+      try {
+        const names = await getAllClassicTitles();
+        clearTimeout(timeout);
+        if (Array.isArray(names) && names.length > 0) {
+          setClassicNames(names);
+        } else {
+          setClassicNames(classicFallbackTitles);
+          setIsClassicFallback(true);
+        }
+      } catch {
+        clearTimeout(timeout);
+        setClassicNames(classicFallbackTitles);
+        setIsClassicFallback(true);
+      }
+    };
+
+    fetchClassicNames();
     return () => clearTimeout(timeout);
   }, []);
 
@@ -88,6 +121,31 @@ export const SidebarMenu: FC = () => {
                 onClick={() => handleStoryClick(name.id)}
               >
                 {name.title}
+              </li>
+            ))}
+          </ul>
+          <h2 className="text-2xl text-amber-400 font-creepster mt-8 mb-3 text-center">
+            Clásicos del Terror
+          </h2>
+          {isClassicFallback && (
+            <p className="text-yellow-500 text-xs text-center mb-3">
+              ⚠️ Clásicos sin conexión
+            </p>
+          )}
+          <ul className="divide-y divide-gray-700 text-center text-xl">
+            {classicNames.map((name) => (
+              <li
+                key={name.slug}
+                className="p-3 hover:bg-gray-200 bg-gray-400 rounded transition cursor-pointer"
+                onClick={() => {
+                  navigate(`/classic/${name.slug}`);
+                  toggleMenu();
+                }}
+              >
+                {name.title}
+                <span className="block text-xs text-gray-600 italic">
+                  {name.author}
+                </span>
               </li>
             ))}
           </ul>

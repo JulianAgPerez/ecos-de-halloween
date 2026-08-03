@@ -3,6 +3,12 @@ export interface StoryTitleDTO{
     title: string;
 }
 
+export interface ClassicStoryTitleDTO {
+    slug: string;
+    title: string;
+    author: string;
+}
+
 export interface StoryDTO {
     id?:number;
     title: string;
