@@ -61,6 +61,35 @@ export const SidebarMenu: FC = () => {
     };
   }, [fetchStoryNames]);
 
+  useEffect(() => {
+    const fetchClassicNames = async () => {
+      try {
+        const names = await getAllClassicTitles();
+        if (Array.isArray(names) && names.length > 0) {
+          setClassicNames(names);
+          setIsClassicFallback(false);
+        } else {
+          setClassicNames(classicFallbackTitles);
+          setIsClassicFallback(true);
+        }
+      } catch {
+        setClassicNames(classicFallbackTitles);
+        setIsClassicFallback(true);
+      }
+    };
+
+    fetchClassicNames();
+    timeoutRef.current = window.setTimeout(() => {
+      setClassicNames((prev) => {
+        if (prev.length === 0) {
+          setIsClassicFallback(true);
+          return classicFallbackTitles;
+        }
+        return prev;
+      });
+    }, 5000);
+  }, []);
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleStoryClick = (id: number) => {
