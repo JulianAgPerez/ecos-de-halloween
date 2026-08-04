@@ -1,12 +1,21 @@
 import axios from "axios";
 import { StoryDTO } from "../types";
+import useAuthStore from "../store/useAuthStore";
 
 export const url = import.meta.env.VITE_API_URL;
+
+const getAuthHeaders = (): Record<string, string> => {
+  const token = useAuthStore.getState().token;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export const createStoryService = async (
   storyData: Omit<StoryDTO, "id">
 ): Promise<number> => {
-  const response = await axios.post<StoryDTO>(`${url}/api/stories`, storyData);
+  const response = await axios.post<StoryDTO>(`${url}/api/stories`, storyData, {
+    headers: getAuthHeaders(),
+    withCredentials: true,
+  });
   console.log("id: " + response.data.id);
   return response.data.id!;
 };
@@ -23,7 +32,9 @@ export const uploadBodyService = async (
     {
       headers: {
         "Content-Type": "multipart/form-data",
+        ...getAuthHeaders(),
       },
+      withCredentials: true,
     }
   );
   console.log("estoy en uploadBody: " + response.data);
