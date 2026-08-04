@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import { Story } from "../pages/Story";
+import ClassicStory from "../pages/ClassicStory";
 import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
 import Login from "../pages/Login";
@@ -30,6 +31,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/story/:id" element={<Story />} />
+          <Route path="/classic/:slug" element={<ClassicStory />} />
         </Route>
       </Routes>
       <Footer />
