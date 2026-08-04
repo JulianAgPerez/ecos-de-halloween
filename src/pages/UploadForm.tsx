@@ -74,6 +74,7 @@ const UploadForm: React.FC = () => {
     try {
       await uploadStoryWithBody(title.trim(), description, imageUrl, file);
       setSuccess(true);
+      window.dispatchEvent(new CustomEvent("stories-updated"));
     } catch {
       setError("Error al subir la historia. Intenta de nuevo.");
     } finally {

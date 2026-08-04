@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getAllStoryTitles } from "../services/StoryService";
 import { StoryTitleDTO } from "../types";
 import { useNavigate } from "react-router-dom";
@@ -9,35 +9,53 @@ export const SidebarMenu: FC = () => {
   const [isFallback, setIsFallback] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const timeoutRef = useRef<number | null>(null);
+
+  const fetchStoryNames = useCallback(async () => {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    try {
+      const names = await getAllStoryTitles();
+      if (Array.isArray(names) && names.length > 0) {
+        setStoryNames(names);
+        setIsFallback(false);
+      } else {
+        setStoryNames(fallbackTitles);
+        setIsFallback(true);
+      }
+    } catch {
+      setStoryNames(fallbackTitles);
+      setIsFallback(true);
+    }
+  }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (storyNames.length === 0) {
-        setStoryNames(fallbackTitles);
-        setIsFallback(true);
-      }
-    }, 5000);
-
-    const fetchStoryNames = async () => {
-      try {
-        const names = await getAllStoryTitles();
-        clearTimeout(timeout);
-        if (Array.isArray(names) && names.length > 0) {
-          setStoryNames(names);
-        } else {
-          setStoryNames(fallbackTitles);
-          setIsFallback(true);
-        }
-      } catch (error) {
-        clearTimeout(timeout);
-        setStoryNames(fallbackTitles);
-        setIsFallback(true);
-      }
+    const handleStoriesUpdated = () => {
+      fetchStoryNames();
     };
 
+    window.addEventListener("stories-updated", handleStoriesUpdated);
+
     fetchStoryNames();
-    return () => clearTimeout(timeout);
-  }, []);
+    timeoutRef.current = window.setTimeout(() => {
+      setStoryNames((prev) => {
+        if (prev.length === 0) {
+          setIsFallback(true);
+          return fallbackTitles;
+        }
+        return prev;
+      });
+    }, 5000);
+
+    return () => {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current);
+      }
+      window.removeEventListener("stories-updated", handleStoriesUpdated);
+    };
+  }, [fetchStoryNames]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
