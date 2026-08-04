@@ -21,8 +21,8 @@ const Register: React.FC = () => {
     setError(null);
 
     try {
-      const { user, token } = await registerUser({ email, username, password });
-      login(user, token);
+      const { token } = await registerUser({ email, username, password });
+      login(username, token);
       navigate("/");
     } catch {
       console.error("Error al registrarse. Verifica tus credenciales.");

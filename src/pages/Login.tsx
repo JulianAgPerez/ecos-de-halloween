@@ -20,8 +20,8 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      const { user, token } = await loginUser({ email, password });
-      login(user, token);
+      const { token } = await loginUser({ email, password });
+      login(email, token);
       navigate("/");
     } catch {
       console.error("Error al iniciar sesión. Verifica tus credenciales.");
