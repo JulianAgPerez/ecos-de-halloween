@@ -9,7 +9,10 @@ export const registerUser = async (registerData: any) => {
     },
     withCredentials: true,
   });
-  return response.data;
+  return {
+    token: response.data.access_token,
+    refreshToken: response.data.refresh_token,
+  };
 };
 
 export const loginUser = async (loginData: any) => {
@@ -19,7 +22,10 @@ export const loginUser = async (loginData: any) => {
     },
     withCredentials: true,
   });
-  return response.data;
+  return {
+    token: response.data.access_token,
+    refreshToken: response.data.refresh_token,
+  };
 };
 
 export const refreshToken = async (token: string) => {

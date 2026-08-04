@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { getAllStoryTitles } from "../services/StoryService";
 import { getAllClassicTitles } from "../services/ClassicStoryService";
 import { StoryTitleDTO, ClassicStoryTitleDTO } from "../types";
@@ -13,64 +13,53 @@ export const SidebarMenu: FC = () => {
   const [isClassicFallback, setIsClassicFallback] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const timeoutRef = useRef<number | null>(null);
+
+  const fetchStoryNames = useCallback(async () => {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    try {
+      const names = await getAllStoryTitles();
+      if (Array.isArray(names) && names.length > 0) {
+        setStoryNames(names);
+        setIsFallback(false);
+      } else {
+        setStoryNames(fallbackTitles);
+        setIsFallback(true);
+      }
+    } catch {
+      setStoryNames(fallbackTitles);
+      setIsFallback(true);
+    }
+  }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (storyNames.length === 0) {
-        setStoryNames(fallbackTitles);
-        setIsFallback(true);
-      }
-    }, 5000);
-
-    const fetchStoryNames = async () => {
-      try {
-        const names = await getAllStoryTitles();
-        clearTimeout(timeout);
-        if (Array.isArray(names) && names.length > 0) {
-          setStoryNames(names);
-        } else {
-          setStoryNames(fallbackTitles);
-          setIsFallback(true);
-        }
-      } catch {
-        clearTimeout(timeout);
-        setStoryNames(fallbackTitles);
-        setIsFallback(true);
-      }
+    const handleStoriesUpdated = () => {
+      fetchStoryNames();
     };
+
+    window.addEventListener("stories-updated", handleStoriesUpdated);
 
     fetchStoryNames();
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (classicNames.length === 0) {
-        setClassicNames(classicFallbackTitles);
-        setIsClassicFallback(true);
-      }
+    timeoutRef.current = window.setTimeout(() => {
+      setStoryNames((prev) => {
+        if (prev.length === 0) {
+          setIsFallback(true);
+          return fallbackTitles;
+        }
+        return prev;
+      });
     }, 5000);
 
-    const fetchClassicNames = async () => {
-      try {
-        const names = await getAllClassicTitles();
-        clearTimeout(timeout);
-        if (Array.isArray(names) && names.length > 0) {
-          setClassicNames(names);
-        } else {
-          setClassicNames(classicFallbackTitles);
-          setIsClassicFallback(true);
-        }
-      } catch {
-        clearTimeout(timeout);
-        setClassicNames(classicFallbackTitles);
-        setIsClassicFallback(true);
+    return () => {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current);
       }
+      window.removeEventListener("stories-updated", handleStoriesUpdated);
     };
-
-    fetchClassicNames();
-    return () => clearTimeout(timeout);
-  }, []);
+  }, [fetchStoryNames]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 

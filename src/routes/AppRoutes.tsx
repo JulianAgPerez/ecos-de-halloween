@@ -9,6 +9,7 @@ import Register from "../pages/Register";
 import UploadForm from "../pages/UploadForm";
 import VolumeButton from "../components/VolumeButton";
 import PersistentLayout from "../components/PersistentLayaout";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -18,7 +19,14 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/" element={<PersistentLayout />}>
           <Route index element={<Home />} />
-          <Route path="/form" element={<UploadForm />} />
+          <Route
+            path="/form"
+            element={
+              <ProtectedRoute>
+                <UploadForm />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/story/:id" element={<Story />} />
