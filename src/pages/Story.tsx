@@ -1,16 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { StoryDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
 import SpotifyPlayer from "../components/SpotifyPlayer";
-import ScrollingCircle from "../components/Story/ScrollingCircle";
+import StoryReader from "../components/Story/StoryReader";
 import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
 
 const defaultBackgroundClass = "bg-home-principal";
 
 export const Story = () => {
-  const ref = useRef(null);
   const { id } = useParams<{ id: string }>();
   const [story, setStory] = useState<StoryDTO | null>(null);
 
@@ -27,7 +26,7 @@ export const Story = () => {
         const storyData = await getStoryById(parseInt(id));
         clearTimeout(timeout);
         setStory(storyData);
-      } catch (error) {
+      } catch {
         clearTimeout(timeout);
         const fallback =
           getFallbackStoryById(parseInt(id)) ?? fallbackStories[0];
@@ -60,12 +59,7 @@ export const Story = () => {
         </h1>
       </div>
       <SpotifyPlayer />
-      <section>
-        <div className="note-background mt-2 font-bold text-2xl content-center text-left">
-          <ScrollingCircle refProp={ref} />
-          <pre ref={ref}>{story.body}</pre>
-        </div>
-      </section>
+      <StoryReader body={story.body} />
     </div>
   );
 };
