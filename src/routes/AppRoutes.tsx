@@ -19,14 +19,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/" element={<PersistentLayout />}>
           <Route index element={<Home />} />
-          <Route
-            path="/form"
-            element={
-              <ProtectedRoute>
-                <UploadForm />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/form" element={<UploadForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/story/:id" element={<Story />} />
