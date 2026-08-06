@@ -137,6 +137,38 @@ body {
   color: #f0e4c0;
 }
 
+/* Ascuas ascendiendo en el inframundo */
+@keyframes ember-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-90vh) translateX(24px);
+    opacity: 0;
+  }
+}
+
+/* Fondo del inframundo: fuego que sube desde el fondo */
+.underworld {
+  background:
+    radial-gradient(80% 60% at 50% 110%, rgba(220, 38, 38, 0.55), transparent 70%),
+    radial-gradient(60% 40% at 30% 115%, rgba(249, 115, 22, 0.45), transparent 70%),
+    radial-gradient(60% 40% at 70% 115%, rgba(220, 38, 38, 0.4), transparent 70%),
+    linear-gradient(to bottom, #14060a, #2b0a0a 55%, #0c0f0f 100%);
+}
+
+/* Guijarros del suelo: textura sutil */
+.soil-texture {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.08) 0, transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(168, 85, 247, 0.06) 0, transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(245, 158, 11, 0.06) 0, transparent 45%);
+}
+
 /* Titulo con parpadeo (flicker) estilo Halloween */
 .halloween-flicker {
   color: #fde68a;
