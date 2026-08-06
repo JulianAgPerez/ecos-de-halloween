@@ -8,20 +8,52 @@ interface Quote {
 
 const QUOTES: Quote[] = [
   {
-    text: "El miedo más antiguo y más fuerte es el miedo a lo desconocido.",
-    author: "H. P. Lovecraft",
+    text: "La emoción más antigua y más intensa de la humanidad es el miedo, y el más antiguo y más intenso de los miedos es el miedo a lo desconocido.",
+    author: "H. P. Lovecraft, «El horror sobrenatural en la literatura»",
   },
   {
-    text: "¡Es verdad! Soy muy nervioso, espantosamente nervioso.",
+    text: "Ningún organismo vivo puede mantenerse cuerdo durante mucho tiempo en condiciones de reality absoluta.",
+    author: "Shirley Jackson, «La maldición de Hill House»",
+  },
+  {
+    text: "¡Es verdad! Es cierto que soy muy nervioso, espantosamente nervioso, ¿pero por qué dicen que estoy loco?",
     author: "Edgar Allan Poe, «El corazón delator»",
   },
   {
-    text: "En su morada de R'lyeh, el cuervo Cthulhu aguarda soñando.",
-    author: "H. P. Lovecraft, invocación cthulhiana",
+    text: "El pozo es el final de todo. La última parada antes de que el mundo se convierta en nada.",
+    author: "Mariana Enríquez, «Nuestra parte de noche»",
+  },
+  {
+    text: "No está muerto lo que puede yacer eternamente, y con el paso de los extraños eones, incluso la muerte puede morir.",
+    author: "H. P. Lovecraft, «La ciudad sin nombre»",
+  },
+  {
+    text: "Los monstruos son reales, y los fantasmas también: viven dentro de nosotros y, a veces, ellos ganan.",
+    author: "Stephen King",
   },
   {
     text: "En ese extraño nido de amor, Alicia pasó todo el otoño.",
-    author: "Horacio Quiroga, «El almohadón de pluma»",
+    author: "Horacio Quiroga, «El almohadón de plumas»",
+  },
+  {
+    text: "No miré hacia arriba, aunque sabía que las estrellas se balanceaban en un baile de burla abominable.",
+    author: "H. P. Lovecraft, «Las ratas en las paredes»",
+  },
+  {
+    text: "Y mis ojos tienen toda la apariencia de los de un demonio que está soñando.",
+    author: "Edgar Allan Poe, «El cuervo»",
+  },
+  {
+    text: "No es la altura, no es la profundidad. Es la absoluta falta de suelo bajo nuestros pies.",
+    author: "Thomas Ligotti, «Noctuario»",
+  },
+  {
+    text: "La cosa más misericordiosa del mundo, creo, es la incapacidad de la mente humana para correlacionar todos sus contenidos.",
+    author: "H. P. Lovecraft, «La llamada de Cthulhu»",
+  },
+  {
+    text: "Bienvenidos a mi casa. Entren libremente, salgan sin temor, y dejen algo de la felicidad que traen.",
+    author: "Bram Stoker, «Drácula»",
   },
 ];
 
