@@ -29,7 +29,7 @@ const AmbientSoundSelector: FC = () => {
   }, [isOpen]);
 
   return (
-    <div ref={panelRef} className="fixed top-5 right-20 z-30">
+    <div ref={panelRef} className="relative">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -39,7 +39,7 @@ const AmbientSoundSelector: FC = () => {
         className="flex items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-900 p-0.5 overflow-hidden hover:from-purple-700 hover:to-purple-800 active:from-purple-900 active:to-purple-950 transition duration-1000"
       >
         <span className="px-5 py-2.5 text-amber-600">
-          <FaMusic size={18} />
+          <FaMusic size={20} />
         </span>
       </button>
 
@@ -47,7 +47,7 @@ const AmbientSoundSelector: FC = () => {
         <div
           role="listbox"
           aria-label="Sonidos de ambiente"
-          className="absolute right-0 mt-2 w-60 max-h-96 overflow-y-auto rounded-lg border border-purple-800/60 bg-gray-900 shadow-lg"
+          className="absolute right-0 mt-2 w-60 max-w-[calc(100vw-2rem)] max-h-96 overflow-y-auto rounded-lg border border-purple-800/60 bg-gray-900 shadow-lg"
         >
           <p className="px-4 pt-3 pb-2 text-xs uppercase tracking-wide text-gray-400">
             Sonido ambiente

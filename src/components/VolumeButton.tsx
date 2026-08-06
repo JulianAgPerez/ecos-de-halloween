@@ -6,16 +6,19 @@ const VolumeButton: FC = () => {
   const { isPlaying, toggleSound } = useSoundStore();
 
   return (
-    <div className="relative flex justify-between items-start z-30">
-      <button
-        onClick={toggleSound}
-        className="fixed top-5 right-5 p-0.5 bg-gradient-to-br from-purple-600 to-purple-900 rounded-full flex items-center justify-center overflow-hidden hover:from-purple-700 hover:to-purple-800 active:from-purple-900 active:to-purple-950 transition duration-1000"
-      >
-        <span className="px-5 py-2.5 text-amber-600">
-          {isPlaying ? <FaVolumeUp size={24} /> : <FaVolumeMute size={24} />}
-        </span>
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={toggleSound}
+      aria-label={
+        isPlaying ? "Silenciar sonido ambiente" : "Activar sonido ambiente"
+      }
+      title={isPlaying ? "Silenciar" : "Activar sonido"}
+      className="flex items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-900 p-0.5 overflow-hidden hover:from-purple-700 hover:to-purple-800 active:from-purple-900 active:to-purple-950 transition duration-1000"
+    >
+      <span className="px-5 py-2.5 text-amber-600">
+        {isPlaying ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
+      </span>
+    </button>
   );
 };
 

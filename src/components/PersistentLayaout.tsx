@@ -22,8 +22,10 @@ const PersistentLayout = () => {
       {Object.values(sounds).map((sound, index) => (
         <AmbientSound key={index} src={sound} />
       ))}
-      <VolumeButton />
-      <AmbientSoundSelector />
+      <div className="fixed top-5 right-5 z-30 flex items-center gap-2">
+        <VolumeButton />
+        <AmbientSoundSelector />
+      </div>
       <Outlet />
     </div>
   );
