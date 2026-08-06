@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { StoryDTO } from "../types";
-import { getStoryById } from "../services/StoryService";
-import { useParams } from "react-router-dom";
+import { StoryDTO, StoryTitleDTO } from "../types";
+import { getStoryById, getAllStoryTitles } from "../services/StoryService";
+import { useNavigate, useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
-import SpotifyPlayer from "../components/SpotifyPlayer";
-import StoryReader from "../components/Story/StoryReader";
-import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
-
-const defaultBackgroundClass = "bg-home-principal";
+import StoryPageLayout from "../components/Story/StoryPageLayout";
+import ReadingNavigation from "../components/Story/ReadingNavigation";
+import { getFallbackStoryById, fallbackStories, fallbackTitles } from "../data/fallbackData";
 
 export const Story = () => {
   const { id } = useParams<{ id: string }>();
   const [story, setStory] = useState<StoryDTO | null>(null);
+  const [titles, setTitles] = useState<StoryTitleDTO[]>([]);
+  const navigate = useNavigate();
+  const numericId = parseInt(id ?? "0", 10);
 
   useEffect(() => {
     if (!id) return;
@@ -38,6 +39,26 @@ export const Story = () => {
     return () => clearTimeout(timeout);
   }, [id]);
 
+  useEffect(() => {
+    let mounted = true;
+
+    const loadTitles = async () => {
+      try {
+        const names = await getAllStoryTitles();
+        if (mounted) {
+          setTitles(Array.isArray(names) && names.length > 0 ? names : fallbackTitles);
+        }
+      } catch {
+        if (mounted) setTitles(fallbackTitles);
+      }
+    };
+
+    loadTitles();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   if (!story) {
     return <GhostLoader />;
   }
@@ -46,20 +67,32 @@ export const Story = () => {
     ? { backgroundImage: `url(${story.backgroundImageUrl})` }
     : {};
 
+  const sortedTitles = [...titles].sort((a, b) =>
+    a.title.localeCompare(b.title, "es"),
+  );
+  const currentIndex = sortedTitles.findIndex((title) => title.id === numericId);
+  const previousStory = currentIndex > 0 ? sortedTitles[currentIndex - 1] : null;
+  const nextStory =
+    currentIndex >= 0 && currentIndex < sortedTitles.length - 1
+      ? sortedTitles[currentIndex + 1]
+      : null;
+
   return (
-    <div
-      className={`w-full p-4 min-h-screen bg-cover bg-center ${
-        story.backgroundImageUrl ? "" : defaultBackgroundClass
-      }`}
-      style={backgroundStyle}
-    >
-      <div className="mt-16 mb-16">
-        <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
-          {story.title}
-        </h1>
-      </div>
-      <SpotifyPlayer />
-      <StoryReader body={story.body} />
-    </div>
+    <StoryPageLayout
+      title={story.title}
+      backgroundStyle={backgroundStyle}
+      body={story.body}
+      footer={
+        <ReadingNavigation
+          onBack={() => navigate("/")}
+          previousTitle={previousStory?.title}
+          nextTitle={nextStory?.title}
+          onPrevious={() => previousStory && navigate(`/story/${previousStory.id}`)}
+          onNext={() => nextStory && navigate(`/story/${nextStory.id}`)}
+        />
+      }
+    />
   );
 };
+
+export default Story;
