@@ -153,6 +153,7 @@ export const ClassicStory = () => {
       footer={
         <ReadingNavigation
           onBack={() => navigate("/")}
+          entityLabel="clásico"
           previousTitle={previousClassic?.title}
           nextTitle={nextClassic?.title}
           onPrevious={() => previousClassic && navigate(`/classic/${previousClassic.slug}`)}

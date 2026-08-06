@@ -17,7 +17,7 @@ import {
 import { getAllStoryTitles } from "../services/StoryService";
 import { getAllClassicTitles } from "../services/ClassicStoryService";
 import { StoryTitleDTO, ClassicStoryTitleDTO } from "../types";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fallbackTitles } from "../data/fallbackData";
 import { classicFallbackTitles } from "../data/classicFallback";
 
@@ -40,13 +40,17 @@ export const SidebarMenu: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const storiesTimeoutRef = useRef<number | null>(null);
   const classicsTimeoutRef = useRef<number | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+    setQuery("");
+  }, []);
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const fetchStoryNames = useCallback(async () => {
@@ -201,6 +205,10 @@ export const SidebarMenu: FC = () => {
     closeMenu();
   };
 
+  const isStoryActive = (id: number) => location.pathname === `/story/${id}`;
+  const isClassicActive = (slug: string) =>
+    location.pathname === `/classic/${slug}`;
+
   const normalizedQuery = query.trim().toLowerCase();
 
   const filteredStories = useMemo(() => {
@@ -340,7 +348,12 @@ export const SidebarMenu: FC = () => {
                         <li key={name.id}>
                           <button
                             onClick={() => handleStoryClick(name.id)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base text-gray-200 hover:bg-custom-purple hover:text-amber-300 transition"
+                            aria-current={isStoryActive(name.id) ? "page" : undefined}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+                              isStoryActive(name.id)
+                                ? "bg-custom-purple text-amber-300"
+                                : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
+                            }`}
                           >
                             <FaGhost size={14} className="text-purple-400 shrink-0" />
                             <span className="truncate">{name.title}</span>
@@ -389,7 +402,12 @@ export const SidebarMenu: FC = () => {
                         <li key={name.slug}>
                           <button
                             onClick={() => handleClassicClick(name.slug)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base text-gray-200 hover:bg-custom-purple hover:text-amber-300 transition"
+                            aria-current={isClassicActive(name.slug) ? "page" : undefined}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+                              isClassicActive(name.slug)
+                                ? "bg-custom-purple text-amber-300"
+                                : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
+                            }`}
                           >
                             <FaBookDead
                               size={14}
