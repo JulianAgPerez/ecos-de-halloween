@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { StoryDTO, StoryTitleDTO } from "../types";
-import { getStoryById, getAllStoryTitles } from "../services/StoryService";
+import { StoryDTO } from "../types";
+import { getStoryById } from "../services/StoryService";
 import { useNavigate, useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
-import { getFallbackStoryById, fallbackStories, fallbackTitles } from "../data/fallbackData";
+import useTitlesStore from "../store/useTitlesStore";
+import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
 
 export const Story = () => {
   const { id } = useParams<{ id: string }>();
   const [story, setStory] = useState<StoryDTO | null>(null);
-  const [titles, setTitles] = useState<StoryTitleDTO[]>([]);
+  const storyTitles = useTitlesStore((s) => s.storyTitles);
+  const fetchStoryTitles = useTitlesStore((s) => s.fetchStoryTitles);
   const navigate = useNavigate();
   const numericId = parseInt(id ?? "0", 10);
 
@@ -40,24 +42,8 @@ export const Story = () => {
   }, [id]);
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadTitles = async () => {
-      try {
-        const names = await getAllStoryTitles();
-        if (mounted) {
-          setTitles(Array.isArray(names) && names.length > 0 ? names : fallbackTitles);
-        }
-      } catch {
-        if (mounted) setTitles(fallbackTitles);
-      }
-    };
-
-    loadTitles();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    fetchStoryTitles();
+  }, [fetchStoryTitles]);
 
   if (!story) {
     return <GhostLoader />;
@@ -67,7 +53,7 @@ export const Story = () => {
     ? { backgroundImage: `url(${story.backgroundImageUrl})` }
     : {};
 
-  const sortedTitles = [...titles].sort((a, b) =>
+  const sortedTitles = [...storyTitles].sort((a, b) =>
     a.title.localeCompare(b.title, "es"),
   );
   const currentIndex = sortedTitles.findIndex((title) => title.id === numericId);

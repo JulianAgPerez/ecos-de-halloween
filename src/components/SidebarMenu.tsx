@@ -15,14 +15,8 @@ import {
   FaSearch,
   FaTimes,
 } from "react-icons/fa";
-import { getAllStoryTitles } from "../services/StoryService";
-import { getAllClassicTitles } from "../services/ClassicStoryService";
-import { StoryTitleDTO, ClassicStoryTitleDTO } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fallbackTitles } from "../data/fallbackData";
-import { classicFallbackTitles } from "../data/classicFallback";
-
-const FETCH_TIMEOUT_MS = 5000;
+import useTitlesStore from "../store/useTitlesStore";
 
 const StorySkeleton: FC = () => (
   <li className="animate-pulse flex items-center gap-3 p-3">
@@ -48,12 +42,15 @@ const Highlight: FC<{ text: string; query: string }> = ({ text, query }) => {
 };
 
 export const SidebarMenu: FC = () => {
-  const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
-  const [isStoriesLoading, setIsStoriesLoading] = useState(true);
-  const [isFallback, setIsFallback] = useState(false);
-  const [classicNames, setClassicNames] = useState<ClassicStoryTitleDTO[]>([]);
-  const [isClassicsLoading, setIsClassicsLoading] = useState(true);
-  const [isClassicFallback, setIsClassicFallback] = useState(false);
+  const storyNames = useTitlesStore((s) => s.storyTitles);
+  const classicNames = useTitlesStore((s) => s.classicTitles);
+  const isStoriesLoading = useTitlesStore((s) => s.isStoriesLoading);
+  const isClassicsLoading = useTitlesStore((s) => s.isClassicsLoading);
+  const isFallback = useTitlesStore((s) => s.isStoriesFallback);
+  const isClassicFallback = useTitlesStore((s) => s.isClassicsFallback);
+  const fetchStoryTitles = useTitlesStore((s) => s.fetchStoryTitles);
+  const fetchClassicTitles = useTitlesStore((s) => s.fetchClassicTitles);
+  const refreshStoryTitles = useTitlesStore((s) => s.refreshStoryTitles);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [openSections, setOpenSections] = useState<{
@@ -62,8 +59,6 @@ export const SidebarMenu: FC = () => {
   }>({ stories: true, classics: true });
   const navigate = useNavigate();
   const location = useLocation();
-  const storiesTimeoutRef = useRef<number | null>(null);
-  const classicsTimeoutRef = useRef<number | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -77,90 +72,23 @@ export const SidebarMenu: FC = () => {
   const toggleSection = (key: "stories" | "classics") =>
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const fetchStoryNames = useCallback(async () => {
-    setIsStoriesLoading(true);
-    try {
-      const names = await getAllStoryTitles();
-      if (Array.isArray(names) && names.length > 0) {
-        setStoryNames(names);
-        setIsFallback(false);
-      } else {
-        setStoryNames(fallbackTitles);
-        setIsFallback(true);
-      }
-    } catch {
-      setStoryNames(fallbackTitles);
-      setIsFallback(true);
-    } finally {
-      setIsStoriesLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     const handleStoriesUpdated = () => {
-      fetchStoryNames();
+      refreshStoryTitles();
     };
 
     window.addEventListener("stories-updated", handleStoriesUpdated);
 
-    fetchStoryNames();
-    storiesTimeoutRef.current = window.setTimeout(() => {
-      setStoryNames((prev) => {
-        if (prev.length === 0) {
-          setIsFallback(true);
-          setIsStoriesLoading(false);
-          return fallbackTitles;
-        }
-        return prev;
-      });
-    }, FETCH_TIMEOUT_MS);
+    fetchStoryTitles();
 
     return () => {
-      if (storiesTimeoutRef.current !== null) {
-        window.clearTimeout(storiesTimeoutRef.current);
-      }
       window.removeEventListener("stories-updated", handleStoriesUpdated);
     };
-  }, [fetchStoryNames]);
+  }, [fetchStoryTitles, refreshStoryTitles]);
 
   useEffect(() => {
-    const fetchClassicNames = async () => {
-      setIsClassicsLoading(true);
-      try {
-        const names = await getAllClassicTitles();
-        if (Array.isArray(names) && names.length > 0) {
-          setClassicNames(names);
-          setIsClassicFallback(false);
-        } else {
-          setClassicNames(classicFallbackTitles);
-          setIsClassicFallback(true);
-        }
-      } catch {
-        setClassicNames(classicFallbackTitles);
-        setIsClassicFallback(true);
-      } finally {
-        setIsClassicsLoading(false);
-      }
-    };
-
-    fetchClassicNames();
-    classicsTimeoutRef.current = window.setTimeout(() => {
-      setClassicNames((prev) => {
-        if (prev.length === 0) {
-          setIsClassicFallback(true);
-          setIsClassicsLoading(false);
-          return classicFallbackTitles;
-        }
-        return prev;
-      });
-    }, FETCH_TIMEOUT_MS);
-
-    return () => {
-      if (classicsTimeoutRef.current !== null) {
-        window.clearTimeout(classicsTimeoutRef.current);
-      }
-    };
-  }, []);
+    fetchClassicTitles();
+  }, [fetchClassicTitles]);
 
   useEffect(() => {
     if (!isOpen) return;

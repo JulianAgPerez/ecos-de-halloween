@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
-import { ClassicStoryDTO, ClassicStoryTitleDTO } from "../types";
-import {
-  getClassicStoryById,
-  getAllClassicTitles,
-} from "../services/ClassicStoryService";
+import { ClassicStoryDTO } from "../types";
+import { getClassicStoryById } from "../services/ClassicStoryService";
 import { useNavigate, useParams } from "react-router-dom";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
-import {
-  getClassicStoryFallback,
-  classicFallbackTitles,
-} from "../data/classicFallback";
+import useTitlesStore from "../store/useTitlesStore";
+import { getClassicStoryFallback } from "../data/classicFallback";
 
 export const ClassicStory = () => {
   const { slug } = useParams<{ slug: string }>();
   const [story, setStory] = useState<ClassicStoryDTO | null>(null);
   const [isFallback, setIsFallback] = useState(false);
-  const [titles, setTitles] = useState<ClassicStoryTitleDTO[]>([]);
+  const classicTitles = useTitlesStore((s) => s.classicTitles);
+  const fetchClassicTitles = useTitlesStore((s) => s.fetchClassicTitles);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,32 +55,14 @@ export const ClassicStory = () => {
   }, [slug]);
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadTitles = async () => {
-      try {
-        const names = await getAllClassicTitles();
-        if (mounted) {
-          setTitles(
-            Array.isArray(names) && names.length > 0 ? names : classicFallbackTitles,
-          );
-        }
-      } catch {
-        if (mounted) setTitles(classicFallbackTitles);
-      }
-    };
-
-    loadTitles();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    fetchClassicTitles();
+  }, [fetchClassicTitles]);
 
   if (!story) {
     return <GhostLoader />;
   }
 
-  const sortedTitles = [...titles].sort((a, b) =>
+  const sortedTitles = [...classicTitles].sort((a, b) =>
     a.title.localeCompare(b.title, "es"),
   );
   const currentIndex = sortedTitles.findIndex((title) => title.slug === slug);
