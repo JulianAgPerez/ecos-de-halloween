@@ -11,6 +11,7 @@ import FeatureCards from "../components/Home/FeatureCards";
 import HalloweenCountdown from "../components/Home/HalloweenCountdown";
 import HalloweenTrivia from "../components/Home/HalloweenTrivia";
 import TerrorQuote from "../components/Home/TerrorQuote";
+import HorrorEasterEggs from "../components/Home/HorrorEasterEggs";
 import ParallaxBackground from "../components/ParallaxBackground";
 
 const HOME_BACKGROUND_URL =
@@ -35,15 +36,18 @@ const Home = () => {
       <DepthHeat />
 
       {/* Escena 1 — Bosque (superficie) */}
-      <ParallaxBackground
-        imageUrl={HOME_BACKGROUND_URL}
-        title={
-          <span className="halloween-flicker font-creepster text-6xl font-bold text-center block md:text-9xl">
-            Feliz Halloween
-          </span>
-        }
-        textSpeed={700}
-      />
+      <div className="relative">
+        <ParallaxBackground
+          imageUrl={HOME_BACKGROUND_URL}
+          title={
+            <span className="halloween-flicker font-creepster text-6xl font-bold text-center block md:text-9xl">
+              Feliz Halloween
+            </span>
+          }
+          textSpeed={700}
+        />
+        <HorrorEasterEggs variant="forest" />
+      </div>
 
       {/* Transición: entramos al suelo */}
       <DepthDivider variant="soil" />
@@ -61,6 +65,7 @@ const Home = () => {
       {/* Escena 3 — Cuevas (profundidad) */}
       <section className="relative bg-[#141126]">
         <CaveDecor />
+        <HorrorEasterEggs variant="caves" />
         <FeatureCards />
         <HalloweenTrivia />
       </section>
@@ -71,6 +76,7 @@ const Home = () => {
       {/* Escena 4 — Inframundo (el final) */}
       <section className="underworld relative overflow-hidden">
         <FloatingEmbers />
+        <HorrorEasterEggs variant="underworld" />
         <HalloweenCountdown />
         <TerrorQuote />
       </section>
