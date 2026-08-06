@@ -1,39 +1,43 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import { Story } from "../pages/Story";
-import ClassicStory from "../pages/ClassicStory";
 import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import UploadForm from "../pages/UploadForm";
-import NotFound from "../pages/NotFound";
 import PersistentLayout from "../components/PersistentLayout";
 import ProtectedRoute from "../components/ProtectedRoute";
+import GhostLoader from "../components/GhostLoader";
+
+const Home = lazy(() => import("../pages/Home"));
+const Story = lazy(() => import("../pages/Story"));
+const ClassicStory = lazy(() => import("../pages/ClassicStory"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const UploadForm = lazy(() => import("../pages/UploadForm"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 const AppRoutes: React.FC = () => {
   return (
     <Router>
       <SidebarMenu />
-      <Routes>
-        <Route path="/" element={<PersistentLayout />}>
-          <Route index element={<Home />} />
-          <Route
-            path="/form"
-            element={
-              <ProtectedRoute>
-                <UploadForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/story/:id" element={<Story />} />
-          <Route path="/classic/:slug" element={<ClassicStory />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<GhostLoader />}>
+        <Routes>
+          <Route path="/" element={<PersistentLayout />}>
+            <Route index element={<Home />} />
+            <Route
+              path="/form"
+              element={
+                <ProtectedRoute>
+                  <UploadForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/story/:id" element={<Story />} />
+            <Route path="/classic/:slug" element={<ClassicStory />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Suspense>
       <Footer />
     </Router>
   );
