@@ -16,8 +16,6 @@ export const classicFallbackStories: ClassicStoryDTO[] = [
     license: "dominio-publico",
     sourceUrl: "https://es.wikisource.org/wiki/El_almohad%C3%B3n_de_pluma",
     body: `
-EL ALMOHADON DE PLUMA
-
 Su luna de miel fué un largo escalofrío. Rubia, angelical y tímida, el carácter duro de su marido heló sus soñadas niñerías de novia. Lo quería mucho, sin embargo, a veces con un ligero estremecimiento cuando volviendo de noche juntos por la calle, echaba una furtiva mirada a la alta estatura de Jordán, mudo desde hacía una hora. Él, por su parte, la amaba profundamente, sin darlo a conocer.
 
 Durante tres meses—se habían casado en abril—vivieron una dicha especial. Sin duda hubiera ella deseado menos severidad en ese rígido cielo de amor, más expansiva e incauta ternura; pero el impasible semblante de su marido la contenia siempre.
@@ -90,8 +88,6 @@ Estos parásitos de las aves, diminutos en el medio habitual, llegan a adquirir 
     license: "dominio-publico",
     sourceUrl: "https://es.wikisource.org/wiki/Los_ojos_verdes",
     body: `
-LOS OJOS VERDES
-
 Hace mucho tiempo que tenía ganas de escribir cualquier cosa con este título.
 Hoy, que se me ha presentado ocasión, lo he puesto con letras grandes en la primera cuartilla de papel, y luego he dejado á capricho volar la pluma.
 
@@ -214,8 +210,6 @@ Las aguas saltaron en chispas de luz, y se cerraron sobre su cuerpo, y sus círc
     license: "dominio-publico",
     sourceUrl: "https://es.wikisource.org/wiki/El_coraz%C3%B3n_delator_(de_Verneuil_tr.)",
     body: `
-EL CORAZÓN DELATOR
-
 Es verdad! Soy muy nervioso, espantosamente Es déis que esté loco? La enfermedad ha aguzado mis sentidos, mas sin destruirlos ni embotarlos. Tenía el oido muy fino; ninguno le igualaba; he escuchado todas las cosas.del cielo y de la tierra, y no pocas del infierno. ¿Cómo he de estar loco? ¡Atención! Ahora veréis con qué sano juicio y con qué calma puedo referiros toda la historia.
 
 Me es imposible decir cómo me ocurrió primeramente la idea; pero una vez concebida, no pude desecharla ni de día ni de noche. No me proponia objeto alguno ni me dejaba llevar de una pasión. Amaba al buen anciano, pues jamás me había hecho daño alguno, ni menos insultado; no envidiaba su oro; pero tenía una cosa desagradable. ¡Era uno de sus ojos, sí, esto es! Asemejabase al de un buitre y tenía el color azul pálido. Cada vez que este ojo fijaba en mi su mirada, helábaseme la sangre en las venas; y lentamente, por grados, comenzó á germinar en mi cerebro la idea de arrancar la vida al viejo, á fin de librarme para siempre de aquel ojo que tanto me molestaba.

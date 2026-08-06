@@ -9,10 +9,12 @@ const StoryReader = ({ body }: StoryReaderProps) => {
   const ref = useRef(null);
 
   return (
-    <section>
-      <div className="note-background mt-2 font-bold text-2xl content-center text-left">
+    <section className="flex justify-center px-4">
+      <div className="note-background mt-2 w-full max-w-3xl text-left">
         <ScrollingCircle refProp={ref} />
-        <pre ref={ref}>{body}</pre>
+        <pre ref={ref} className="text-lg sm:text-xl leading-relaxed">
+          {body}
+        </pre>
       </div>
     </section>
   );
