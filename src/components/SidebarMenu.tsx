@@ -9,6 +9,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FaBookDead,
+  FaChevronDown,
   FaGhost,
   FaHome,
   FaSearch,
@@ -30,6 +31,22 @@ const StorySkeleton: FC = () => (
   </li>
 );
 
+const Highlight: FC<{ text: string; query: string }> = ({ text, query }) => {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return <>{text}</>;
+  const index = text.toLowerCase().indexOf(normalizedQuery);
+  if (index === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, index)}
+      <mark className="bg-amber-400/30 text-amber-200 rounded px-0.5">
+        {text.slice(index, index + normalizedQuery.length)}
+      </mark>
+      {text.slice(index + normalizedQuery.length)}
+    </>
+  );
+};
+
 export const SidebarMenu: FC = () => {
   const [storyNames, setStoryNames] = useState<StoryTitleDTO[]>([]);
   const [isStoriesLoading, setIsStoriesLoading] = useState(true);
@@ -39,6 +56,10 @@ export const SidebarMenu: FC = () => {
   const [isClassicFallback, setIsClassicFallback] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [openSections, setOpenSections] = useState<{
+    stories: boolean;
+    classics: boolean;
+  }>({ stories: true, classics: true });
   const navigate = useNavigate();
   const location = useLocation();
   const storiesTimeoutRef = useRef<number | null>(null);
@@ -52,6 +73,9 @@ export const SidebarMenu: FC = () => {
     setQuery("");
   }, []);
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const toggleSection = (key: "stories" | "classics") =>
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const fetchStoryNames = useCallback(async () => {
     setIsStoriesLoading(true);
@@ -149,6 +173,25 @@ export const SidebarMenu: FC = () => {
   }, [isOpen, closeMenu]);
 
   useEffect(() => {
+    const handleShortcut = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      if (e.key.toLowerCase() === "m") {
+        e.preventDefault();
+        setIsOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, []);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const panel = panelRef.current;
@@ -162,14 +205,29 @@ export const SidebarMenu: FC = () => {
     const last = focusables[focusables.length - 1];
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
+      if (e.key === "Tab") {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+        return;
       }
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      const items = Array.from(
+        panel.querySelectorAll<HTMLButtonElement>("[data-nav-item]"),
+      );
+      if (items.length === 0) return;
+      const currentIndex = items.indexOf(
+        document.activeElement as HTMLButtonElement,
+      );
+      if (currentIndex === -1) return;
+      e.preventDefault();
+      const delta = e.key === "ArrowDown" ? 1 : -1;
+      const nextIndex = (currentIndex + delta + items.length) % items.length;
+      items[nextIndex].focus();
     };
 
     panel.addEventListener("keydown", handleKeyDown);
@@ -235,11 +293,15 @@ export const SidebarMenu: FC = () => {
 
   const hasQuery = normalizedQuery.length > 0;
 
+  const storiesOpen = hasQuery || openSections.stories;
+  const classicsOpen = hasQuery || openSections.classics;
+
   return (
     <div>
       <button
         ref={toggleButtonRef}
         onClick={toggleMenu}
+        title="Abrir menú (M)"
         aria-label={isOpen ? "Cerrar menú de historias" : "Abrir menú de historias"}
         aria-expanded={isOpen}
         aria-controls="sidebar-panel"
@@ -286,8 +348,8 @@ export const SidebarMenu: FC = () => {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 pb-10 pt-4">
-                <label className="relative block mb-4">
+              <div className="shrink-0 px-4 pt-4 pb-3 border-b border-gray-700/60">
+                <label className="relative block mb-3">
                   <FaSearch
                     size={16}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
@@ -304,128 +366,207 @@ export const SidebarMenu: FC = () => {
 
                 <button
                   onClick={() => handleStoryClick(0)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 mb-4 rounded-lg text-lg text-amber-400 hover:bg-custom-purple hover:text-amber-300 transition border border-purple-800/40"
+                  aria-current={location.pathname === "/" ? "page" : undefined}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border ${
+                    location.pathname === "/"
+                      ? "text-amber-300 bg-custom-purple border-purple-400/60"
+                      : "text-amber-400 hover:bg-custom-purple hover:text-amber-300 border-purple-800/40"
+                  }`}
                 >
                   <FaHome size={18} className="text-purple-400" />
                   Home
                 </button>
+              </div>
 
+              <div className="flex-1 overflow-y-auto px-4 pb-10 pt-3">
                 <section aria-labelledby="my-stories-heading" className="mb-6">
-                  <header className="sticky top-0 bg-gray-900 z-10 flex items-baseline justify-between pt-2 pb-2">
-                    <h2
-                      id="my-stories-heading"
-                      className="flex items-center gap-2 text-amber-400 font-creepster text-xl"
-                    >
+                  <h2 id="my-stories-heading" className="sr-only">
+                    Mis Historias
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection("stories")}
+                    aria-expanded={storiesOpen}
+                    aria-controls="stories-list"
+                    className="sticky top-0 bg-gray-900 z-10 w-full flex items-center justify-between gap-2 py-2 text-left"
+                  >
+                    <span className="flex items-center gap-2 text-amber-400 font-creepster text-xl">
                       <FaGhost size={16} className="text-purple-400" />
                       Mis Historias
-                    </h2>
-                    <span className="text-xs text-gray-400">
-                      {filteredStories.length}
                     </span>
-                  </header>
+                    <span className="flex items-center gap-2 text-xs text-gray-400">
+                      {filteredStories.length}
+                      <motion.span
+                        animate={{ rotate: storiesOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <FaChevronDown size={14} className="text-amber-400" />
+                      </motion.span>
+                    </span>
+                  </button>
 
-                  {isFallback && (
-                    <p className="text-yellow-500 text-xs text-center mb-3">
-                      ⚠️ Modo sin conexión
-                    </p>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {storiesOpen && (
+                      <motion.div
+                        id="stories-list"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        {isFallback && (
+                          <p className="text-yellow-500 text-xs text-center mb-3">
+                            ⚠️ Modo sin conexión
+                          </p>
+                        )}
 
-                  {isStoriesLoading ? (
-                    <ul className="space-y-1">
-                      {[0, 1, 2].map((i) => (
-                        <StorySkeleton key={i} />
-                      ))}
-                    </ul>
-                  ) : filteredStories.length === 0 ? (
-                    <p className="text-gray-500 text-sm text-center py-4">
-                      {hasQuery
-                        ? `Sin resultados para "${query}"`
-                        : "Aún no hay historias"}
-                    </p>
-                  ) : (
-                    <ul className="divide-y divide-gray-700/60">
-                      {filteredStories.map((name) => (
-                        <li key={name.id}>
-                          <button
-                            onClick={() => handleStoryClick(name.id)}
-                            aria-current={isStoryActive(name.id) ? "page" : undefined}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
-                              isStoryActive(name.id)
-                                ? "bg-custom-purple text-amber-300"
-                                : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
-                            }`}
-                          >
-                            <FaGhost size={14} className="text-purple-400 shrink-0" />
-                            <span className="truncate">{name.title}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                        {isStoriesLoading ? (
+                          <ul className="space-y-1">
+                            {[0, 1, 2].map((i) => (
+                              <StorySkeleton key={i} />
+                            ))}
+                          </ul>
+                        ) : filteredStories.length === 0 ? (
+                          <p className="text-gray-500 text-sm text-center py-4">
+                            {hasQuery
+                              ? `Sin resultados para "${query}"`
+                              : "Aún no hay historias"}
+                          </p>
+                        ) : (
+                          <ul className="divide-y divide-gray-700/60">
+                            {filteredStories.map((name) => (
+                              <li key={name.id}>
+                                <button
+                                  data-nav-item
+                                  onClick={() => handleStoryClick(name.id)}
+                                  aria-current={
+                                    isStoryActive(name.id) ? "page" : undefined
+                                  }
+                                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+                                    isStoryActive(name.id)
+                                      ? "bg-custom-purple text-amber-300"
+                                      : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
+                                  }`}
+                                >
+                                  <FaGhost
+                                    size={14}
+                                    className="text-purple-400 shrink-0"
+                                  />
+                                  <span className="truncate">
+                                    <Highlight
+                                      text={name.title}
+                                      query={query}
+                                    />
+                                  </span>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </section>
 
                 <section aria-labelledby="classics-heading">
-                  <header className="sticky top-0 bg-gray-900 z-10 flex items-baseline justify-between pt-2 pb-2">
-                    <h2
-                      id="classics-heading"
-                      className="flex items-center gap-2 text-amber-400 font-creepster text-xl"
-                    >
+                  <h2 id="classics-heading" className="sr-only">
+                    Clásicos del Terror
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection("classics")}
+                    aria-expanded={classicsOpen}
+                    aria-controls="classics-list"
+                    className="sticky top-0 bg-gray-900 z-10 w-full flex items-center justify-between gap-2 py-2 text-left"
+                  >
+                    <span className="flex items-center gap-2 text-amber-400 font-creepster text-xl">
                       <FaBookDead size={16} className="text-purple-400" />
                       Clásicos del Terror
-                    </h2>
-                    <span className="text-xs text-gray-400">
-                      {filteredClassics.length}
                     </span>
-                  </header>
+                    <span className="flex items-center gap-2 text-xs text-gray-400">
+                      {filteredClassics.length}
+                      <motion.span
+                        animate={{ rotate: classicsOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <FaChevronDown size={14} className="text-amber-400" />
+                      </motion.span>
+                    </span>
+                  </button>
 
-                  {isClassicFallback && (
-                    <p className="text-yellow-500 text-xs text-center mb-3">
-                      ⚠️ Clásicos sin conexión
-                    </p>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {classicsOpen && (
+                      <motion.div
+                        id="classics-list"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        {isClassicFallback && (
+                          <p className="text-yellow-500 text-xs text-center mb-3">
+                            ⚠️ Clásicos sin conexión
+                          </p>
+                        )}
 
-                  {isClassicsLoading ? (
-                    <ul className="space-y-1">
-                      {[0, 1, 2].map((i) => (
-                        <StorySkeleton key={i} />
-                      ))}
-                    </ul>
-                  ) : filteredClassics.length === 0 ? (
-                    <p className="text-gray-500 text-sm text-center py-4">
-                      {hasQuery
-                        ? `Sin resultados para "${query}"`
-                        : "Aún no hay clásicos"}
-                    </p>
-                  ) : (
-                    <ul className="divide-y divide-gray-700/60">
-                      {filteredClassics.map((name) => (
-                        <li key={name.slug}>
-                          <button
-                            onClick={() => handleClassicClick(name.slug)}
-                            aria-current={isClassicActive(name.slug) ? "page" : undefined}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
-                              isClassicActive(name.slug)
-                                ? "bg-custom-purple text-amber-300"
-                                : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
-                            }`}
-                          >
-                            <FaBookDead
-                              size={14}
-                              className="text-purple-400 shrink-0"
-                            />
-                            <span className="min-w-0">
-                              <span className="block truncate">
-                                {name.title}
-                              </span>
-                              <span className="block text-xs text-gray-400 italic truncate">
-                                {name.author}
-                              </span>
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                        {isClassicsLoading ? (
+                          <ul className="space-y-1">
+                            {[0, 1, 2].map((i) => (
+                              <StorySkeleton key={i} />
+                            ))}
+                          </ul>
+                        ) : filteredClassics.length === 0 ? (
+                          <p className="text-gray-500 text-sm text-center py-4">
+                            {hasQuery
+                              ? `Sin resultados para "${query}"`
+                              : "Aún no hay clásicos"}
+                          </p>
+                        ) : (
+                          <ul className="divide-y divide-gray-700/60">
+                            {filteredClassics.map((name) => (
+                              <li key={name.slug}>
+                                <button
+                                  data-nav-item
+                                  onClick={() => handleClassicClick(name.slug)}
+                                  aria-current={
+                                    isClassicActive(name.slug)
+                                      ? "page"
+                                      : undefined
+                                  }
+                                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+                                    isClassicActive(name.slug)
+                                      ? "bg-custom-purple text-amber-300"
+                                      : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
+                                  }`}
+                                >
+                                  <FaBookDead
+                                    size={14}
+                                    className="text-purple-400 shrink-0"
+                                  />
+                                  <span className="min-w-0">
+                                    <span className="block truncate">
+                                      <Highlight
+                                        text={name.title}
+                                        query={query}
+                                      />
+                                    </span>
+                                    <span className="block text-xs text-gray-400 italic truncate">
+                                      <Highlight
+                                        text={name.author}
+                                        query={query}
+                                      />
+                                    </span>
+                                  </span>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </section>
               </div>
             </motion.div>
