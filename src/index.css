@@ -110,6 +110,15 @@ body {
   color: #3f3a30;
 }
 
+/* Modo lectura nocturno: baja el brillo del pergamino y suaviza el texto */
+.note-background.night-mode {
+  filter: brightness(0.55) sepia(0.35) hue-rotate(-10deg);
+}
+
+.note-background.night-mode pre {
+  color: #d6c9a3;
+}
+
 /* Titulo con parpadeo (flicker) estilo Halloween */
 .halloween-flicker {
   color: #fde68a;
