@@ -41,7 +41,7 @@ const ReadingNavigation: FC<ReadingNavigationProps> = ({
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-gray-200 bg-purple-800/40 hover:bg-purple-700/60 disabled:opacity-40 disabled:cursor-not-allowed transition"
         >
           <FaArrowLeft size={14} />
-          <span className="text-left">
+          <span className="text-left min-w-0">
             <span className="block text-sm">{`${capitalizedLabel} anterior`}</span>
             {previousTitle && (
               <span className="block text-xs text-gray-400 truncate max-w-44">
@@ -57,7 +57,7 @@ const ReadingNavigation: FC<ReadingNavigationProps> = ({
           title={nextTitle}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-gray-200 bg-purple-800/40 hover:bg-purple-700/60 disabled:opacity-40 disabled:cursor-not-allowed transition"
         >
-          <span className="text-right">
+          <span className="text-right min-w-0">
             <span className="block text-sm">{`Siguiente ${entityLabel}`}</span>
             {nextTitle && (
               <span className="block text-xs text-gray-400 truncate max-w-44">
