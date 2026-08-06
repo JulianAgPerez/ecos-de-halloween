@@ -70,7 +70,10 @@ export const SidebarMenu: FC = () => {
     setIsOpen(false);
     setQuery("");
   }, []);
-  const toggleMenu = () => setIsOpen((prev) => !prev);
+  const toggleMenu = useCallback(() => {
+    setIsOpen((prev) => !prev);
+    setQuery("");
+  }, []);
 
   const toggleSection = (key: "stories" | "classics") =>
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -115,12 +118,12 @@ export const SidebarMenu: FC = () => {
       }
       if (e.key.toLowerCase() === "m") {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        toggleMenu();
       }
     };
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, []);
+  }, [toggleMenu]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -151,11 +154,14 @@ export const SidebarMenu: FC = () => {
         panel.querySelectorAll<HTMLButtonElement>("[data-nav-item]"),
       );
       if (items.length === 0) return;
+      e.preventDefault();
       const currentIndex = items.indexOf(
         document.activeElement as HTMLButtonElement,
       );
-      if (currentIndex === -1) return;
-      e.preventDefault();
+      if (currentIndex === -1) {
+        items[e.key === "ArrowDown" ? 0 : items.length - 1].focus();
+        return;
+      }
       const delta = e.key === "ArrowDown" ? 1 : -1;
       const nextIndex = (currentIndex + delta + items.length) % items.length;
       items[nextIndex].focus();
