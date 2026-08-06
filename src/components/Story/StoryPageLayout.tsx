@@ -19,9 +19,14 @@ const StoryPageLayout: FC<StoryPageLayoutProps> = ({
   body,
   footer,
 }) => {
+  const hasCustomBackground =
+    backgroundStyle && Object.keys(backgroundStyle).length > 0;
+
   return (
     <div
-      className={`w-full p-4 min-h-screen bg-cover bg-center ${backgroundClass}`}
+      className={`w-full p-4 min-h-screen bg-cover bg-center ${
+        hasCustomBackground ? "" : backgroundClass
+      }`}
       style={backgroundStyle}
     >
       <div className="mt-16 mb-8">
