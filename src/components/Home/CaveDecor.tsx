@@ -5,16 +5,16 @@ interface CaveDecorProps {
 }
 
 const STALACTITES = [
-  { left: "0%", w: 90, h: 170 },
-  { left: "10%", w: 55, h: 240 },
-  { left: "22%", w: 120, h: 130 },
-  { left: "32%", w: 48, h: 280 },
-  { left: "44%", w: 140, h: 150 },
-  { left: "56%", w: 65, h: 260 },
-  { left: "68%", w: 110, h: 120 },
-  { left: "78%", w: 50, h: 300 },
-  { left: "88%", w: 105, h: 140 },
-  { left: "96%", w: 60, h: 220 },
+  { left: "0%", w: 90, h: 220 },
+  { left: "9%", w: 55, h: 130 },
+  { left: "18%", w: 120, h: 90 },
+  { left: "28%", w: 48, h: 70 },
+  { left: "38%", w: 140, h: 50 },
+  { left: "52%", w: 65, h: 30 },
+  { left: "64%", w: 110, h: 55 },
+  { left: "74%", w: 50, h: 90 },
+  { left: "84%", w: 105, h: 120 },
+  { left: "94%", w: 60, h: 280 },
 ];
 
 const STALAGMITES = [

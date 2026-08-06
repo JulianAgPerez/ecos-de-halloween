@@ -4,11 +4,13 @@ import witchGif from "../../assets/images/witch-gif.gif";
 
 type WitchMode = "fixed" | "anchored" | "hybrid";
 
-// Cambiar este valor para probar los 3 modos de viaje de la bruja:
+// Cambiar el valor de retorno para probar los 3 modos de viaje de la bruja:
 // - "fixed":    compañera fija que cruza el centro del viewport con el scroll.
 // - "anchored": vive en la página y desciende por las escenas con el scroll.
 // - "hybrid":   anclada a la página + al arrastrarla se despega y vuelve a la ruta.
-const WITCH_MODE: WitchMode = "fixed";
+function getWitchMode(): WitchMode {
+  return "hybrid";
+}
 
 const WITCH_SIZE = 64;
 
@@ -39,7 +41,11 @@ const WitchJourney: FC = () => {
   const fixedOpacity = useTransform(scrollYProgress, [0.88, 1], [1, 0]);
   const fixedScale = useTransform(scrollYProgress, [0, 0.6], [0.8, 1.15]);
 
-  const anchoredY = useTransform(scrollYProgress, [0.08, 0.95], ["4vh", "260vh"]);
+  const anchoredY = useTransform(
+    scrollYProgress,
+    [0.08, 0.95],
+    ["4vh", "260vh"],
+  );
   const anchoredX = useTransform(
     scrollYProgress,
     [0.15, 0.5, 0.85],
@@ -47,12 +53,17 @@ const WitchJourney: FC = () => {
   );
   const anchoredOpacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
 
-  if (WITCH_MODE === "fixed") {
+  if (getWitchMode() === "fixed") {
     return (
       <motion.div
         aria-hidden="true"
         className="pointer-events-none fixed left-1/2 top-[16%] z-40"
-        style={{ x: fixedX, y: fixedY, opacity: fixedOpacity, scale: fixedScale }}
+        style={{
+          x: fixedX,
+          y: fixedY,
+          opacity: fixedOpacity,
+          scale: fixedScale,
+        }}
       >
         <div className="pointer-events-auto">
           <DraggableWitch snapBack />
@@ -68,7 +79,7 @@ const WitchJourney: FC = () => {
       style={{ x: anchoredX, y: anchoredY, opacity: anchoredOpacity }}
     >
       <div className="pointer-events-auto">
-        <DraggableWitch snapBack={WITCH_MODE === "hybrid"} />
+        <DraggableWitch snapBack={getWitchMode() === "hybrid"} />
       </div>
     </motion.div>
   );
