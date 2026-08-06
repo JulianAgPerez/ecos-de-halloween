@@ -4,6 +4,7 @@ import { registerUser } from "../services/AuthService";
 import GhostLoader from "../components/GhostLoader";
 import useAuthStore from "../store/useAuthStore";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import AnimatedBackground from "../components/AnimatedBackground";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -35,8 +36,9 @@ const Register: React.FC = () => {
   if (loading) return <GhostLoader />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-home-principal p-4">
-      <div className="w-full max-w-md bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8">
+    <div className="relative min-h-screen flex items-center justify-center p-4">
+      <AnimatedBackground />
+      <div className="relative z-10 w-full max-w-md bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8">
         <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
           Registrarse
         </h2>

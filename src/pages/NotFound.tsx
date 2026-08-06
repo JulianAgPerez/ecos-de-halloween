@@ -1,11 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import AnimatedBackground from "../components/AnimatedBackground";
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-home-principal bg-cover bg-center px-6 text-center">
+    <div className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      <AnimatedBackground />
+      <div className="relative z-10 flex flex-col items-center">
       <p className="font-creepster text-9xl text-amber-400 [text-shadow:0_0_20px_rgba(251,191,36,0.6)]">
         404
       </p>
@@ -29,6 +32,7 @@ const NotFound: React.FC = () => {
       >
         Volver al inicio
       </button>
+      </div>
     </div>
   );
 };

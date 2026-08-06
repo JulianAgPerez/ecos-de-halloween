@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { uploadStoryWithBody } from "../services/UploadFileService";
+import AnimatedBackground from "../components/AnimatedBackground";
 
 interface CloudinaryWidget {
   open: () => void;
@@ -46,6 +47,9 @@ const UploadForm: React.FC = () => {
       {
         cloudName: "diauphrb6",
         uploadPreset: "main_upload",
+        minImageWidth: 1600,
+        minImageHeight: 900,
+        clientAllowedFormats: ["jpg", "jpeg", "png", "webp", "avif"],
       },
       (_error, result) => {
         if (result.event === "success") {
@@ -83,10 +87,11 @@ const UploadForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-home-principal p-4">
+    <div className="relative min-h-screen flex items-center justify-center p-4">
+      <AnimatedBackground />
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8"
+        className="relative z-10 w-full max-w-lg bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8"
       >
         <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
           Subir Cuento
