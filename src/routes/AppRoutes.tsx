@@ -9,7 +9,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UploadForm from "../pages/UploadForm";
 import NotFound from "../pages/NotFound";
-import PersistentLayout from "../components/PersistentLayaout";
+import PersistentLayout from "../components/PersistentLayout";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const AppRoutes: React.FC = () => {
