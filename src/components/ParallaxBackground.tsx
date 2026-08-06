@@ -1,37 +1,79 @@
-import { FC, useRef } from "react";
+import { FC, ReactNode, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  getBackgroundSrcSet,
+  getOptimizedBackgroundUrl,
+} from "../utils/cloudinary";
 
-interface ParallaxProps {
-  text: string;
+interface ParallaxBackgroundProps {
+  imageUrl?: string;
+  fallbackBgClass?: string;
+  title?: ReactNode;
+  titleClassName?: string;
+  className?: string;
+  textSpeed?: number;
+  fadeTitle?: boolean;
 }
 
-const ParallaxBackground: FC<ParallaxProps> = ({ text }) => {
-  const ref = useRef<HTMLDivElement>(null);
+const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
+  imageUrl,
+  fallbackBgClass,
+  title,
+  titleClassName,
+  className = "",
+  textSpeed = 200,
+  fadeTitle = true,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: containerRef,
     offset: ["start start", "end start"],
   });
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "11%"]);
+  const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const titleY = useTransform(scrollYProgress, [0, 1], ["0%", `${textSpeed}%`]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const backgroundStyle = { y: backgroundY, scale: backgroundScale };
 
   return (
     <div
-      ref={ref}
-      className="relative h-screen overflow-hidden grid place-items-center"
+      ref={containerRef}
+      className={`relative h-screen overflow-hidden ${className}`}
     >
-      <motion.h1
-        style={{ y: textY }}
-        className="font-creepster text-white text-6xl md:text-9xl font-bold text-center z-20 relative"
-      >
-        {text}
-      </motion.h1>
-      <motion.div
-        className="absolute inset-0 bg-cover bg-home-principal bg-bottom"
-        style={{
-          y: backgroundY,
-        }}
-      />
-      <div className="absolute inset-0 z-19 bg-home-piso md:bg-home-secundaria-clean bg-cover bg-bottom" />
+      {imageUrl ? (
+        <motion.img
+          src={getOptimizedBackgroundUrl(imageUrl)}
+          srcSet={getBackgroundSrcSet(imageUrl)}
+          sizes="100vw"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          className="absolute left-0 right-0 top-[-16%] h-[132%] w-full object-cover object-center"
+          style={backgroundStyle}
+        />
+      ) : fallbackBgClass ? (
+        <motion.div
+          aria-hidden="true"
+          className={`absolute left-0 right-0 top-[-16%] h-[132%] w-full bg-cover bg-center ${fallbackBgClass}`}
+          style={backgroundStyle}
+        />
+      ) : null}
+
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-transparent to-black/85" />
+
+      {title && (
+        <div
+          className={`relative z-20 h-full w-full grid place-items-center ${titleClassName ?? ""}`}
+        >
+          <motion.div
+            style={{ y: titleY, opacity: fadeTitle ? titleOpacity : 1 }}
+          >
+            {title}
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
