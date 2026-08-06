@@ -14,7 +14,12 @@ const useSoundStore = create<SoundStore>((set) => ({
   sounds: [],
   activeSound: null,
   toggleSound: () => set((state) => ({ isPlaying: !state.isPlaying })),
-  addSound: (sound) => set((state) => ({ sounds: [...state.sounds, sound] })),
+  addSound: (sound) =>
+    set((state) =>
+      state.sounds.includes(sound)
+        ? state
+        : { sounds: [...state.sounds, sound] },
+    ),
   setActiveSound: (sound) => set(() => ({ activeSound: sound })),
 }));
 

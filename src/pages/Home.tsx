@@ -1,13 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import AmbientSound from "../components/AmbientSound";
-import { sounds } from "../assets/sounds/sounds";
 import ContentSection from "../components/Home/ContentSection";
-import useSoundStore from "../store/useSoundStore";
 
 const Home = () => {
-  const { addSound } = useSoundStore();
-
   // setup de Parallax
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -20,15 +15,8 @@ const Home = () => {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "700%"]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  useEffect(() => {
-    Object.values(sounds).forEach((sound) => addSound(sound));
-  }, [addSound]);
-
   return (
     <div ref={ref}>
-      {Object.values(sounds).map((sound) => (
-        <AmbientSound key={sound} src={sound} />
-      ))}
       {/* Contenedor con la imagen de fondo y efecto parallax */}
       <div className="relative h-screen overflow-hidden grid place-items-center">
         <motion.h1
