@@ -8,10 +8,12 @@ import ReadingNavigation from "../components/Story/ReadingNavigation";
 import useTitlesStore from "../store/useTitlesStore";
 import { saveLastRead } from "../utils/lastRead";
 import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
+import { getOptimizedBackgroundUrl } from "../utils/cloudinary";
 
 export const Story = () => {
   const { id } = useParams<{ id: string }>();
   const [story, setStory] = useState<StoryDTO | null>(null);
+  const [bgReady, setBgReady] = useState(false);
   const storyTitles = useTitlesStore((s) => s.storyTitles);
   const fetchStoryTitles = useTitlesStore((s) => s.fetchStoryTitles);
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ export const Story = () => {
   }, [id]);
 
   useEffect(() => {
+    setStory(null);
+    setBgReady(false);
     if (!id) return;
 
     const timeout = setTimeout(() => {
@@ -47,6 +51,26 @@ export const Story = () => {
   }, [id]);
 
   useEffect(() => {
+    if (!story?.backgroundImageUrl) {
+      setBgReady(true);
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => setBgReady(true);
+    img.onerror = () => setBgReady(true);
+    img.src = getOptimizedBackgroundUrl(story.backgroundImageUrl);
+
+    const failsafe = setTimeout(() => setBgReady(true), 8000);
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+      clearTimeout(failsafe);
+    };
+  }, [story]);
+
+  useEffect(() => {
     if (story) {
       saveLastRead({ type: "story", id: numericId, title: story.title });
     }
@@ -56,7 +80,7 @@ export const Story = () => {
     fetchStoryTitles();
   }, [fetchStoryTitles]);
 
-  if (!story) {
+  if (!story || !bgReady) {
     return <GhostLoader />;
   }
 

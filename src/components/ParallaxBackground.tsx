@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef } from "react";
+import { FC, ReactNode, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   getBackgroundSrcSet,
@@ -25,6 +25,7 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
   fadeTitle = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -43,13 +44,19 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
       className={`relative h-screen overflow-hidden ${className}`}
     >
       {imageUrl ? (
-        <motion.img
+<motion.img
           src={getOptimizedBackgroundUrl(imageUrl)}
           srcSet={getBackgroundSrcSet(imageUrl)}
           sizes="100vw"
           alt=""
           aria-hidden="true"
           decoding="async"
+          loading="eager"
+          fetchPriority="high"
+          onLoad={() => setLoaded(true)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: loaded ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="absolute left-0 right-0 top-[-16%] h-[132%] w-full object-cover object-center"
           style={backgroundStyle}
         />

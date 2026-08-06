@@ -14,6 +14,7 @@ const buildTransformations = (width: number, dpr: boolean): string =>
     `w_${width}`,
     "q_auto",
     "f_auto",
+    "fl_progressive",
     ...(dpr ? ["dpr_auto"] : []),
     "c_scale",
   ].join(",");
