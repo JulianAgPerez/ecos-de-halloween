@@ -30,14 +30,22 @@ const StoryCatalog = () => {
   const classicTitles = useTitlesStore((s) => s.classicTitles);
 
   const [featured, setFeatured] = useState<StoryDTO[]>([]);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
     const ids = storyTitles.slice(0, FEATURED_AMOUNT).map((s) => s.id);
-    if (ids.length === 0) return;
-    Promise.all(ids.map((id) => getStoryById(id))).then((results) => {
+    if (ids.length === 0) {
+      setFeaturedLoading(false);
+      return;
+    }
+    setFeaturedLoading(true);
+    Promise.all(
+      ids.map((id) => getStoryById(id).catch(() => null)),
+    ).then((results) => {
       if (!active) return;
       setFeatured(results.filter((s): s is StoryDTO => s !== null));
+      setFeaturedLoading(false);
     });
     return () => {
       active = false;
@@ -50,8 +58,23 @@ const StoryCatalog = () => {
     <div className="mx-auto w-full max-w-6xl px-5 py-16">
       <SectionHeading icon={FaGhost} title="Historias destacadas" />
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {featured.map((story, i) => (
+      {featuredLoading ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="flex flex-col animate-pulse rounded-2xl border border-purple-800/40 bg-black/25 p-6"
+            >
+              <div className="mb-3 h-8 w-8 rounded-full bg-purple-700/40" />
+              <div className="h-6 w-3/4 rounded bg-purple-700/40" />
+              <div className="mt-3 h-4 w-full rounded bg-purple-900/40" />
+              <div className="mt-2 h-4 w-2/3 rounded bg-purple-900/40" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((story, i) => (
           <motion.button
             key={story.id}
             onClick={() => story.id && navigate(`/story/${story.id}`)}
@@ -77,8 +100,9 @@ const StoryCatalog = () => {
               <FaArrowRight className="transition-transform group-hover:translate-x-1" />
             </span>
           </motion.button>
-        ))}
-      </div>
+))}
+        </div>
+      )}
 
       {visibleClassics.length > 0 && (
         <>
