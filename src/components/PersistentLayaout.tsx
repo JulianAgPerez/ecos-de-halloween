@@ -1,16 +1,21 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AmbientSound from "../components/AmbientSound";
+import AmbientSoundSelector from "../components/AmbientSoundSelector";
 import { sounds } from "../assets/sounds/sounds";
 import useSoundStore from "../store/useSoundStore";
 import VolumeButton from "../components/VolumeButton";
 
 const PersistentLayout = () => {
-  const { addSound } = useSoundStore();
+  const { addSound, activeSound, setActiveSound } = useSoundStore();
 
   useEffect(() => {
-    Object.values(sounds).forEach((sound) => addSound(sound));
-  }, [addSound]);
+    const allSounds = Object.values(sounds);
+    allSounds.forEach((sound) => addSound(sound));
+    if (!activeSound) {
+      setActiveSound(allSounds[allSounds.length - 1]);
+    }
+  }, [addSound, activeSound, setActiveSound]);
 
   return (
     <div>
@@ -18,6 +23,7 @@ const PersistentLayout = () => {
         <AmbientSound key={index} src={sound} />
       ))}
       <VolumeButton />
+      <AmbientSoundSelector />
       <Outlet />
     </div>
   );

@@ -11,3 +11,16 @@ export const sounds = {
     windLouder:"https://res.cloudinary.com/diauphrb6/video/upload/v1729113922/audio/wind-forest-slow-shifts-fairly-strong-trees-bright-irving-nature-park-190929-56124_kmnbzr.mp3",
     windSnow:"https://res.cloudinary.com/diauphrb6/video/upload/v1729113922/audio/smooth-cold-wind-looped-135538_y1yd9p.mp3"
 }
+
+//Nombres legibles para el selector de sonido ambiente
+export const soundLabels: Record<string, string> = {
+    campfire: "Fogata",
+    forest: "Bosque nocturno",
+    campfireDeeper: "Chimenea",
+    spookySong: "Canción tenebrosa",
+    forest2: "Horror nocturno",
+    wind: "Viento entre árboles",
+    windSoft: "Viento suave",
+    windLouder: "Viento fuerte",
+    windSnow: "Viento de nieve"
+}

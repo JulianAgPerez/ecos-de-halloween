@@ -3,22 +3,18 @@ import useSoundStore from "../store/useSoundStore";
 
 const AmbientSound: FC<{ src: string }> = ({ src }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { isPlaying, activeSound, setActiveSound } = useSoundStore();
+  const { isPlaying, activeSound } = useSoundStore();
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (src === activeSound && isPlaying) {
-        audioRef.current.volume = 0.5;
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (src === activeSound && isPlaying) {
+      audio.volume = 0.5;
+      audio.play();
+    } else {
+      audio.pause();
     }
   }, [src, activeSound, isPlaying]);
-
-  useEffect(() => {
-    setActiveSound(src);
-  }, [src, activeSound]);
 
   return (
     <audio ref={audioRef} loop>
