@@ -2,7 +2,23 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL + "/auth";
 
-export const registerUser = async (registerData: any) => {
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData extends LoginData {
+  username: string;
+}
+
+interface AuthResponse {
+  token: string;
+  refreshToken: string;
+}
+
+export const registerUser = async (
+  registerData: RegisterData,
+): Promise<AuthResponse> => {
   const response = await axios.post(`${API_URL}/register`, registerData, {
     headers: {
       "Content-Type": "application/json",
@@ -15,7 +31,7 @@ export const registerUser = async (registerData: any) => {
   };
 };
 
-export const loginUser = async (loginData: any) => {
+export const loginUser = async (loginData: LoginData): Promise<AuthResponse> => {
   const response = await axios.post(`${API_URL}/login`, loginData, {
     headers: {
       "Content-Type": "application/json",

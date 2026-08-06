@@ -7,7 +7,7 @@ import {
   FaArrowRight,
   FaBookOpen,
 } from "react-icons/fa";
-import useTitlesStore from "../../store/useTitlesStore";
+import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
 import { getStoryById } from "../../services/StoryService";
 import { StoryDTO } from "../../types";
 import SectionHeading from "./SectionHeading";
@@ -16,8 +16,8 @@ const FEATURED_AMOUNT = 3;
 
 const StoryCatalog = () => {
   const navigate = useNavigate();
-  const storyTitles = useTitlesStore((s) => s.storyTitles);
-  const classicTitles = useTitlesStore((s) => s.classicTitles);
+  const { titles: storyTitles } = useStoryTitles();
+  const { titles: classicTitles } = useClassicTitles();
 
   const [featured, setFeatured] = useState<StoryDTO[]>([]);
   const [featuredLoading, setFeaturedLoading] = useState(true);

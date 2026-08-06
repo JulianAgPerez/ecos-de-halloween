@@ -1,70 +1,38 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { StoryDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
-import { useNavigate, useParams } from "react-router-dom";
+import { fallbackStories, getFallbackStoryById } from "../data/fallbackData";
+import { useStoryTitles } from "../hooks/useTitles";
+import { useStoryFetch } from "../hooks/useStoryFetch";
+import { findAdjacent } from "../utils/adjacent";
+import { saveLastRead } from "../utils/lastRead";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
-import useTitlesStore from "../store/useTitlesStore";
-import { saveLastRead } from "../utils/lastRead";
-import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
 
 export const Story = () => {
   const { id } = useParams<{ id: string }>();
-  const [story, setStory] = useState<StoryDTO | null>(null);
-  const storyTitles = useTitlesStore((s) => s.storyTitles);
-  const fetchStoryTitles = useTitlesStore((s) => s.fetchStoryTitles);
-  const navigate = useNavigate();
   const numericId = parseInt(id ?? "0", 10);
+  const navigate = useNavigate();
+  const { titles: storyTitles } = useStoryTitles();
 
-  useEffect(() => {
-    if (!id) return;
+  const { story } = useStoryFetch<StoryDTO, number>({
+    key: numericId,
+    fetch: getStoryById,
+    fallback: (storyId) => getFallbackStoryById(storyId) ?? fallbackStories[0],
+    saveLastRead: (s) =>
+      saveLastRead({ type: "story", id: numericId, title: s.title }),
+  });
 
-    const timeout = setTimeout(() => {
-      const fallback = getFallbackStoryById(parseInt(id)) ?? fallbackStories[0];
-      setStory(fallback);
-    }, 5000);
-
-    const fetchStory = async () => {
-      try {
-        const storyData = await getStoryById(parseInt(id));
-        clearTimeout(timeout);
-        setStory(storyData);
-      } catch {
-        clearTimeout(timeout);
-        const fallback =
-          getFallbackStoryById(parseInt(id)) ?? fallbackStories[0];
-        setStory(fallback);
-      }
-    };
-
-    fetchStory();
-    return () => clearTimeout(timeout);
-  }, [id]);
-
-  useEffect(() => {
-    if (story) {
-      saveLastRead({ type: "story", id: numericId, title: story.title });
-    }
-  }, [story, numericId]);
-
-  useEffect(() => {
-    fetchStoryTitles();
-  }, [fetchStoryTitles]);
+  const { previous, next } = useMemo(
+    () => findAdjacent(storyTitles, numericId, (title) => title.id),
+    [storyTitles, numericId],
+  );
 
   if (!story) {
     return <GhostLoader />;
   }
-
-  const sortedTitles = [...storyTitles].sort((a, b) =>
-    a.title.localeCompare(b.title, "es"),
-  );
-  const currentIndex = sortedTitles.findIndex((title) => title.id === numericId);
-  const previousStory = currentIndex > 0 ? sortedTitles[currentIndex - 1] : null;
-  const nextStory =
-    currentIndex >= 0 && currentIndex < sortedTitles.length - 1
-      ? sortedTitles[currentIndex + 1]
-      : null;
 
   return (
     <StoryPageLayout
@@ -74,10 +42,10 @@ export const Story = () => {
       footer={
         <ReadingNavigation
           onBack={() => navigate("/")}
-          previousTitle={previousStory?.title}
-          nextTitle={nextStory?.title}
-          onPrevious={() => previousStory && navigate(`/story/${previousStory.id}`)}
-          onNext={() => nextStory && navigate(`/story/${nextStory.id}`)}
+          previousTitle={previous?.title}
+          nextTitle={next?.title}
+          onPrevious={() => previous && navigate(`/story/${previous.id}`)}
+          onNext={() => next && navigate(`/story/${next.id}`)}
         />
       }
     />

@@ -1,83 +1,40 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClassicStoryDTO } from "../types";
 import { getClassicStoryById } from "../services/ClassicStoryService";
-import { useNavigate, useParams } from "react-router-dom";
+import { getClassicStoryFallback } from "../data/classicFallbackStories";
+import { useClassicTitles } from "../hooks/useTitles";
+import { useStoryFetch } from "../hooks/useStoryFetch";
+import { findAdjacent } from "../utils/adjacent";
+import { saveLastRead } from "../utils/lastRead";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
-import useTitlesStore from "../store/useTitlesStore";
-import { saveLastRead } from "../utils/lastRead";
-import { getClassicStoryFallback } from "../data/classicFallback";
 
 export const ClassicStory = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [story, setStory] = useState<ClassicStoryDTO | null>(null);
-  const [isFallback, setIsFallback] = useState(false);
-  const classicTitles = useTitlesStore((s) => s.classicTitles);
-  const fetchClassicTitles = useTitlesStore((s) => s.fetchClassicTitles);
   const navigate = useNavigate();
+  const { titles: classicTitles } = useClassicTitles();
 
-  useEffect(() => {
-    if (!slug) return;
-
-    const timeout = setTimeout(() => {
-      const fallback = getClassicStoryFallback(slug);
-      if (fallback) {
-        setStory(fallback);
-        setIsFallback(true);
+  const { story, isFallback } = useStoryFetch<ClassicStoryDTO, string>({
+    key: slug ?? "",
+    fetch: getClassicStoryById,
+    fallback: getClassicStoryFallback,
+    saveLastRead: (s) => {
+      if (slug) {
+        saveLastRead({ type: "classic", slug, title: s.title });
       }
-    }, 5000);
+    },
+  });
 
-    const fetchStory = async () => {
-      try {
-        const storyData = await getClassicStoryById(slug);
-        clearTimeout(timeout);
-        if (storyData) {
-          setStory(storyData);
-        } else {
-          const fallback = getClassicStoryFallback(slug);
-          if (fallback) {
-            setStory(fallback);
-            setIsFallback(true);
-          }
-        }
-      } catch {
-        clearTimeout(timeout);
-        const fallback = getClassicStoryFallback(slug);
-        if (fallback) {
-          setStory(fallback);
-          setIsFallback(true);
-        }
-      }
-    };
-
-    fetchStory();
-    return () => clearTimeout(timeout);
-  }, [slug]);
-
-  useEffect(() => {
-    fetchClassicTitles();
-  }, [fetchClassicTitles]);
-
-  useEffect(() => {
-    if (story && slug) {
-      saveLastRead({ type: "classic", slug, title: story.title });
-    }
-  }, [story, slug]);
+  const { previous, next } = useMemo(
+    () => findAdjacent(classicTitles, slug, (title) => title.slug),
+    [classicTitles, slug],
+  );
 
   if (!story) {
     return <GhostLoader />;
   }
-
-  const sortedTitles = [...classicTitles].sort((a, b) =>
-    a.title.localeCompare(b.title, "es"),
-  );
-  const currentIndex = sortedTitles.findIndex((title) => title.slug === slug);
-  const previousClassic = currentIndex > 0 ? sortedTitles[currentIndex - 1] : null;
-  const nextClassic =
-    currentIndex >= 0 && currentIndex < sortedTitles.length - 1
-      ? sortedTitles[currentIndex + 1]
-      : null;
 
   return (
     <StoryPageLayout
@@ -139,10 +96,10 @@ export const ClassicStory = () => {
         <ReadingNavigation
           onBack={() => navigate("/")}
           entityLabel="clásico"
-          previousTitle={previousClassic?.title}
-          nextTitle={nextClassic?.title}
-          onPrevious={() => previousClassic && navigate(`/classic/${previousClassic.slug}`)}
-          onNext={() => nextClassic && navigate(`/classic/${nextClassic.slug}`)}
+          previousTitle={previous?.title}
+          nextTitle={next?.title}
+          onPrevious={() => previous && navigate(`/classic/${previous.slug}`)}
+          onNext={() => next && navigate(`/classic/${next.slug}`)}
         />
       }
     />

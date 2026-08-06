@@ -16,7 +16,6 @@ export const createStoryService = async (
     headers: getAuthHeaders(),
     withCredentials: true,
   });
-  console.log("id: " + response.data.id);
   return response.data.id!;
 };
 
@@ -37,7 +36,6 @@ export const uploadBodyService = async (
       withCredentials: true,
     }
   );
-  console.log("estoy en uploadBody: " + response.data);
   return response.data;
 };
 
@@ -55,7 +53,6 @@ export const uploadStoryWithBody = async (
   }; // body is initially empty
   try {
     const storyId = await createStoryService(storyData);
-    console.log("estoy en upload story with body");
     await uploadBodyService(file, storyId);
   } catch (error) {
     console.error("Error al crear la historia o cargar el cuerpo", error);

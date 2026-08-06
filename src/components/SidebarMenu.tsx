@@ -10,15 +10,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   FaBookDead,
   FaBookOpen,
-  FaChevronDown,
   FaGhost,
   FaHome,
   FaSearch,
   FaTimes,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import useTitlesStore from "../store/useTitlesStore";
+import { useClassicTitles, useStoryTitles } from "../hooks/useTitles";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import { getLastRead } from "../utils/lastRead";
+import SectionHeader from "./SidebarMenu/SectionHeader";
+import StoryListItem from "./SidebarMenu/StoryListItem";
+import ClassicListItem from "./SidebarMenu/ClassicListItem";
 
 const StorySkeleton: FC = () => (
   <li className="animate-pulse flex items-center gap-3 p-3">
@@ -27,32 +30,19 @@ const StorySkeleton: FC = () => (
   </li>
 );
 
-const Highlight: FC<{ text: string; query: string }> = ({ text, query }) => {
-  const normalizedQuery = query.trim().toLowerCase();
-  if (!normalizedQuery) return <>{text}</>;
-  const index = text.toLowerCase().indexOf(normalizedQuery);
-  if (index === -1) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, index)}
-      <mark className="bg-amber-400/30 text-amber-200 rounded px-0.5">
-        {text.slice(index, index + normalizedQuery.length)}
-      </mark>
-      {text.slice(index + normalizedQuery.length)}
-    </>
-  );
-};
-
 export const SidebarMenu: FC = () => {
-  const storyNames = useTitlesStore((s) => s.storyTitles);
-  const classicNames = useTitlesStore((s) => s.classicTitles);
-  const isStoriesLoading = useTitlesStore((s) => s.isStoriesLoading);
-  const isClassicsLoading = useTitlesStore((s) => s.isClassicsLoading);
-  const isFallback = useTitlesStore((s) => s.isStoriesFallback);
-  const isClassicFallback = useTitlesStore((s) => s.isClassicsFallback);
-  const fetchStoryTitles = useTitlesStore((s) => s.fetchStoryTitles);
-  const fetchClassicTitles = useTitlesStore((s) => s.fetchClassicTitles);
-  const refreshStoryTitles = useTitlesStore((s) => s.refreshStoryTitles);
+  const {
+    titles: storyNames,
+    isLoading: isStoriesLoading,
+    isFallback,
+    refresh: refreshStoryTitles,
+  } = useStoryTitles();
+  const {
+    titles: classicNames,
+    isLoading: isClassicsLoading,
+    isFallback: isClassicFallback,
+  } = useClassicTitles();
+
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [lastRead, setLastRead] = useState(() => getLastRead());
@@ -65,6 +55,8 @@ export const SidebarMenu: FC = () => {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useFocusTrap(panelRef, isOpen);
 
   const closeMenu = useCallback(() => {
     setIsOpen(false);
@@ -84,17 +76,10 @@ export const SidebarMenu: FC = () => {
     };
 
     window.addEventListener("stories-updated", handleStoriesUpdated);
-
-    fetchStoryTitles();
-
     return () => {
       window.removeEventListener("stories-updated", handleStoriesUpdated);
     };
-  }, [fetchStoryTitles, refreshStoryTitles]);
-
-  useEffect(() => {
-    fetchClassicTitles();
-  }, [fetchClassicTitles]);
+  }, [refreshStoryTitles]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -124,52 +109,6 @@ export const SidebarMenu: FC = () => {
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, [toggleMenu]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const panel = panelRef.current;
-    if (!panel) return;
-    const focusables = panel.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    if (focusables.length === 0) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-        return;
-      }
-      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-      const items = Array.from(
-        panel.querySelectorAll<HTMLButtonElement>("[data-nav-item]"),
-      );
-      if (items.length === 0) return;
-      e.preventDefault();
-      const currentIndex = items.indexOf(
-        document.activeElement as HTMLButtonElement,
-      );
-      if (currentIndex === -1) {
-        items[e.key === "ArrowDown" ? 0 : items.length - 1].focus();
-        return;
-      }
-      const delta = e.key === "ArrowDown" ? 1 : -1;
-      const nextIndex = (currentIndex + delta + items.length) % items.length;
-      items[nextIndex].focus();
-    };
-
-    panel.addEventListener("keydown", handleKeyDown);
-    return () => panel.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -352,30 +291,15 @@ export const SidebarMenu: FC = () => {
 
               <div className="flex-1 overflow-y-auto px-4 pb-10 pt-3">
                 <section aria-labelledby="my-stories-heading" className="mb-6">
-                  <h2 id="my-stories-heading" className="sr-only">
-                    Mis Historias
-                  </h2>
-                  <button
-                    type="button"
-                    onClick={() => toggleSection("stories")}
-                    aria-expanded={storiesOpen}
-                    aria-controls="stories-list"
-                    className="sticky top-0 bg-gray-900 z-10 w-full flex items-center justify-between gap-2 py-2 text-left"
-                  >
-                    <span className="flex items-center gap-2 text-amber-400 font-creepster text-xl">
-                      <FaGhost size={16} className="text-purple-400" />
-                      Mis Historias
-                    </span>
-                    <span className="flex items-center gap-2 text-xs text-gray-400">
-                      {filteredStories.length}
-                      <motion.span
-                        animate={{ rotate: storiesOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <FaChevronDown size={14} className="text-amber-400" />
-                      </motion.span>
-                    </span>
-                  </button>
+                  <SectionHeader
+                    headingId="my-stories-heading"
+                    listId="stories-list"
+                    label="Mis Historias"
+                    icon={FaGhost}
+                    count={filteredStories.length}
+                    open={storiesOpen}
+                    onToggle={() => toggleSection("stories")}
+                  />
 
                   <AnimatePresence initial={false}>
                     {storiesOpen && (
@@ -408,31 +332,13 @@ export const SidebarMenu: FC = () => {
                         ) : (
                           <ul className="divide-y divide-gray-700/60">
                             {filteredStories.map((name) => (
-                              <li key={name.id}>
-                                <button
-                                  data-nav-item
-                                  onClick={() => handleStoryClick(name.id)}
-                                  aria-current={
-                                    isStoryActive(name.id) ? "page" : undefined
-                                  }
-                                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
-                                    isStoryActive(name.id)
-                                      ? "bg-custom-purple text-amber-300"
-                                      : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
-                                  }`}
-                                >
-                                  <FaGhost
-                                    size={14}
-                                    className="text-purple-400 shrink-0"
-                                  />
-                                  <span className="truncate">
-                                    <Highlight
-                                      text={name.title}
-                                      query={query}
-                                    />
-                                  </span>
-                                </button>
-                              </li>
+                              <StoryListItem
+                                key={name.id}
+                                title={name.title}
+                                active={isStoryActive(name.id)}
+                                onClick={() => handleStoryClick(name.id)}
+                                query={query}
+                              />
                             ))}
                           </ul>
                         )}
@@ -442,30 +348,15 @@ export const SidebarMenu: FC = () => {
                 </section>
 
                 <section aria-labelledby="classics-heading">
-                  <h2 id="classics-heading" className="sr-only">
-                    Clásicos del Terror
-                  </h2>
-                  <button
-                    type="button"
-                    onClick={() => toggleSection("classics")}
-                    aria-expanded={classicsOpen}
-                    aria-controls="classics-list"
-                    className="sticky top-0 bg-gray-900 z-10 w-full flex items-center justify-between gap-2 py-2 text-left"
-                  >
-                    <span className="flex items-center gap-2 text-amber-400 font-creepster text-xl">
-                      <FaBookDead size={16} className="text-purple-400" />
-                      Clásicos del Terror
-                    </span>
-                    <span className="flex items-center gap-2 text-xs text-gray-400">
-                      {filteredClassics.length}
-                      <motion.span
-                        animate={{ rotate: classicsOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <FaChevronDown size={14} className="text-amber-400" />
-                      </motion.span>
-                    </span>
-                  </button>
+                  <SectionHeader
+                    headingId="classics-heading"
+                    listId="classics-list"
+                    label="Clásicos del Terror"
+                    icon={FaBookDead}
+                    count={filteredClassics.length}
+                    open={classicsOpen}
+                    onToggle={() => toggleSection("classics")}
+                  />
 
                   <AnimatePresence initial={false}>
                     {classicsOpen && (
@@ -498,41 +389,14 @@ export const SidebarMenu: FC = () => {
                         ) : (
                           <ul className="divide-y divide-gray-700/60">
                             {filteredClassics.map((name) => (
-                              <li key={name.slug}>
-                                <button
-                                  data-nav-item
-                                  onClick={() => handleClassicClick(name.slug)}
-                                  aria-current={
-                                    isClassicActive(name.slug)
-                                      ? "page"
-                                      : undefined
-                                  }
-                                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
-                                    isClassicActive(name.slug)
-                                      ? "bg-custom-purple text-amber-300"
-                                      : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
-                                  }`}
-                                >
-                                  <FaBookDead
-                                    size={14}
-                                    className="text-purple-400 shrink-0"
-                                  />
-                                  <span className="min-w-0">
-                                    <span className="block truncate">
-                                      <Highlight
-                                        text={name.title}
-                                        query={query}
-                                      />
-                                    </span>
-                                    <span className="block text-xs text-gray-400 italic truncate">
-                                      <Highlight
-                                        text={name.author}
-                                        query={query}
-                                      />
-                                    </span>
-                                  </span>
-                                </button>
-                              </li>
+                              <ClassicListItem
+                                key={name.slug}
+                                title={name.title}
+                                author={name.author}
+                                active={isClassicActive(name.slug)}
+                                onClick={() => handleClassicClick(name.slug)}
+                                query={query}
+                              />
                             ))}
                           </ul>
                         )}
