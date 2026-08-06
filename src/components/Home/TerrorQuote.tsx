@@ -8,20 +8,20 @@ interface Quote {
 
 const QUOTES: Quote[] = [
   {
-    text: "El miedo es el don del que nadie quiere hablar. Es el silencio que te sigue cuando estás solo.",
-    author: "La bruja del bosque",
+    text: "El miedo más antiguo y más fuerte es el miedo a lo desconocido.",
+    author: "H. P. Lovecraft",
   },
   {
-    text: "En la oscuridad, cada sombra esconde una historia que prefiere no ser contada.",
-    author: "El cuervo",
+    text: "¡Es verdad! Soy muy nervioso, espantosamente nervioso.",
+    author: "Edgar Allan Poe, «El corazón delator»",
   },
   {
-    text: "No tengas miedo de lo que ves en la noche; ten miedo de lo que la noche ve en ti.",
-    author: "La luna llena",
+    text: "En su morada de R'lyeh, el cuervo Cthulhu aguarda soñando.",
+    author: "H. P. Lovecraft, invocación cthulhiana",
   },
   {
-    text: "Los ecos que escuchas no vienen del bosque. Vienen de lo que dejaste enterrado.",
-    author: "El guardián de la cripta",
+    text: "En ese extraño nido de amor, Alicia pasó todo el otoño.",
+    author: "Horacio Quiroga, «El almohadón de pluma»",
   },
 ];
 

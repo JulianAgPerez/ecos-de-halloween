@@ -1,7 +1,14 @@
 import { FC } from "react";
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
-import { FaQuestion } from "react-icons/fa";
+import {
+  FaQuestion,
+  FaGhost,
+  FaSkull,
+  FaBookDead,
+  FaMoon,
+  FaDragon,
+} from "react-icons/fa";
 
 interface Trivia {
   fact: string;
@@ -11,19 +18,31 @@ interface Trivia {
 const TRIVIA: Trivia[] = [
   {
     icon: FaQuestion,
-    fact: "El origen del truco o trato se remonta al Samhain celta, cuando se dejaban ofrendas de comida a los espíritus.",
+    fact: "El origen del truco o trato se remonta al Samhain celta, cuando se derramaban ofrendas de comida para los espíritus.",
+  },
+  {
+    icon: FaSkull,
+    fact: "Edgar Allan Poe escribió 'The Raven' en 1845. La repetitiva 'Nevermore' se inspiró, según se cree, en el cuervo mascota del escritor Charles Dickens.",
+  },
+  {
+    icon: FaDragon,
+    fact: "H.P. Lovecraft creó los 'Mitos de Cthulhu' desde sus propias pesadillas, dando forma al terror cósmico: el miedo a lo incomprensible e infinito.",
+  },
+  {
+    icon: FaMoon,
+    fact: "Mary Shelley escribió 'Frankenstein' a los 18 años, en la famosa 'noche de tormentas' en la que Byron y Polidori se desafiaron a escribir relatos de miedo (1816).",
+  },
+  {
+    icon: FaBookDead,
+    fact: "Bram Stoker se inspiró para 'Drácula' en la figura histórica de Vlad el Empalador y en las leyendas de vampiros de los Balcanes.",
+  },
+  {
+    icon: FaGhost,
+    fact: "Horacio Quiroga, maestro del cuento rioplatense, escribió 'El almohadón de pluma', donde el horror habita en algo tan inofensivo como una almohada.",
   },
   {
     icon: FaQuestion,
-    fact: "La calabaza tallada tiene su origen en Irlanda, donde se usaban nabos antes de descubrir la calabaza.",
-  },
-  {
-    icon: FaQuestion,
-    fact: "El negro y el naranja son los colores de Halloween porque el naranja recuerda la cosecha y el negro la muerte.",
-  },
-  {
-    icon: FaQuestion,
-    fact: "En la Edad Media se creía que los gatos negros eran ayudantes de brujas, y por eso se los temía.",
+    fact: "En la Edad Media se temía a los imagos negros como criaturas que compartían vínculos con las brujas.",
   },
 ];
 
