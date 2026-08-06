@@ -1,5 +1,4 @@
 import { motion, useInView, useScroll } from "framer-motion";
-import { useEffect } from "react";
 
 const ScrollingCircle = ({
   refProp,
@@ -11,10 +10,6 @@ const ScrollingCircle = ({
     offset: ["start start", "end end"],
   });
   const isInView = useInView(refProp, { root: refProp, amount: 0.5 });
-
-  useEffect(() => {
-    console.log("Element is in view: ", isInView);
-  }, [isInView]);
 
   return (
     <div ref={refProp}>
