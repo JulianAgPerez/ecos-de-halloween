@@ -92,17 +92,53 @@ body {
   background-size: cover; /* Ajusta la imagen para cubrir todo el div */
   background-repeat: no-repeat; 
   background-position: center; 
-  padding: 20px; 
-  border: 1px solid #c2b280; /* color similar al papel viejo */
-  border-radius: 8px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  color: #4a4a4a; 
+  padding: 24px 20px; 
+  border: 1px solid #b9a475; /* color similar al papel viejo */
+  border-radius: 10px; 
+  box-shadow: 
+    inset 0 0 50px rgba(74, 58, 30, 0.15), /* viñeta sutil, efecto desgastado */
+    0 10px 30px rgba(0, 0, 0, 0.35); /* sombra de profundidad */
+  color: #3f3a30; 
+  position: relative;
 }
 
 .note-background pre {
   white-space: pre-wrap; /* Permite ajustar el texto dentro del contenedor */
   word-wrap: break-word; /* Rompe palabras largas para ajustarse al contenedor */
-  font-family: 'Times New Roman', Times, serif; /* Fuente que parezca escrita a mano, borrar y usar default? */
-  line-height: 1.6; /* ajusta altura de lineas == mas espaciado entre lineas */
-  color: #4a4a4a;
+  font-family: 'Crimson Text', Georgia, serif; /* fuente serif legible para lectura larga */
+  line-height: 1.7; /* ajusta altura de lineas == mas espaciado entre lineas */
+  color: #3f3a30;
+}
+
+/* Titulo con parpadeo (flicker) estilo Halloween */
+.halloween-flicker {
+  color: #fde68a;
+  animation: halloween-flicker 5s ease-in-out infinite;
+}
+
+@keyframes halloween-flicker {
+  0%, 100% {
+    text-shadow:
+      0 0 8px rgba(251, 191, 36, 0.7),
+      0 0 24px rgba(251, 191, 36, 0.4),
+      0 0 48px rgba(168, 85, 247, 0.35);
+  }
+  25% {
+    text-shadow:
+      0 0 5px rgba(251, 191, 36, 0.5),
+      0 0 14px rgba(251, 191, 36, 0.3),
+      0 0 32px rgba(168, 85, 247, 0.25);
+  }
+  50% {
+    text-shadow:
+      0 0 12px rgba(251, 191, 36, 0.9),
+      0 0 40px rgba(251, 191, 36, 0.55),
+      0 0 72px rgba(168, 85, 247, 0.45);
+  }
+  75% {
+    text-shadow:
+      0 0 6px rgba(251, 191, 36, 0.6),
+      0 0 18px rgba(251, 191, 36, 0.35),
+      0 0 40px rgba(168, 85, 247, 0.3);
+  }
 }

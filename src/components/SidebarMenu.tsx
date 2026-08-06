@@ -9,6 +9,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FaBookDead,
+  FaBookOpen,
   FaChevronDown,
   FaGhost,
   FaHome,
@@ -17,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import useTitlesStore from "../store/useTitlesStore";
+import { getLastRead } from "../utils/lastRead";
 
 const StorySkeleton: FC = () => (
   <li className="animate-pulse flex items-center gap-3 p-3">
@@ -53,6 +55,7 @@ export const SidebarMenu: FC = () => {
   const refreshStoryTitles = useTitlesStore((s) => s.refreshStoryTitles);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [lastRead, setLastRead] = useState(() => getLastRead());
   const [openSections, setOpenSections] = useState<{
     stories: boolean;
     classics: boolean;
@@ -191,6 +194,22 @@ export const SidebarMenu: FC = () => {
     closeMenu();
   };
 
+  const handleLastReadClick = () => {
+    if (!lastRead) return;
+    if (lastRead.type === "classic" && lastRead.slug) {
+      navigate(`/classic/${lastRead.slug}`);
+    } else if (lastRead.type === "story" && lastRead.id !== undefined) {
+      navigate(`/story/${lastRead.id}`);
+    }
+    closeMenu();
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      setLastRead(getLastRead());
+    }
+  }, [isOpen]);
+
   const isStoryActive = (id: number) => location.pathname === `/story/${id}`;
   const isClassicActive = (slug: string) =>
     location.pathname === `/classic/${slug}`;
@@ -304,6 +323,25 @@ export const SidebarMenu: FC = () => {
                   <FaHome size={18} className="text-purple-400" />
                   Home
                 </button>
+
+                {lastRead && (
+                  <button
+                    data-nav-item
+                    onClick={handleLastReadClick}
+                    aria-label={`Continuar leyendo ${lastRead.title}`}
+                    className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border border-purple-800/40 text-amber-300 hover:bg-custom-purple hover:text-amber-200"
+                  >
+                    <FaBookOpen size={18} className="text-purple-400" />
+                    <span className="min-w-0 text-left">
+                      <span className="block text-sm">
+                        Continuar leyendo
+                      </span>
+                      <span className="block text-xs text-gray-400 italic truncate">
+                        {lastRead.title}
+                      </span>
+                    </span>
+                  </button>
+                )}
               </div>
 
               <div className="flex-1 overflow-y-auto px-4 pb-10 pt-3">

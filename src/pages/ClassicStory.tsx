@@ -6,6 +6,7 @@ import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
 import useTitlesStore from "../store/useTitlesStore";
+import { saveLastRead } from "../utils/lastRead";
 import { getClassicStoryFallback } from "../data/classicFallback";
 
 export const ClassicStory = () => {
@@ -58,6 +59,12 @@ export const ClassicStory = () => {
     fetchClassicTitles();
   }, [fetchClassicTitles]);
 
+  useEffect(() => {
+    if (story && slug) {
+      saveLastRead({ type: "classic", slug, title: story.title });
+    }
+  }, [story, slug]);
+
   if (!story) {
     return <GhostLoader />;
   }
@@ -78,12 +85,12 @@ export const ClassicStory = () => {
       backgroundClass="bg-home-principal"
       meta={
         <>
-          <p className="text-center text-gray-400 text-xl mt-2">
+          <p className="text-center text-gray-300 text-xl mt-2">
             {story.author}
             {story.year ? ` (${story.year})` : ""}
           </p>
           {story.translator && (
-            <p className="text-center text-gray-500 italic text-sm mt-1">
+            <p className="text-center text-gray-400 italic text-sm mt-1">
               Traducción de {story.translator}
             </p>
           )}

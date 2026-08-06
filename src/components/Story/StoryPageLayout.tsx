@@ -30,7 +30,7 @@ const StoryPageLayout: FC<StoryPageLayoutProps> = ({
       style={backgroundStyle}
     >
       <div className="mt-16 mb-8">
-        <h1 className="font-creepster text-gray-500 text-6xl md:text-9xl font-bold text-center z-20 relative">
+        <h1 className="font-creepster text-gray-200 text-6xl md:text-9xl font-bold text-center z-20 relative [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
           {title}
         </h1>
         {meta}

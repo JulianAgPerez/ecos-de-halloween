@@ -21,7 +21,7 @@ const Home = () => {
       <div className="relative h-screen overflow-hidden grid place-items-center">
         <motion.h1
           style={{ y: textY, opacity: textOpacity }}
-          className="font-creepster text-white text-6xl md:text-9xl font-bold text-center z-20 relative"
+          className="halloween-flicker font-creepster text-6xl md:text-9xl font-bold text-center z-20 relative"
         >
           Feliz Halloween
         </motion.h1>

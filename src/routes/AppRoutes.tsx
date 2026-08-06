@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UploadForm from "../pages/UploadForm";
+import NotFound from "../pages/NotFound";
 import PersistentLayout from "../components/PersistentLayaout";
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -30,6 +31,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/story/:id" element={<Story />} />
           <Route path="/classic/:slug" element={<ClassicStory />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
       <Footer />

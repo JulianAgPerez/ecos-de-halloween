@@ -6,6 +6,7 @@ import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
 import useTitlesStore from "../store/useTitlesStore";
+import { saveLastRead } from "../utils/lastRead";
 import { getFallbackStoryById, fallbackStories } from "../data/fallbackData";
 
 export const Story = () => {
@@ -40,6 +41,12 @@ export const Story = () => {
     fetchStory();
     return () => clearTimeout(timeout);
   }, [id]);
+
+  useEffect(() => {
+    if (story) {
+      saveLastRead({ type: "story", id: numericId, title: story.title });
+    }
+  }, [story, numericId]);
 
   useEffect(() => {
     fetchStoryTitles();
