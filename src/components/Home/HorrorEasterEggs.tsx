@@ -85,7 +85,7 @@ const HorrorEasterEggs: FC<HorrorEasterEggsProps> = ({ variant }) => {
       <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden" aria-hidden="true">
         {BATS.map((b, i) => (
           <span key={i} className="absolute" style={{ left: b.left, top: b.top }}>
-            <Bat size={b.size} delay={b.delay} dur={b.dur} />
+            <Bat size={b.s} delay={b.delay} dur={b.dur} />
           </span>
         ))}
       </div>
