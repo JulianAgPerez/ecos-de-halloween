@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaGhost } from "react-icons/fa";
 
@@ -11,7 +11,10 @@ interface TimeLeft {
 
 const getTarget = (): Date => {
   const now = new Date();
-  const year = now.getMonth() === 9 && now.getDate() > 31 ? now.getFullYear() + 1 : now.getFullYear();
+  // Si ya pasamos Halloween (1° de noviembre o después), apuntar al año próximo
+  const startOfNovember = new Date(now.getFullYear(), 10, 1);
+  const year =
+    now >= startOfNovember ? now.getFullYear() + 1 : now.getFullYear();
   return new Date(year, 9, 31, 0, 0, 0);
 };
 
@@ -40,8 +43,6 @@ const HalloweenCountdown: FC = () => {
     return () => window.clearInterval(id);
   }, []);
 
-  const totalDays = useMemo(() => timeLeft.days, [timeLeft]);
-
   return (
     <div className="mx-auto w-full max-w-4xl px-5 py-20 text-center">
       <motion.h3
@@ -55,9 +56,9 @@ const HalloweenCountdown: FC = () => {
         Hasta que la noche nos llame
       </motion.h3>
       <p className="mb-10 text-lg text-orange-200/80">
-        {totalDays === 0
+        {timeLeft.days === 0
           ? "¡Esta noche es Halloween!"
-          : `Faltan ${totalDays} ${totalDays === 1 ? "día" : "días"} para el 31 de octubre.`}
+          : `Faltan ${timeLeft.days} ${timeLeft.days === 1 ? "día" : "días"} para el 31 de octubre.`}
       </p>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
