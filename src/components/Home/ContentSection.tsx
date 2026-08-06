@@ -45,7 +45,14 @@ const ContentSection = () => {
       <h2 className="bg-texto-gif bg-clip-text text-transparent md:text-8xl text-5xl font-bold p-5">
         Más contenido
       </h2>
-      <section id="explicacion-halloween" className="text-gray-300">
+      <motion.section
+        id="explicacion-halloween"
+        className="text-gray-300"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <h3 className="mt-2 text-2xl text-white">
           ¿Por qué se celebra el Halloween?
         </h3>
@@ -76,7 +83,7 @@ const ContentSection = () => {
           profundamente ligados a las creencias sobre la vida, la muerte y el
           cambio de estaciones.
         </p>
-      </section>
+      </motion.section>
       <section id="explicacion-desarrollo" className="text-gray-300">
         <h3 className="mt-2 text-2xl text-white">
           ¿Por qué desarrollé esta web?
