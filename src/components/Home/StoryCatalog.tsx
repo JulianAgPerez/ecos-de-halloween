@@ -1,7 +1,6 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { IconType } from "react-icons";
 import {
   FaBookDead,
   FaGhost,
@@ -11,18 +10,9 @@ import {
 import useTitlesStore from "../../store/useTitlesStore";
 import { getStoryById } from "../../services/StoryService";
 import { StoryDTO } from "../../types";
+import SectionHeading from "./SectionHeading";
 
 const FEATURED_AMOUNT = 3;
-
-const SectionHeading: FC<{ icon: IconType; title: string }> = ({
-  icon: Icon,
-  title,
-}) => (
-  <h3 className="mb-6 flex items-center justify-center gap-3 font-creepster text-3xl md:text-4xl text-amber-400">
-    <Icon className="text-purple-400" />
-    {title}
-  </h3>
-);
 
 const StoryCatalog = () => {
   const navigate = useNavigate();
@@ -56,7 +46,7 @@ const StoryCatalog = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-16">
-      <SectionHeading icon={FaGhost} title="Historias destacadas" />
+      <SectionHeading icon={FaGhost}>Historias destacadas</SectionHeading>
 
       {featuredLoading ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -111,7 +101,7 @@ const StoryCatalog = () => {
             <FaBookOpen className="text-purple-500" />
             <div className="h-px flex-1 bg-purple-800/50" />
           </div>
-          <SectionHeading icon={FaBookDead} title="Clásicos del Terror" />
+          <SectionHeading icon={FaBookDead}>Clásicos del Terror</SectionHeading>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visibleClassics.map((classic, i) => (
               <motion.button

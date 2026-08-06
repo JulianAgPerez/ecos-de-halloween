@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaGhost } from "react-icons/fa";
+import SectionHeading from "./SectionHeading";
 
 interface TimeLeft {
   days: number;
@@ -45,16 +46,9 @@ const HalloweenCountdown: FC = () => {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-5 py-20 text-center">
-      <motion.h3
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.5 }}
-        className="mb-4 flex items-center justify-center gap-3 font-creepster text-4xl md:text-5xl text-amber-400"
-      >
-        <FaGhost />
+      <SectionHeading icon={FaGhost} size="lg" className="mb-4">
         Hasta que la noche nos llame
-      </motion.h3>
+      </SectionHeading>
       <p className="mb-10 text-lg text-orange-200/80">
         {timeLeft.days === 0
           ? "¡Esta noche es Halloween!"

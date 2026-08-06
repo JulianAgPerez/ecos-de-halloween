@@ -7,6 +7,7 @@ import {
   FaMoon,
   FaCompactDisc,
 } from "react-icons/fa";
+import SectionHeading from "./SectionHeading";
 
 interface Feature {
   icon: IconType;
@@ -43,15 +44,7 @@ const FEATURES: Feature[] = [
 
 const FeatureCards: FC = () => (
   <div className="mx-auto w-full max-w-6xl px-5 py-16">
-    <motion.h3
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.5 }}
-      transition={{ duration: 0.5 }}
-      className="mb-8 text-center font-creepster text-3xl md:text-4xl text-amber-400"
-    >
-      Una experiencia inmersiva
-    </motion.h3>
+    <SectionHeading className="mb-8">Una experiencia inmersiva</SectionHeading>
 
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {FEATURES.map((feature, i) => {
