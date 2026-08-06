@@ -8,7 +8,6 @@ import Footer from "../components/Footer";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UploadForm from "../pages/UploadForm";
-import VolumeButton from "../components/VolumeButton";
 import PersistentLayout from "../components/PersistentLayaout";
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -16,7 +15,6 @@ const AppRoutes: React.FC = () => {
   return (
     <Router>
       <SidebarMenu />
-      <VolumeButton />
       <Routes>
         <Route path="/" element={<PersistentLayout />}>
           <Route index element={<Home />} />
