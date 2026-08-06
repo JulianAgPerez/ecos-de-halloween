@@ -56,10 +56,6 @@ export const Story = () => {
     return <GhostLoader />;
   }
 
-  const backgroundStyle = story.backgroundImageUrl
-    ? { backgroundImage: `url(${story.backgroundImageUrl})` }
-    : {};
-
   const sortedTitles = [...storyTitles].sort((a, b) =>
     a.title.localeCompare(b.title, "es"),
   );
@@ -73,7 +69,7 @@ export const Story = () => {
   return (
     <StoryPageLayout
       title={story.title}
-      backgroundStyle={backgroundStyle}
+      backgroundImageUrl={story.backgroundImageUrl}
       body={story.body}
       footer={
         <ReadingNavigation
