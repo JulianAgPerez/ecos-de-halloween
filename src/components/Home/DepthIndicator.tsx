@@ -21,9 +21,11 @@ const DepthIndicator = () => {
   return (
     <div
       className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-4 md:flex"
-      aria-hidden="true"
     >
-      <div className="flex flex-col items-center gap-1 text-[10px] uppercase tracking-widest text-gray-500">
+      <div
+        aria-hidden="true"
+        className="flex flex-col items-center gap-1 text-[10px] uppercase tracking-widest text-gray-500"
+      >
         Profundidad
       </div>
       <div className="flex flex-col items-center gap-3">
@@ -32,7 +34,11 @@ const DepthIndicator = () => {
           const isActive = i === active;
           const isPast = i < active;
           return (
-            <div key={layer.key} className="flex flex-col items-center">
+            <div
+              key={layer.key}
+              aria-hidden="true"
+              className="flex flex-col items-center"
+            >
               {i > 0 && (
                 <div
                   className={`w-px h-4 transition-colors duration-500 ${
@@ -59,6 +65,9 @@ const DepthIndicator = () => {
             </div>
           );
         })}
+        <span aria-live="polite" className="sr-only">
+          Nivel actual: {LAYERS[active].label}
+        </span>
       </div>
     </div>
   );
