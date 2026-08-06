@@ -24,6 +24,7 @@ const FloatingEmbers = () => (
           width: e.size,
           height: e.size,
           animation: `ember-rise ${e.duration} linear ${e.delay} infinite`,
+          willChange: "transform",
         }}
       />
     ))}

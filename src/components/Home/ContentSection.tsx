@@ -61,7 +61,7 @@ const ContentSection = () => {
           <p className="mt-4 text-lg">
             Siempre he querido poder transmitir lo mejor posible las emociones
             que quiero causar en las historias que escribo, por lo cual siempre
-            quize una web en la cuál poder subir mis escritos y poder elegir
+            quise una web en la cuál poder subir mis escritos y poder elegir
             sonidos de ambiente, fondos, incluso la playlist que me arme para
             escribir inspirado, todo para aumentar lo máximo posible la
             inmersión con la historia.
