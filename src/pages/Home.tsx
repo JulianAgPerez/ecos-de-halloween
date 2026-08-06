@@ -12,6 +12,7 @@ import HalloweenCountdown from "../components/Home/HalloweenCountdown";
 import HalloweenTrivia from "../components/Home/HalloweenTrivia";
 import TerrorQuote from "../components/Home/TerrorQuote";
 import HorrorEasterEggs from "../components/Home/HorrorEasterEggs";
+import WitchJourney from "../components/Home/WitchJourney";
 import ParallaxBackground from "../components/ParallaxBackground";
 
 const HOME_BACKGROUND_URL =
@@ -34,6 +35,7 @@ const Home = () => {
     <div className="relative">
       <DepthIndicator />
       <DepthHeat />
+      <WitchJourney />
 
       {/* Escena 1 — Bosque (superficie) */}
       <div className="relative">
