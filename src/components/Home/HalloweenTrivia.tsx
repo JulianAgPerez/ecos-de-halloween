@@ -68,7 +68,7 @@ const HalloweenTrivia: FC = () => (
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="group relative flex items-start gap-4 rounded-2xl border border-purple-800/50 bg-black/25 p-6 transition hover:border-amber-400/50"
+            className="group glass-card relative flex items-start gap-4 p-6 transition hover:border-amber-400/50"
           >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-amber-400 transition group-hover:rotate-12">
               <Icon size={18} />

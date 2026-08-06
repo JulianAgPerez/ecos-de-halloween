@@ -63,7 +63,7 @@ const StoryCatalog = () => {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="flex flex-col animate-pulse rounded-2xl border border-purple-800/40 bg-black/25 p-6"
+              className="glass-card flex flex-col p-6 animate-pulse"
             >
               <div className="mb-3 h-8 w-8 rounded-full bg-purple-700/40" />
               <div className="h-6 w-3/4 rounded bg-purple-700/40" />
@@ -84,7 +84,7 @@ const StoryCatalog = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="group flex flex-col rounded-2xl border border-purple-800/50 bg-black/30 p-6 text-left shadow-lg backdrop-blur-sm transition hover:border-amber-400/60"
+            className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
           >
             <FaGhost className="mb-3 text-2xl text-purple-400" />
             <h4 className="text-xl font-bold text-white group-hover:text-amber-300">
@@ -123,7 +123,7 @@ const StoryCatalog = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group flex flex-col rounded-2xl border border-purple-800/60 bg-black/30 p-6 text-left shadow-lg backdrop-blur-sm transition hover:border-amber-400/60"
+                className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
               >
                 <FaBookDead className="mb-3 text-2xl text-purple-400" />
                 <h4 className="text-xl font-bold text-white group-hover:text-amber-300">

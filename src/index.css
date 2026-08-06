@@ -211,3 +211,12 @@ body {
       0 0 40px rgba(168, 85, 247, 0.3);
   }
 }
+
+/* Tarjeta de vidrio compartida por las secciones de Home */
+.glass-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 1rem;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
