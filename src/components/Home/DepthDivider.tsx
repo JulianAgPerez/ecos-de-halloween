@@ -20,20 +20,29 @@ const DIVIDER_PALETTES: Record<
 interface DepthDividerProps {
   variant?: "soil" | "rock" | "embers";
   flip?: boolean;
+  size?: "md" | "lg";
 }
 
-const DepthDivider = ({ variant = "soil", flip = false }: DepthDividerProps) => {
+const DepthDivider = ({
+  variant = "soil",
+  flip = false,
+  size = "md",
+}: DepthDividerProps) => {
   const { fill, stroke, glow } = DIVIDER_PALETTES[variant];
+  const svgClassName =
+    size === "lg" ? "block h-14 w-full md:h-20" : "block h-10 w-full md:h-14";
+  const marginClassName =
+    size === "lg" ? "-mt-14 md:-mt-20" : "-mt-10 md:-mt-14";
   return (
     <div
-      className="relative z-20 -mt-10 md:-mt-14"
+      className={`relative z-20 ${marginClassName}`}
       aria-hidden="true"
       style={{ transform: flip ? "scaleY(-1)" : undefined }}
     >
       <svg
         viewBox="0 0 1440 96"
         preserveAspectRatio="none"
-        className="block h-10 w-full md:h-14"
+        className={svgClassName}
       >
         <path
           d="M1440,8 L1280,56 L1120,8 L960,56 L800,8 L640,56 L480,8 L320,56 L160,8 L0,56 L0,96 L1440,96 Z"

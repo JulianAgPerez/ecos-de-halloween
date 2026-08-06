@@ -19,7 +19,7 @@ const ContinueReading: FC = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-5 py-12">
+    <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-16">
       <motion.button
         onClick={goTo}
         whileHover={{ scale: 1.02 }}

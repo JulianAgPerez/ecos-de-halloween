@@ -60,7 +60,7 @@ const Home = () => {
       </section>
 
       {/* Transición: descendemos a las cuevas */}
-      <DepthDivider variant="rock" />
+      <DepthDivider variant="rock" size="lg" />
 
       {/* Escena 3 — Cuevas (profundidad) */}
       <section className="relative bg-[#141126]">
