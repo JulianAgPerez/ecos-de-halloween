@@ -48,7 +48,6 @@ const Home = () => {
           }
           textSpeed={700}
         />
-        <HorrorEasterEggs variant="forest" />
       </div>
 
       {/* Transición: entramos al suelo */}
@@ -67,7 +66,7 @@ const Home = () => {
       {/* Escena 3 — Cuevas (profundidad) */}
       <section className="relative bg-[#141126]">
         <CaveDecor />
-        <HorrorEasterEggs variant="caves" />
+        <HorrorEasterEggs />
         <FeatureCards />
         <HalloweenTrivia />
       </section>
@@ -78,7 +77,6 @@ const Home = () => {
       {/* Escena 4 — Inframundo (el final) */}
       <section className="underworld relative overflow-hidden">
         <FloatingEmbers />
-        <HorrorEasterEggs variant="underworld" />
         <HalloweenCountdown />
         <TerrorQuote />
       </section>
