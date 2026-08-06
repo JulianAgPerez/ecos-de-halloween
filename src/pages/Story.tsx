@@ -18,6 +18,10 @@ export const Story = () => {
   const numericId = parseInt(id ?? "0", 10);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [id]);
+
+  useEffect(() => {
     if (!id) return;
 
     const timeout = setTimeout(() => {
