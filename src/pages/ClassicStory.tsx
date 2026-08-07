@@ -1,13 +1,19 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ClassicStoryDTO, ClassicStoryTitleDTO } from "../types";
 import { getClassicStoryById } from "../services/ClassicStoryService";
-import { getClassicStoryFallback } from "../data/classicFallbackStories";
 import { useClassicTitles } from "../hooks/useTitles";
 import { useStoryReader } from "../hooks/useStoryReader";
 import { saveLastRead } from "../utils/lastRead";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
+
+const fallbackClassic = async (slug: string): Promise<ClassicStoryDTO | null> => {
+  const { getClassicStoryFallback } = await import(
+    "../data/classicFallbackStories"
+  );
+  return getClassicStoryFallback(slug);
+};
 
 export const ClassicStory = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -17,7 +23,7 @@ export const ClassicStory = () => {
     useStoryReader<ClassicStoryDTO, ClassicStoryTitleDTO>({
       keyParam: slug,
       fetch: (key) => getClassicStoryById(key),
-      fallback: getClassicStoryFallback,
+      fallback: fallbackClassic,
       useTitles: useClassicTitles,
       getTitleKey: (title) => title.slug,
       basePath: "/classic",
