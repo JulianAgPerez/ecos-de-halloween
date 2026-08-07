@@ -9,11 +9,11 @@ const LostTravelerScene: FC = () => {
   return (
     <div
       aria-hidden="true"
-      className="relative mx-auto mt-2 h-56 w-full max-w-xl overflow-hidden rounded-xl border border-purple-900/40 bg-gradient-to-b from-[#0d0a1e] via-[#141126] to-black"
+      className="relative mx-auto mt-2 h-56 w-full max-w-xl overflow-hidden rounded-xl border border-purple-900/40 bg-gradient-to-b from-[#0c091c] via-[#141126] to-black"
     >
-      <div className="absolute right-7 top-4 h-14 w-14 rounded-full bg-amber-100/10 blur-md" />
+      <div className="absolute right-8 top-4 h-14 w-14 rounded-full bg-amber-100/10 blur-md" />
       <motion.div
-        className="absolute right-9 top-6 h-8 w-8 rounded-full bg-amber-100/90"
+        className="absolute right-10 top-6 h-8 w-8 rounded-full bg-amber-100/90"
         animate={reduce ? {} : { opacity: [0.7, 1, 0.7] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -23,62 +23,68 @@ const LostTravelerScene: FC = () => {
         viewBox="0 0 400 240"
         preserveAspectRatio="xMidYMid slice"
       >
-        <path d="M40 240 L105 95 L170 240 Z" fill="#0b0817" />
-        <path d="M52 240 L105 130 L158 240 Z" fill="#151030" />
-        <path d="M185 240 L268 55 L350 240 Z" fill="#0d0a1d" />
-        <path d="M205 240 L268 110 L330 240 Z" fill="#191436" />
-        <path d="M300 240 L348 130 L396 240 Z" fill="#0b0817" />
+        <path d="M40 240 L100 90 L160 240 Z" fill="#151030" />
+        <path d="M55 240 L100 120 L145 240 Z" fill="#0b0817" />
+        <path d="M180 240 L250 55 L320 240 Z" fill="#0d0a1f" />
+        <path d="M205 240 L250 105 L295 240 Z" fill="#1a1536" />
+        <path d="M250 240 L330 95 L410 240 Z" fill="#110f28" />
       </svg>
 
-      <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black to-transparent" />
-
       <motion.div
-        className="absolute bottom-7 left-1/2 -translate-x-1/2"
-        animate={reduce ? {} : { rotate: [-1.5, 1.5, -1.5] }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
+        className="absolute bottom-6 left-1/2 h-24 w-64 -translate-x-1/2"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(251,191,36,0.28), rgba(251,191,36,0.05) 45%, transparent 75%)",
         }}
-      >
-        <motion.div
-          className="absolute bottom-2 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(251,191,36,0.55), transparent 70%)",
-          }}
-          animate={reduce ? {} : { opacity: [0.55, 1, 0.55], scale: [1, 1.12, 1] }}
-          transition={{
-            duration: 1.7,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <svg width="72" height="100" viewBox="0 0 60 90">
-          <path
-            d="M30 12 a10 10 0 1 0 0.001 0 Z"
-            fill="#05040c"
-          />
-          <path
-            d="M16 22 C16 34 10 44 10 62 L10 90 L50 90 L50 62 C50 44 44 34 44 22 C44 30 40 34 30 34 C20 34 16 30 16 22 Z"
-            fill="#05040c"
-          />
-          <path d="M16 34 L2 12 L2 2" stroke="#05040c" strokeWidth="6" strokeLinecap="round" fill="none" />
-          <rect x="0" y="0" width="10" height="14" rx="2" fill="#fbbf24" />
-          <rect x="2" y="2" width="6" height="10" rx="1" fill="#fef3c7" />
-        </svg>
-      </motion.div>
+        animate={reduce ? {} : { opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <motion.div
-        className="absolute bottom-9 left-0 h-6 w-full bg-purple-100/5 blur-lg"
-        animate={reduce ? {} : { x: [-28, 28, -28] }}
+        className="absolute bottom-10 left-0 h-6 w-full bg-purple-100/5 blur-lg"
+        animate={reduce ? {} : { x: [-26, 26, -26] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-3 left-0 h-4 w-3/4 bg-purple-100/5 blur-md"
+        className="absolute bottom-4 left-0 h-4 w-3/4 bg-purple-100/5 blur-md"
         animate={reduce ? {} : { x: [24, -24, 24] }}
         transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
       />
+
+      <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black to-transparent" />
+
+      <motion.div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2"
+        animate={reduce ? {} : { opacity: [0.95, 1, 0.95] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <motion.div
+          className="absolute -top-4 right-4 h-16 w-16 rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(251,191,36,0.6), transparent 70%)",
+          }}
+          animate={reduce ? {} : { opacity: [0.6, 1, 0.6], scale: [1, 1.1, 1] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <svg viewBox="0 0 120 100" className="h-28 w-32">
+          <circle cx="60" cy="34" r="20" fill="#07040d" />
+          <path
+            d="M60 52 C78 54 92 64 95 88 L95 100 L25 100 L25 88 C28 64 42 54 60 52 Z"
+            fill="#07040d"
+          />
+          <path
+            d="M95 64 L110 70 L116 56"
+            stroke="#07040d"
+            strokeWidth="10"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <rect x="108" y="44" width="12" height="16" rx="2" fill="#fbbf24" />
+          <rect x="111" y="47" width="6" height="10" rx="1" fill="#fef3c7" />
+          <rect x="113" y="40" width="2" height="5" fill="#07040d" />
+        </svg>
+      </motion.div>
     </div>
   );
 };
