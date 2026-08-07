@@ -1,8 +1,6 @@
-import axios from "axios";
 import { StoryDTO } from "../types";
 import useAuthStore from "../store/useAuthStore";
-
-export const url = import.meta.env.VITE_API_URL;
+import { api } from "./api";
 
 const getAuthHeaders = (): Record<string, string> => {
   const token = useAuthStore.getState().token;
@@ -12,7 +10,7 @@ const getAuthHeaders = (): Record<string, string> => {
 export const createStoryService = async (
   storyData: Omit<StoryDTO, "id">
 ): Promise<number> => {
-  const response = await axios.post<StoryDTO>(`${url}/api/stories`, storyData, {
+  const response = await api.post<StoryDTO>("/api/stories", storyData, {
     headers: getAuthHeaders(),
     withCredentials: true,
   });
@@ -25,8 +23,8 @@ export const uploadBodyService = async (
 ): Promise<string> => {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await axios.post<string>(
-    `${url}/api/stories/upload-body/${storyId}`,
+  const response = await api.post<string>(
+    `/api/stories/upload-body/${storyId}`,
     formData,
     {
       headers: {
@@ -50,7 +48,7 @@ export const uploadStoryWithBody = async (
     description,
     backgroundImageUrl,
     body: "",
-  }; // body is initially empty
+  };
   try {
     const storyId = await createStoryService(storyData);
     await uploadBodyService(file, storyId);
