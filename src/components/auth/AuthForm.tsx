@@ -62,9 +62,9 @@ const AuthForm: FC<AuthFormProps> = ({
     <div className="relative min-h-screen flex items-center justify-center p-4">
       <AnimatedBackground />
       <div className="relative z-10 w-full max-w-md bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8">
-        <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
+        <h1 className="font-creepster text-4xl text-amber-400 text-center mb-6">
           {title}
-        </h2>
+        </h1>
         {error && <p className="text-red-400 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           {showUsername && (

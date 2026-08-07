@@ -31,6 +31,7 @@ const DepthHeat: FC = () => {
 const Home = () => {
   return (
     <div className="relative">
+      <h1 className="sr-only">Ecos de Halloween</h1>
       <DepthIndicator />
       <DepthHeat />
       <WitchJourney />

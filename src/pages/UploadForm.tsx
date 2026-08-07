@@ -93,9 +93,9 @@ const UploadForm: FC = () => {
         onSubmit={handleSubmit}
         className="relative z-10 w-full max-w-lg bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8"
       >
-        <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
+        <h1 className="font-creepster text-4xl text-amber-400 text-center mb-6">
           Subir Cuento
-        </h2>
+        </h1>
         {error && <p className="text-red-400 text-center mb-4">{error}</p>}
         {success && (
           <p className="text-green-400 text-center mb-4">
