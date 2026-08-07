@@ -16,10 +16,15 @@ interface AuthResponse {
   refreshToken: string;
 }
 
+interface RawAuthResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
 export const registerUser = async (
   registerData: RegisterData,
 ): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/register`, registerData, {
+  const response = await axios.post<RawAuthResponse>(`${API_URL}/register`, registerData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -32,7 +37,7 @@ export const registerUser = async (
 };
 
 export const loginUser = async (loginData: LoginData): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/login`, loginData, {
+  const response = await axios.post<RawAuthResponse>(`${API_URL}/login`, loginData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -44,8 +49,8 @@ export const loginUser = async (loginData: LoginData): Promise<AuthResponse> => 
   };
 };
 
-export const refreshToken = async (token: string) => {
-  const response = await axios.post(
+export const refreshToken = async (token: string): Promise<RawAuthResponse> => {
+  const response = await axios.post<RawAuthResponse>(
     `${API_URL}/refresh`,
     {},
     {

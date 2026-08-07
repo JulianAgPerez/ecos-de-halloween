@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { uploadStoryWithBody } from "../services/UploadFileService";
 import AnimatedBackground from "../components/AnimatedBackground";
 
@@ -22,7 +22,7 @@ declare global {
   }
 }
 
-const UploadForm: React.FC = () => {
+const UploadForm: FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -31,7 +31,7 @@ const UploadForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFile(event.target.files[0]);
     }
@@ -60,7 +60,7 @@ const UploadForm: React.FC = () => {
     cloudinaryWidget.open();
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
     setSuccess(false);

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import { FC, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
@@ -14,7 +14,7 @@ const Register = lazy(() => import("../pages/Register"));
 const UploadForm = lazy(() => import("../pages/UploadForm"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
-const AppRoutes: React.FC = () => {
+const AppRoutes: FC = () => {
   return (
     <Router>
       <SidebarMenu />

@@ -1,9 +1,10 @@
+import { type RefObject } from "react";
 import { motion, useInView, useScroll } from "framer-motion";
 
 const ScrollingCircle = ({
   refProp,
 }: {
-  refProp: React.RefObject<HTMLDivElement>;
+  refProp: RefObject<HTMLDivElement>;
 }) => {
   const { scrollYProgress } = useScroll({
     target: refProp,

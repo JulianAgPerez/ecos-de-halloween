@@ -14,9 +14,7 @@ import TerrorQuote from "../components/Home/TerrorQuote";
 import HorrorEasterEggs from "../components/Home/HorrorEasterEggs";
 import WitchJourney from "../components/Home/WitchJourney";
 import ParallaxBackground from "../components/ParallaxBackground";
-
-const HOME_BACKGROUND_URL =
-  "https://res.cloudinary.com/diauphrb6/image/upload/v1729461842/ecos%20de%20halloween/fondo-halloween-bosque-embrujado_uummki.jpg";
+import { HOME_BACKGROUND_URL } from "../config";
 
 const DepthHeat: FC = () => {
   const { scrollYProgress } = useScroll();

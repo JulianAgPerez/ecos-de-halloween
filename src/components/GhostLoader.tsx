@@ -1,6 +1,6 @@
-import React from "react";
+import { FC } from "react";
 
-const GhostLoader: React.FC = () => {
+const GhostLoader: FC = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-custom-purple">
       <div className="ghost-loader">
