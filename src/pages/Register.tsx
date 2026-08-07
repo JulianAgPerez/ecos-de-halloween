@@ -1,116 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthForm from "../components/auth/AuthForm";
 import { registerUser } from "../services/AuthService";
-import GhostLoader from "../components/GhostLoader";
 import useAuthStore from "../store/useAuthStore";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import AnimatedBackground from "../components/AnimatedBackground";
 
-const Register: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState(""); // Estado para el nombre de usuario
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const Register = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { token } = await registerUser({ email, username, password });
-      login(username, token);
-      navigate("/");
-    } catch {
-      console.error("Error al registrarse. Verifica tus credenciales.");
-      setError("Error al registrarse. Verifica tus credenciales.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) return <GhostLoader />;
-
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4">
-      <AnimatedBackground />
-      <div className="relative z-10 w-full max-w-md bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8">
-        <h2 className="font-creepster text-4xl text-amber-400 text-center mb-6">
-          Registrarse
-        </h2>
-        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-300 mb-2" htmlFor="email">
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
-              placeholder="Introduce tu correo"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-300 mb-2" htmlFor="username">
-              Nombre de Usuario
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
-              placeholder="Introduce tu nombre de usuario"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-300 mb-2" htmlFor="password">
-              Contraseña
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-2 pr-10 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
-                placeholder="Introduce tu contraseña"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-amber-400"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-br from-purple-600 to-purple-900 text-amber-400 py-2 rounded hover:from-purple-700 hover:to-purple-800 transition duration-300"
-          >
-            Registrarse
-          </button>
-        </form>
-        <p className="text-center text-gray-400 mt-4">
+    <AuthForm
+      title="Registrarse"
+      submitLabel="Registrarse"
+      showUsername
+      onSubmit={async ({ email, username, password }) => {
+        const { token } = await registerUser({
+          email,
+          username: username ?? email,
+          password,
+        });
+        login(username ?? email, token);
+        navigate("/");
+      }}
+      errorMessage="Error al registrarse. Verifica tus credenciales."
+      footer={
+        <>
           ¿Ya tienes una cuenta?{" "}
           <Link to="/login" className="text-amber-400 hover:text-amber-300">
             Inicia sesión aquí
           </Link>
-        </p>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 };
 
