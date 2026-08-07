@@ -26,11 +26,6 @@ const STALAGMITES = [
   { left: "90%", w: 110, h: 180 },
 ];
 
-const COLUMNS = [
-  { left: "-2%", w: 90, h: 520 },
-  { left: "auto", right: "-2%", w: 110, h: 560 },
-];
-
 interface SpikeProps {
   left: string;
   w: number;
@@ -62,29 +57,6 @@ const Spike: FC<SpikeProps> = ({ left, w, h }) => (
   </svg>
 );
 
-const Column: FC<{ left?: string; right?: string; w: number; h: number }> = ({
-  left,
-  right,
-  w,
-  h,
-}) => (
-  <svg
-    viewBox="0 0 80 160"
-    preserveAspectRatio="none"
-    className="absolute top-0"
-    style={{
-      left,
-      right,
-      width: w,
-      height: h,
-      filter: "drop-shadow(0 6px 6px rgba(0,0,0,0.6))",
-    }}
-  >
-    <path d="M20,0 L60,0 L70,160 L10,160 Z" fill="#0d0b1c" opacity="0.95" />
-    <path d="M34,0 L46,0 L50,160 L30,160 Z" fill="#191531" opacity="0.5" />
-  </svg>
-);
-
 const CaveDecor = ({ density = "medium" }: CaveDecorProps) => {
   const stalactiteCount =
     density === "light" ? 5 : density === "heavy" ? STALACTITES.length : 8;
@@ -97,16 +69,6 @@ const CaveDecor = ({ density = "medium" }: CaveDecorProps) => {
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_40%,rgba(147,51,234,0.16),transparent_70%)]" />
-
-      {COLUMNS.map((c, i) => (
-        <Column
-          key={`col-${i}`}
-          left={c.left}
-          right={c.right}
-          w={c.w}
-          h={c.h}
-        />
-      ))}
 
       {STALACTITES.slice(0, stalactiteCount).map((s, i) => (
         <Spike key={`t-${i}`} left={s.left} w={s.w} h={s.h} />
