@@ -2,16 +2,6 @@ import { FC } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import witchGif from "../../assets/images/witch-gif.gif";
 
-type WitchMode = "fixed" | "anchored" | "hybrid";
-
-// Cambiar el valor de retorno para probar los 3 modos de viaje de la bruja:
-// - "fixed":    compañera fija que cruza el centro del viewport con el scroll.
-// - "anchored": vive en la página y desciende por las escenas con el scroll.
-// - "hybrid":   anclada a la página + al arrastrarla se despega y vuelve a la ruta.
-function getWitchMode(): WitchMode {
-  return "hybrid";
-}
-
 const WITCH_SIZE = 64;
 
 const DraggableWitch: FC<{ snapBack: boolean }> = ({ snapBack }) => (
@@ -32,15 +22,6 @@ const DraggableWitch: FC<{ snapBack: boolean }> = ({ snapBack }) => (
 const WitchJourney: FC = () => {
   const { scrollYProgress } = useScroll();
 
-  const fixedX = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    ["-38vw", "0vw", "28vw"],
-  );
-  const fixedY = useTransform(scrollYProgress, [0, 1], ["0vh", "58vh"]);
-  const fixedOpacity = useTransform(scrollYProgress, [0.88, 1], [1, 0]);
-  const fixedScale = useTransform(scrollYProgress, [0, 0.6], [0.8, 1.15]);
-
   const anchoredY = useTransform(
     scrollYProgress,
     [0.08, 0.95],
@@ -53,25 +34,6 @@ const WitchJourney: FC = () => {
   );
   const anchoredOpacity = useTransform(scrollYProgress, [0.9, 1], [1, 0]);
 
-  if (getWitchMode() === "fixed") {
-    return (
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none fixed left-1/2 top-[16%] z-40"
-        style={{
-          x: fixedX,
-          y: fixedY,
-          opacity: fixedOpacity,
-          scale: fixedScale,
-        }}
-      >
-        <div className="pointer-events-auto">
-          <DraggableWitch snapBack />
-        </div>
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div
       aria-hidden="true"
@@ -79,7 +41,7 @@ const WitchJourney: FC = () => {
       style={{ x: anchoredX, y: anchoredY, opacity: anchoredOpacity }}
     >
       <div className="pointer-events-auto">
-        <DraggableWitch snapBack={getWitchMode() === "hybrid"} />
+        <DraggableWitch snapBack />
       </div>
     </motion.div>
   );
