@@ -4,7 +4,7 @@ import witchGif from "../../assets/images/witch-gif.gif";
 
 const WITCH_SIZE = 64;
 
-const DraggableWitch: FC<{ snapBack: boolean }> = ({ snapBack }) => (
+const DraggableWitch: FC = () => (
   <motion.img
     src={witchGif}
     alt=""
@@ -12,7 +12,7 @@ const DraggableWitch: FC<{ snapBack: boolean }> = ({ snapBack }) => (
     draggable={false}
     drag
     dragMomentum={false}
-    dragSnapToOrigin={snapBack}
+    dragSnapToOrigin
     whileDrag={{ scale: 1.15 }}
     className="cursor-grab active:cursor-grabbing"
     style={{ width: WITCH_SIZE, height: WITCH_SIZE }}
@@ -41,7 +41,7 @@ const WitchJourney: FC = () => {
       style={{ x: anchoredX, y: anchoredY, opacity: anchoredOpacity }}
     >
       <div className="pointer-events-auto">
-        <DraggableWitch snapBack />
+        <DraggableWitch />
       </div>
     </motion.div>
   );
