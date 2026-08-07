@@ -2,7 +2,6 @@ import {
   FC,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -18,6 +17,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useClassicTitles, useStoryTitles } from "../hooks/useTitles";
 import { useFocusTrap } from "../hooks/useFocusTrap";
+import { useSearchTitles } from "../hooks/useSearchTitles";
 import { getLastRead } from "../utils/lastRead";
 import { lastReadRoute } from "../utils/lastReadRoute";
 import SectionHeader from "./SidebarMenu/SectionHeader";
@@ -45,8 +45,9 @@ export const SidebarMenu: FC = () => {
   } = useClassicTitles();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
   const [lastRead, setLastRead] = useState(() => getLastRead());
+  const { query, setQuery, filteredStories, filteredClassics, hasQuery } =
+    useSearchTitles(storyNames, classicNames);
   const [openSections, setOpenSections] = useState<{
     stories: boolean;
     classics: boolean;
@@ -62,11 +63,11 @@ export const SidebarMenu: FC = () => {
   const closeMenu = useCallback(() => {
     setIsOpen(false);
     setQuery("");
-  }, []);
+  }, [setQuery]);
   const toggleMenu = useCallback(() => {
     setIsOpen((prev) => !prev);
     setQuery("");
-  }, []);
+  }, [setQuery]);
 
   const toggleSection = (key: "stories" | "classics") =>
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -159,32 +160,6 @@ export const SidebarMenu: FC = () => {
   const isClassicActive = (slug: string) =>
     location.pathname === `/classic/${slug}`;
 
-  const normalizedQuery = query.trim().toLowerCase();
-
-  const filteredStories = useMemo(() => {
-    const sorted = [...storyNames].sort((a, b) =>
-      a.title.localeCompare(b.title, "es"),
-    );
-    if (!normalizedQuery) return sorted;
-    return sorted.filter((story) =>
-      story.title.toLowerCase().includes(normalizedQuery),
-    );
-  }, [storyNames, normalizedQuery]);
-
-  const filteredClassics = useMemo(() => {
-    const sorted = [...classicNames].sort((a, b) =>
-      a.title.localeCompare(b.title, "es"),
-    );
-    if (!normalizedQuery) return sorted;
-    return sorted.filter(
-      (classic) =>
-        classic.title.toLowerCase().includes(normalizedQuery) ||
-        classic.author.toLowerCase().includes(normalizedQuery),
-    );
-  }, [classicNames, normalizedQuery]);
-
-  const hasQuery = normalizedQuery.length > 0;
-
   const storiesOpen = hasQuery || openSections.stories;
   const classicsOpen = hasQuery || openSections.classics;
 
@@ -227,9 +202,9 @@ export const SidebarMenu: FC = () => {
               className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-gray-900 border-r border-purple-800/50 shadow-lg z-50 flex flex-col"
             >
               <div className="flex items-start justify-between px-5 pt-6 pb-4 border-b border-gray-700/60">
-                <h1 className="text-3xl text-amber-400 font-creepster">
+                <h2 className="text-3xl text-amber-400 font-creepster">
                   Cuentos de Terror
-                </h1>
+                </h2>
                 <button
                   ref={closeButtonRef}
                   onClick={closeMenu}
