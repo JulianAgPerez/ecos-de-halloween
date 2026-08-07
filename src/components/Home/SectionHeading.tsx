@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
-import { motion } from "framer-motion";
 import { IconType } from "react-icons";
+import Reveal from "./Reveal";
 
 const SIZES = {
   sm: "text-2xl md:text-3xl",
@@ -21,18 +21,14 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   className = "",
   size = "md",
 }) => (
-  <motion.h3
-    initial={{ opacity: 0, y: 12 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.5 }}
-    transition={{ duration: 0.5 }}
-    className={`mb-6 font-creepster text-center text-amber-400 ${SIZES[size]} ${className}`}
-  >
-    {Icon && (
-      <Icon className="mr-3 inline-block -translate-y-0.5 text-purple-400" />
-    )}
-    {children}
-  </motion.h3>
+  <Reveal className={`mb-6 ${className}`} amount={0.5} y={12}>
+    <h3 className={`font-creepster text-center text-amber-400 ${SIZES[size]}`}>
+      {Icon && (
+        <Icon className="mr-3 inline-block -translate-y-0.5 text-purple-400" />
+      )}
+      {children}
+    </h3>
+  </Reveal>
 );
 
 export default SectionHeading;

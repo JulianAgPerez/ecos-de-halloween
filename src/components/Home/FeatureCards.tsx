@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { motion } from "framer-motion";
 import { IconType } from "react-icons";
 import {
   FaHeadphones,
@@ -8,6 +7,7 @@ import {
   FaCompactDisc,
 } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
+import Reveal from "./Reveal";
 
 interface Feature {
   icon: IconType;
@@ -50,12 +50,9 @@ const FeatureCards: FC = () => (
       {FEATURES.map((feature, i) => {
         const Icon = feature.icon;
         return (
-          <motion.div
+          <Reveal
             key={feature.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            delay={i * 0.1}
             className="glass-card flex flex-col items-center p-6 text-center transition hover:border-purple-500/70"
           >
             <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-purple-500/20 text-amber-400">
@@ -63,7 +60,7 @@ const FeatureCards: FC = () => (
             </span>
             <h4 className="text-lg font-bold text-white">{feature.title}</h4>
             <p className="mt-2 text-sm text-gray-400">{feature.description}</p>
-          </motion.div>
+          </Reveal>
         );
       })}
     </div>

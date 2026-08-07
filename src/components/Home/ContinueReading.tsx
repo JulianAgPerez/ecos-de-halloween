@@ -2,21 +2,17 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaBookOpen, FaArrowRight } from "react-icons/fa";
-import { getLastRead, LastRead } from "../../utils/lastRead";
+import { getLastRead } from "../../utils/lastRead";
+import { lastReadRoute } from "../../utils/lastReadRoute";
 
 const ContinueReading: FC = () => {
   const navigate = useNavigate();
-  const lastRead: LastRead | null = getLastRead();
+  const lastRead = getLastRead();
+  const route = lastRead ? lastReadRoute(lastRead) : null;
 
-  if (!lastRead) return null;
+  if (!lastRead || !route) return null;
 
-  const goTo = () => {
-    if (lastRead.type === "classic" && lastRead.slug) {
-      navigate(`/classic/${lastRead.slug}`);
-    } else if (lastRead.type === "story" && lastRead.id !== undefined) {
-      navigate(`/story/${lastRead.id}`);
-    }
-  };
+  const goTo = () => navigate(route);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-16">

@@ -1,27 +1,17 @@
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 
 const ContentSection = () => {
   return (
     <section className="relative z-10 overflow-hidden px-5 py-16">
-      <motion.h2
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="halloween-flicker font-creepster mb-10 text-center text-5xl font-bold md:text-7xl"
-      >
-        Lo que esconde la tierra
-      </motion.h2>
+      <Reveal amount={0.4} y={16}>
+        <h2 className="halloween-flicker font-creepster mb-10 text-center text-5xl font-bold md:text-7xl">
+          Lo que esconde la tierra
+        </h2>
+      </Reveal>
 
       <div className="mx-auto w-full max-w-3xl">
-        <motion.div
-          id="explicacion-halloween"
-          className="text-gray-300"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <Reveal amount={0.2}>
+          <div id="explicacion-halloween" className="text-gray-300">
           <h3 className="mt-2 text-2xl text-white">
             ¿Por qué se celebra el Halloween?
           </h3>
@@ -52,7 +42,8 @@ const ContentSection = () => {
             profundamente ligados a las creencias sobre la vida, la muerte y el
             cambio de estaciones.
           </p>
-        </motion.div>
+          </div>
+        </Reveal>
 
         <section id="explicacion-desarrollo" className="text-gray-300">
           <h3 className="mt-2 text-2xl text-white">

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { FaGhost } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
+import Reveal from "./Reveal";
 
 interface TimeLeft {
   days: number;
@@ -57,12 +57,10 @@ const HalloweenCountdown: FC = () => {
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {UNITS.map((unit, i) => (
-          <motion.div
+          <Reveal
             key={unit.key}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            delay={i * 0.1}
+            amount={0.5}
             className="rounded-2xl border border-orange-500/30 bg-black/30 p-5 backdrop-blur-sm"
           >
             <div className="halloween-flicker font-creepster text-4xl md:text-6xl">
@@ -71,7 +69,7 @@ const HalloweenCountdown: FC = () => {
             <div className="mt-2 text-xs uppercase tracking-widest text-orange-200/70">
               {unit.label}
             </div>
-          </motion.div>
+          </Reveal>
         ))}
       </div>
     </div>

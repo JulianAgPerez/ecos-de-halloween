@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useClassicTitles, useStoryTitles } from "../hooks/useTitles";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { getLastRead } from "../utils/lastRead";
+import { lastReadRoute } from "../utils/lastReadRoute";
 import SectionHeader from "./SidebarMenu/SectionHeader";
 import StoryListItem from "./SidebarMenu/StoryListItem";
 import ClassicListItem from "./SidebarMenu/ClassicListItem";
@@ -141,12 +142,11 @@ export const SidebarMenu: FC = () => {
 
   const handleLastReadClick = () => {
     if (!lastRead) return;
-    if (lastRead.type === "classic" && lastRead.slug) {
-      navigate(`/classic/${lastRead.slug}`);
-    } else if (lastRead.type === "story" && lastRead.id !== undefined) {
-      navigate(`/story/${lastRead.id}`);
+    const route = lastReadRoute(lastRead);
+    if (route) {
+      navigate(route);
+      closeMenu();
     }
-    closeMenu();
   };
 
   useEffect(() => {
