@@ -43,3 +43,39 @@ export const getBackgroundSrcSet = (url: string): string =>
     (width) =>
       `${getOptimizedBackgroundUrl(url, { width, dpr: false })} ${width}w`,
   ).join(", ");
+
+export const PORTRAIT_RATIO = "9:16";
+const PORTRAIT_WIDTHS = [360, 480, 640, 800];
+
+const buildPortraitTransformations = (width: number): string =>
+  [
+    "c_fill",
+    `ar_${PORTRAIT_RATIO}`,
+    "g_center",
+    `w_${width}`,
+    "q_auto",
+    "f_auto",
+    "fl_progressive",
+  ].join(",");
+
+export const getPortraitBackgroundUrl = (
+  url: string,
+  width: number,
+): string => {
+  if (!isCloudinaryUrl(url)) return url;
+  const markerIndex = url.indexOf(TRANSFORMATION_MARKER);
+  if (markerIndex === -1) return url;
+  const after = url.slice(markerIndex + TRANSFORMATION_MARKER.length);
+  if (!/^v\d+\//.test(after)) return url;
+  return (
+    url.slice(0, markerIndex + TRANSFORMATION_MARKER.length) +
+    buildPortraitTransformations(width) +
+    "/" +
+    after
+  );
+};
+
+export const getPortraitBackgroundSrcSet = (url: string): string =>
+  PORTRAIT_WIDTHS.map(
+    (width) => `${getPortraitBackgroundUrl(url, width)} ${width}w`,
+  ).join(", ");

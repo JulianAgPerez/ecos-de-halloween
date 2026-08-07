@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import {
   getBackgroundSrcSet,
   getOptimizedBackgroundUrl,
+  getPortraitBackgroundSrcSet,
 } from "../utils/cloudinary";
 
 interface ParallaxBackgroundProps {
@@ -41,25 +42,31 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative h-screen overflow-hidden ${className}`}
+      className={`relative h-screen supports-[height:100svh]:h-[100svh] overflow-hidden ${className}`}
     >
       {imageUrl ? (
-<motion.img
-          src={getOptimizedBackgroundUrl(imageUrl)}
-          srcSet={getBackgroundSrcSet(imageUrl)}
-          sizes="100vw"
-          alt=""
-          aria-hidden="true"
-          decoding="async"
-          loading="eager"
-          fetchPriority="high"
-          onLoad={() => setLoaded(true)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: loaded ? 1 : 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="absolute left-0 right-0 top-[-16%] h-[132%] w-full object-cover object-center"
-          style={backgroundStyle}
-        />
+<picture className="absolute inset-0" aria-hidden="true">
+          <source
+            media="(max-width: 640px)"
+            srcSet={getPortraitBackgroundSrcSet(imageUrl)}
+            sizes="100vw"
+          />
+          <motion.img
+            src={getOptimizedBackgroundUrl(imageUrl)}
+            srcSet={getBackgroundSrcSet(imageUrl)}
+            sizes="100vw"
+            alt=""
+            decoding="async"
+            loading="eager"
+            fetchPriority="high"
+            onLoad={() => setLoaded(true)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: loaded ? 1 : 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="absolute left-0 right-0 top-[-16%] h-[132%] w-full object-cover object-center"
+            style={backgroundStyle}
+          />
+        </picture>
       ) : fallbackBgClass ? (
         <motion.div
           aria-hidden="true"
