@@ -30,13 +30,13 @@ const ContentSection = () => {
           <p className="paragraph">
             Con el tiempo, esta tradición se mezcló con festividades
             cristianas, como el Día de Todos los Santos, que se celebra el 1 de
-            noviembre. La noche anterior se convirtió en "All Hallows' Eve,"
-            que eventualmente se transformó en "Halloween."
+            noviembre. La noche anterior se convirtió en «All Hallows' Eve»,
+            que eventualmente se transformó en «Halloween».
           </p>
           <p className="paragraph">
             A lo largo de los siglos, Halloween ha evolucionado y se ha
             popularizado, especialmente en Estados Unidos, donde tradiciones
-            como el "trick-or-treat" (dulce o truco), las calabazas talladas y
+            como el «trick-or-treat» (dulce o truco), las calabazas talladas y
             las fiestas de disfraces se han vuelto emblemáticas. Aunque hoy en
             día es principalmente una celebración divertida, sus orígenes están
             profundamente ligados a las creencias sobre la vida, la muerte y el
@@ -50,12 +50,11 @@ const ContentSection = () => {
             ¿Por qué desarrollé esta web?
           </h3>
           <p className="mt-4 text-lg">
-            Siempre he querido poder transmitir lo mejor posible las emociones
-            que quiero causar en las historias que escribo, por lo cual siempre
-            quise una web en la cuál poder subir mis escritos y poder elegir
-            sonidos de ambiente, fondos, incluso la playlist que me arme para
-            escribir inspirado, todo para aumentar lo máximo posible la
-            inmersión con la historia.
+            Siempre quise transmitir lo mejor posible las emociones que busco
+            causar en las historias que escribo, por lo que soñaba con una web
+            en la cual subir mis escritos y poder elegir sonidos de ambiente,
+            fondos e incluso la playlist que armé para escribir inspirado,
+            todo para aumentar lo máximo posible la inmersión en la historia.
           </p>
         </section>
       </div>

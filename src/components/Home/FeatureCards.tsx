@@ -20,7 +20,7 @@ const FEATURES: Feature[] = [
     icon: FaHeadphones,
     title: "Sonidos de ambiente",
     description:
-      "Cada historia puede llevar su propio audio de fondo para sumergirte por completo en el miedo.",
+      "Elegí sonidos de ambiente que acompañen la lectura y te sumerjan por completo en el miedo.",
   },
   {
     icon: FaImage,

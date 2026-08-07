@@ -12,7 +12,7 @@ const QUOTES: Quote[] = [
     author: "H. P. Lovecraft, «El horror sobrenatural en la literatura»",
   },
   {
-    text: "Ningún organismo vivo puede mantenerse cuerdo durante mucho tiempo en condiciones de reality absoluta.",
+    text: "Ningún organismo vivo puede mantenerse cuerdo durante mucho tiempo en condiciones de realidad absoluta.",
     author: "Shirley Jackson, «La maldición de Hill House»",
   },
   {
@@ -20,7 +20,7 @@ const QUOTES: Quote[] = [
     author: "Edgar Allan Poe, «El corazón delator»",
   },
   {
-    text: "El pozo es el final de todo. La última parada antes de que el mundo se convierta en nada.",
+    text: "Los fantasmas son reales. Y no siempre vienen los que uno llama.",
     author: "Mariana Enríquez, «Nuestra parte de noche»",
   },
   {
@@ -36,15 +36,15 @@ const QUOTES: Quote[] = [
     author: "Horacio Quiroga, «El almohadón de plumas»",
   },
   {
-    text: "No miré hacia arriba, aunque sabía que las estrellas se balanceaban en un baile de burla abominable.",
-    author: "H. P. Lovecraft, «Las ratas en las paredes»",
+    text: "Incluso de los horrores más grandes, la ironía rara vez está ausente.",
+    author: "H. P. Lovecraft, «La sombra sobre Innsmouth»",
   },
   {
-    text: "Y mis ojos tienen toda la apariencia de los de un demonio que está soñando.",
+    text: "Y sus ojos tienen toda la apariencia de los de un demonio que está soñando.",
     author: "Edgar Allan Poe, «El cuervo»",
   },
   {
-    text: "No es la altura, no es la profundidad. Es la absoluta falta de suelo bajo nuestros pies.",
+    text: "No hay naturaleza en las cosas. No hay rostros, solo máscaras tensadas contra el caos que se agita detrás de ellas.",
     author: "Thomas Ligotti, «Noctuario»",
   },
   {
@@ -52,7 +52,7 @@ const QUOTES: Quote[] = [
     author: "H. P. Lovecraft, «La llamada de Cthulhu»",
   },
   {
-    text: "Bienvenidos a mi casa. Entren libremente, salgan sin temor, y dejen algo de la felicidad que traen.",
+    text: "¡Bienvenidos a mi casa! Entren libremente y por su propia voluntad.",
     author: "Bram Stoker, «Drácula»",
   },
 ];

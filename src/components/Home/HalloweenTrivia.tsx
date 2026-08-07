@@ -19,7 +19,7 @@ interface Trivia {
 const TRIVIA: Trivia[] = [
   {
     icon: FaQuestion,
-    fact: "El origen del truco o trato se remonta al Samhain celta, cuando se derramaban ofrendas de comida para los espíritus.",
+    fact: "El «truco o trato» tiene raíces en el «souling» medieval, cuando se pedían «pasteles de ánimas» a cambio de oraciones por los difuntos, y en el Samhain celta, cuando se dejaban ofrendas de comida a los espíritus.",
   },
   {
     icon: FaSkull,
@@ -27,7 +27,7 @@ const TRIVIA: Trivia[] = [
   },
   {
     icon: FaDragon,
-    fact: "H.P. Lovecraft creó los 'Mitos de Cthulhu' desde sus propias pesadillas, dando forma al terror cósmico: el miedo a lo incomprensible e infinito.",
+    fact: "H. P. Lovecraft definió el terror cósmico: el miedo a lo incomprensible e infinito, la idea de que la humanidad es insignificante ante un universo hostil.",
   },
   {
     icon: FaMoon,
@@ -43,7 +43,7 @@ const TRIVIA: Trivia[] = [
   },
   {
     icon: FaQuestion,
-    fact: "En la Edad Media se temía a los imagos negros como criaturas que compartían vínculos con las brujas.",
+    fact: "Antes de las calabazas, los «jack-o'-lantern» se tallaban en nabos, una tradición originaria de Irlanda y Escocia.",
   },
 ];
 
