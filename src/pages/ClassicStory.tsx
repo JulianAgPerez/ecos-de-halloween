@@ -1,11 +1,9 @@
-import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ClassicStoryDTO } from "../types";
+import { ClassicStoryDTO, ClassicStoryTitleDTO } from "../types";
 import { getClassicStoryById } from "../services/ClassicStoryService";
 import { getClassicStoryFallback } from "../data/classicFallbackStories";
 import { useClassicTitles } from "../hooks/useTitles";
-import { useStoryFetch } from "../hooks/useStoryFetch";
-import { findAdjacent } from "../utils/adjacent";
+import { useStoryReader } from "../hooks/useStoryReader";
 import { saveLastRead } from "../utils/lastRead";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
@@ -14,23 +12,21 @@ import ReadingNavigation from "../components/Story/ReadingNavigation";
 export const ClassicStory = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { titles: classicTitles } = useClassicTitles();
 
-  const { story, isFallback } = useStoryFetch<ClassicStoryDTO, string>({
-    key: slug ?? "",
-    fetch: getClassicStoryById,
-    fallback: getClassicStoryFallback,
-    saveLastRead: (s) => {
-      if (slug) {
-        saveLastRead({ type: "classic", slug, title: s.title });
-      }
-    },
-  });
-
-  const { previous, next } = useMemo(
-    () => findAdjacent(classicTitles, slug, (title) => title.slug),
-    [classicTitles, slug],
-  );
+  const { story, isFallback, previous, next, previousPath, nextPath } =
+    useStoryReader<ClassicStoryDTO, ClassicStoryTitleDTO>({
+      keyParam: slug,
+      fetch: (key) => getClassicStoryById(key),
+      fallback: getClassicStoryFallback,
+      useTitles: useClassicTitles,
+      getTitleKey: (title) => title.slug,
+      basePath: "/classic",
+      save: (s) => {
+        if (slug) {
+          saveLastRead({ type: "classic", slug, title: s.title });
+        }
+      },
+    });
 
   if (!story) {
     return <GhostLoader />;
@@ -98,8 +94,8 @@ export const ClassicStory = () => {
           entityLabel="clásico"
           previousTitle={previous?.title}
           nextTitle={next?.title}
-          onPrevious={() => previous && navigate(`/classic/${previous.slug}`)}
-          onNext={() => next && navigate(`/classic/${next.slug}`)}
+          onPrevious={previousPath ? () => navigate(previousPath) : undefined}
+          onNext={nextPath ? () => navigate(nextPath) : undefined}
         />
       }
     />

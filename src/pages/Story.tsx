@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { StoryDTO } from "../types";
+import { StoryDTO, StoryTitleDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { fallbackStories, getFallbackStoryById } from "../data/fallbackData";
 import { useStoryTitles } from "../hooks/useTitles";
-import { useStoryFetch } from "../hooks/useStoryFetch";
-import { findAdjacent } from "../utils/adjacent";
+import { useStoryReader } from "../hooks/useStoryReader";
 import { saveLastRead } from "../utils/lastRead";
 import { getOptimizedBackgroundUrl } from "../utils/cloudinary";
 import GhostLoader from "../components/GhostLoader";
@@ -16,16 +15,18 @@ export const Story = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = parseInt(id ?? "0", 10);
   const navigate = useNavigate();
-  const { titles: storyTitles } = useStoryTitles();
   const [bgReady, setBgReady] = useState(false);
 
-  const { story } = useStoryFetch<StoryDTO, number>({
-    key: numericId,
-    fetch: getStoryById,
-    fallback: (storyId) => getFallbackStoryById(storyId) ?? fallbackStories[0],
-    saveLastRead: (s) =>
-      saveLastRead({ type: "story", id: numericId, title: s.title }),
-  });
+  const { story, previous, next, previousPath, nextPath } =
+    useStoryReader<StoryDTO, StoryTitleDTO>({
+      keyParam: id,
+      fetch: (key) => getStoryById(parseInt(key, 10)),
+      fallback: (key) => getFallbackStoryById(parseInt(key, 10)) ?? fallbackStories[0],
+      useTitles: useStoryTitles,
+      getTitleKey: (title) => String(title.id),
+      basePath: "/story",
+      save: (s) => saveLastRead({ type: "story", id: numericId, title: s.title }),
+    });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -55,11 +56,6 @@ export const Story = () => {
     };
   }, [story]);
 
-  const { previous, next } = useMemo(
-    () => findAdjacent(storyTitles, numericId, (title) => title.id),
-    [storyTitles, numericId],
-  );
-
   if (!story || !bgReady) {
     return <GhostLoader />;
   }
@@ -74,8 +70,8 @@ export const Story = () => {
           onBack={() => navigate("/")}
           previousTitle={previous?.title}
           nextTitle={next?.title}
-          onPrevious={() => previous && navigate(`/story/${previous.id}`)}
-          onNext={() => next && navigate(`/story/${next.id}`)}
+          onPrevious={previousPath ? () => navigate(previousPath) : undefined}
+          onNext={nextPath ? () => navigate(nextPath) : undefined}
         />
       }
     />
