@@ -97,12 +97,16 @@ const StoryCatalog = () => {
             <motion.button
               key={story.id}
               onClick={() => story.id && navigate(`/story/${story.id}`)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.04, transition: { duration: 0.15, ease: "easeOut" } }}
+              whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
               initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, delay: i * 0.1, ease: "easeOut" },
+              }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
               className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
             >
               <FaGhost className="mb-3 text-2xl text-purple-400" />
@@ -136,12 +140,16 @@ const StoryCatalog = () => {
               <motion.button
                 key={classic.slug}
                 onClick={() => navigate(`/classic/${classic.slug}`)}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.04, transition: { duration: 0.15, ease: "easeOut" } }}
+                whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
                 initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, delay: i * 0.1, ease: "easeOut" },
+                }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
               >
                 <FaBookDead className="mb-3 text-2xl text-purple-400" />

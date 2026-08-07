@@ -18,12 +18,16 @@ const ContinueReading: FC = () => {
     <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-16">
       <motion.button
         onClick={goTo}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.02, transition: { duration: 0.15, ease: "easeOut" } }}
+        whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
         initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, ease: "easeOut" },
+        }}
         viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="group flex w-full items-center gap-5 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-purple-900/80 to-black/50 p-6 text-left shadow-2xl backdrop-blur-sm transition hover:border-amber-400/80"
       >
         <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
