@@ -4,6 +4,7 @@
 
 body {
     font-family: 'Crimson Text', serif;
+    background-color: #141126;
   }
 
 /* Fondo animado lento (Ken Burns) para páginas de auth y 404 */
@@ -103,7 +104,8 @@ body {
 
 /* Para body en Story */
 .note-background {
-  background-image: url('/src/assets/images/pergamino.jpg');
+/*   background-color: #e7d8ae;
+ */  background-image: url('/src/assets/images/pergamino.jpg');
   background-size: cover; /* Ajusta la imagen para cubrir todo el div */
   background-repeat: no-repeat; 
   background-position: center; 
