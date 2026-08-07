@@ -29,10 +29,6 @@ export const Story = () => {
     });
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [id]);
-
-  useEffect(() => {
     setBgReady(false);
   }, [id]);
 

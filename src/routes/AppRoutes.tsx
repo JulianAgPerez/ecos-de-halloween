@@ -1,5 +1,10 @@
-import { FC, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { FC, lazy, Suspense, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import SidebarMenu from "../components/SidebarMenu";
 import Footer from "../components/Footer";
 import PersistentLayout from "../components/PersistentLayout";
@@ -14,9 +19,18 @@ const Register = lazy(() => import("../pages/Register"));
 const UploadForm = lazy(() => import("../pages/UploadForm"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
+const ScrollToTop: FC = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+  return null;
+};
+
 const AppRoutes: FC = () => {
   return (
     <Router>
+      <ScrollToTop />
       <SidebarMenu />
       <Suspense fallback={<GhostLoader />}>
         <Routes>
