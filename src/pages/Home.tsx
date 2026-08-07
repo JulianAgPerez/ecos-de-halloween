@@ -65,9 +65,11 @@ const Home = () => {
       {/* Escena 3 — Cuevas (profundidad) */}
       <section className="relative bg-[#141126]">
         <CaveDecor />
-        <HorrorEasterEggs />
-        <FeatureCards />
-        <HalloweenTrivia />
+        <div className="relative z-20">
+          <HorrorEasterEggs />
+          <FeatureCards />
+          <HalloweenTrivia />
+        </div>
       </section>
 
       {/* Transición: la tierra se enciende, bajamos al inframundo */}
