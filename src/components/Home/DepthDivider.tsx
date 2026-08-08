@@ -35,7 +35,7 @@ const DepthDivider = ({
     size === "lg" ? "-mt-14 md:-mt-20" : "-mt-10 md:-mt-14";
   return (
     <div
-      className={`relative z-20 ${marginClassName}`}
+      className={`relative z-20 pt-5 ${marginClassName}`}
       aria-hidden="true"
       style={{ transform: flip ? "scaleY(-1)" : undefined }}
     >
