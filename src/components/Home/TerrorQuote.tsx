@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Quote {
@@ -59,8 +59,20 @@ const QUOTES: Quote[] = [
 
 const ROTATION_MS = 8000;
 
+const QUOTE_TEXT_CLASS = "text-xl italic leading-relaxed text-gray-300 md:text-2xl";
+const QUOTE_AUTHOR_CLASS = "mt-4 text-sm uppercase tracking-widest text-amber-400";
+
+const QuoteBody: FC<{ text: string; author: string }> = ({ text, author }) => (
+  <>
+    <p className={QUOTE_TEXT_CLASS}>“{text}”</p>
+    <footer className={QUOTE_AUTHOR_CLASS}>— {author}</footer>
+  </>
+);
+
 const TerrorQuote: FC = () => {
   const [index, setIndex] = useState(0);
+  const [reservedHeight, setReservedHeight] = useState(0);
+  const measureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = window.setInterval(
@@ -70,26 +82,54 @@ const TerrorQuote: FC = () => {
     return () => window.clearInterval(id);
   }, []);
 
+  useLayoutEffect(() => {
+    const el = measureRef.current;
+    if (!el) return;
+    const update = () => {
+      let max = 0;
+      for (const child of Array.from(el.children)) {
+        max = Math.max(max, child.getBoundingClientRect().height);
+      }
+      setReservedHeight(max);
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const quote = QUOTES[index];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-5 py-20 text-center">
-      <AnimatePresence mode="wait">
-        <motion.blockquote
-          key={index}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <p className="text-xl italic leading-relaxed text-gray-300 md:text-2xl">
-            “{quote.text}”
-          </p>
-          <footer className="mt-4 text-sm uppercase tracking-widest text-amber-400">
-            — {quote.author}
-          </footer>
-        </motion.blockquote>
-      </AnimatePresence>
+    <div className="relative mx-auto w-full max-w-3xl px-5 py-20 text-center">
+      <div
+        ref={measureRef}
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute inset-x-5 top-20"
+      >
+        {QUOTES.map((q) => (
+          <blockquote key={q.text}>
+            <QuoteBody text={q.text} author={q.author} />
+          </blockquote>
+        ))}
+      </div>
+
+      <div
+        className="relative flex items-center justify-center"
+        style={{ height: reservedHeight }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={index}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <QuoteBody text={quote.text} author={quote.author} />
+          </motion.blockquote>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
