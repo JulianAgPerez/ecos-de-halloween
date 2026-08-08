@@ -57,6 +57,18 @@ const ContentSection = () => {
             todo para aumentar lo máximo posible la inmersión en la historia.
           </p>
         </section>
+
+        <section className="text-gray-300">
+          <h3 className="mt-2 text-2xl text-white">
+            Dato curioso
+          </h3>
+          <p className="mt-4 text-lg">
+            Estos cuentos los escribí para un concurso en el que había
+            distintas temáticas: el que ganara en más temáticas obtenía una
+            copia digital de un libro que el mismo autor regalaba a los 3
+            ganadores.
+          </p>
+        </section>
       </div>
     </section>
   );
