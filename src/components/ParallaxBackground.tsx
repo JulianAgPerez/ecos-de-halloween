@@ -45,7 +45,7 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
       className={`relative h-screen supports-[height:100svh]:h-[100svh] overflow-hidden ${className}`}
     >
       {imageUrl ? (
-<picture className="absolute inset-0" aria-hidden="true">
+        <picture className="absolute inset-0" aria-hidden="true">
           <source
             media="(max-width: 640px)"
             srcSet={getPortraitBackgroundSrcSet(imageUrl)}
@@ -58,7 +58,6 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
             alt=""
             decoding="async"
             loading="eager"
-            fetchPriority="high"
             onLoad={() => setLoaded(true)}
             initial={{ opacity: 0 }}
             animate={{ opacity: loaded ? 1 : 0 }}
