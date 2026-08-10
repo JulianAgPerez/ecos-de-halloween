@@ -1,16 +1,9 @@
-import {
-  type RefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { type RefObject, useEffect, useRef } from "react";
 import {
   motion,
   useMotionValueEvent,
   useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
 
 const IDLE_MS = 1500;
@@ -32,8 +25,10 @@ const ScrollingCircle = ({
   targetRef: RefObject<HTMLElement>;
   nightMode?: boolean;
 }) => {
-  const { scrollY } = useScroll();
-  const [range, setRange] = useState({ start: 0, end: 1 });
+  const { scrollY, scrollYProgress: progress } = useScroll({
+    target: targetRef,
+    offset: ["start start", "end end"],
+  });
   const idleTimer = useRef<number | null>(null);
   const opacity = useSpring(0.3, { stiffness: 250, damping: 30 });
 
@@ -52,31 +47,6 @@ const ScrollingCircle = ({
     opacity.set(1);
     if (idleTimer.current !== null) window.clearTimeout(idleTimer.current);
     idleTimer.current = window.setTimeout(() => opacity.set(0.3), IDLE_MS);
-  });
-
-  useLayoutEffect(() => {
-    const el = targetRef.current;
-    if (!el) return;
-
-    const measure = () => {
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      const end = top + el.offsetHeight - window.innerHeight;
-      setRange({ start: top, end: Math.max(end, top + 1) });
-    };
-    measure();
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    window.addEventListener("resize", measure);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [targetRef]);
-
-  const progress = useTransform(scrollY, [range.start, range.end], [0, 1], {
-    clamp: true,
   });
 
   return (
