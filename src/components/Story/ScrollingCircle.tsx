@@ -1,25 +1,78 @@
-import { type RefObject, useLayoutEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  type RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+
+const IDLE_MS = 1500;
+
+const DAY_COLORS = {
+  track: "rgba(201, 160, 106, 0.25)",
+  progress: "#c9a06a",
+};
+
+const NIGHT_COLORS = {
+  track: "rgba(230, 197, 143, 0.18)",
+  progress: "#e6c58f",
+};
 
 const ScrollingCircle = ({
   targetRef,
+  nightMode = false,
 }: {
   targetRef: RefObject<HTMLElement>;
+  nightMode?: boolean;
 }) => {
   const { scrollY } = useScroll();
   const [range, setRange] = useState({ start: 0, end: 1 });
+  const idleTimer = useRef<number | null>(null);
+  const opacity = useSpring(0.3, { stiffness: 250, damping: 30 });
+
+  const { track, progress: progressColor } = nightMode
+    ? NIGHT_COLORS
+    : DAY_COLORS;
+
+  useEffect(
+    () => () => {
+      if (idleTimer.current !== null) window.clearTimeout(idleTimer.current);
+    },
+    []
+  );
+
+  useMotionValueEvent(scrollY, "change", () => {
+    opacity.set(1);
+    if (idleTimer.current !== null) window.clearTimeout(idleTimer.current);
+    idleTimer.current = window.setTimeout(() => opacity.set(0.3), IDLE_MS);
+  });
 
   useLayoutEffect(() => {
+    const el = targetRef.current;
+    if (!el) return;
+
     const measure = () => {
-      const el = targetRef.current;
-      if (!el) return;
       const top = el.getBoundingClientRect().top + window.scrollY;
       const end = top + el.offsetHeight - window.innerHeight;
       setRange({ start: top, end: Math.max(end, top + 1) });
     };
     measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [targetRef]);
 
   const progress = useTransform(scrollY, [range.start, range.end], [0, 1], {
@@ -27,14 +80,17 @@ const ScrollingCircle = ({
   });
 
   return (
-    <figure className="fixed top-6 left-1/2 transform -translate-x-1/2 z-15">
+    <motion.figure
+      aria-hidden="true"
+      style={{ opacity }}
+      className="fixed bottom-5 right-5 z-20"
+    >
       <motion.svg
-        width="50"
-        height="50"
+        width="40"
+        height="40"
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="transform rotate-[0deg]"
       >
         {/* Círculo de fondo (sin progreso) */}
         <circle
@@ -42,18 +98,19 @@ const ScrollingCircle = ({
           cy="50"
           r="45"
           pathLength="1"
-          stroke="rgba(255, 255, 255, 0.2)" // Color del fondo del círculo
-          strokeWidth="10"
+          stroke={track}
+          strokeWidth="8"
         />
         {/* Círculo de progreso (animado) */}
         <motion.path
           d="M 50 5 A 45 45 0 1 1 49.99 5"
-          stroke="#00FF00" // Color del círculo de progreso
-          strokeWidth="10"
-          style={{ pathLength: progress }} // Controlamos el "llenado"
+          stroke={progressColor}
+          strokeWidth="8"
+          strokeLinecap="round"
+          style={{ pathLength: progress }}
         />
       </motion.svg>
-    </figure>
+    </motion.figure>
   );
 };
 

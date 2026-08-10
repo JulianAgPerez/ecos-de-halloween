@@ -98,7 +98,7 @@ const StoryReader = ({ body }: StoryReaderProps) => {
           nightMode ? "night-mode" : ""
         }`}
       >
-        <ScrollingCircle targetRef={ref} />
+        <ScrollingCircle targetRef={ref} nightMode={nightMode} />
         <pre ref={ref} className="text-lg leading-relaxed sm:text-xl" style={{ fontSize: `${fontSize}%` }}>
           {body}
         </pre>
