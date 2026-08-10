@@ -5,9 +5,11 @@ import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
 import { getStoryById } from "../../services/StoryService";
 import { ClassicStoryTitleDTO, StoryDTO } from "../../types";
+import { withTimeout } from "../../utils/withTimeout";
 import SectionHeading from "./SectionHeading";
 
 const FEATURED_AMOUNT = 3;
+const FEATURED_FETCH_TIMEOUT_MS = 5000;
 
 const PREFERRED_OTHER_AUTHORS = [
   "Horacio Quiroga",
@@ -62,13 +64,19 @@ const StoryCatalog = () => {
       return;
     }
     setFeaturedLoading(true);
-    Promise.all(ids.map((id) => getStoryById(id).catch(() => null))).then(
-      (results) => {
+    withTimeout(
+      Promise.all(ids.map((id) => getStoryById(id).catch(() => null))),
+      FEATURED_FETCH_TIMEOUT_MS,
+    )
+      .then((results) => {
         if (!active) return;
         setFeatured(results.filter((s): s is StoryDTO => s !== null));
         setFeaturedLoading(false);
-      },
-    );
+      })
+      .catch(() => {
+        if (!active) return;
+        setFeaturedLoading(false);
+      });
     return () => {
       active = false;
     };

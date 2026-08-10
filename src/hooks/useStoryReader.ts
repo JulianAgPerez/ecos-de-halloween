@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { findAdjacent } from "../utils/adjacent";
+import { withTimeout } from "../utils/withTimeout";
 
 interface StoryReaderOptions<TStory, TTitle extends { title: string }> {
   keyParam: string | undefined;
@@ -27,14 +28,6 @@ interface StoryData<T> {
 }
 
 const FETCH_TIMEOUT_MS = 5000;
-
-const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> =>
-  Promise.race([
-    promise,
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("timeout")), ms),
-    ),
-  ]);
 
 export function useStoryReader<TStory, TTitle extends { title: string }>({
   keyParam,
