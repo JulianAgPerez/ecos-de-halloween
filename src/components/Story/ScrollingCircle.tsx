@@ -22,12 +22,9 @@ const ScrollingCircle = ({
     return () => window.removeEventListener("resize", measure);
   }, [targetRef]);
 
-  const progress = useTransform(
-    scrollY,
-    [range.start, range.end],
-    [0, 1],
-    { clamp: true },
-  );
+  const progress = useTransform(scrollY, [range.start, range.end], [0, 1], {
+    clamp: true,
+  });
 
   return (
     <figure className="fixed top-6 left-1/2 transform -translate-x-1/2 z-15">
@@ -37,7 +34,7 @@ const ScrollingCircle = ({
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="transform rotate-[-90deg]"
+        className="transform rotate-[0deg]"
       >
         {/* Círculo de fondo (sin progreso) */}
         <circle
