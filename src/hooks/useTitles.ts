@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useRef } from "react";
+import { type Query, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllClassicTitles } from "../services/ClassicStoryService";
 import { getAllStoryTitles } from "../services/StoryService";
 import { classicFallbackTitles } from "../data/classicFallbackTitles";
@@ -8,6 +8,22 @@ import type { ClassicStoryTitleDTO, StoryTitleDTO } from "../types";
 
 export const STORY_TITLES_KEY = ["story-titles"] as const;
 export const CLASSIC_TITLES_KEY = ["classic-titles"] as const;
+
+const FALLBACK_RETRY_MS = 10_000;
+const MAX_FALLBACK_RETRIES = 10;
+
+const useErrorRefetchInterval = <TData,>() => {
+  const retriesLeft = useRef(MAX_FALLBACK_RETRIES);
+  return useCallback(
+    (query: Query<TData, Error, TData, readonly unknown[]>) => {
+      if (query.state.status !== "error") return false;
+      if (retriesLeft.current <= 0) return false;
+      retriesLeft.current -= 1;
+      return FALLBACK_RETRY_MS;
+    },
+    [],
+  );
+};
 
 interface TitlesResult<T> {
   titles: T[];
@@ -41,6 +57,7 @@ export const useStoryTitles = (): TitlesResult<StoryTitleDTO> =>
     useQuery<StoryTitleDTO[]>({
       queryKey: STORY_TITLES_KEY,
       queryFn: getAllStoryTitles,
+      refetchInterval: useErrorRefetchInterval<StoryTitleDTO[]>(),
     }),
     STORY_TITLES_KEY,
     fallbackTitles,
@@ -51,6 +68,7 @@ export const useClassicTitles = (): TitlesResult<ClassicStoryTitleDTO> =>
     useQuery<ClassicStoryTitleDTO[]>({
       queryKey: CLASSIC_TITLES_KEY,
       queryFn: getAllClassicTitles,
+      refetchInterval: useErrorRefetchInterval<ClassicStoryTitleDTO[]>(),
     }),
     CLASSIC_TITLES_KEY,
     classicFallbackTitles,

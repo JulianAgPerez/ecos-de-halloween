@@ -28,6 +28,8 @@ interface StoryData<T> {
 }
 
 const FETCH_TIMEOUT_MS = 5000;
+const FALLBACK_RETRY_MS = 10_000;
+const MAX_FALLBACK_RETRIES = 10;
 
 export function useStoryReader<TStory, TTitle extends { title: string }>({
   keyParam,
@@ -40,11 +42,21 @@ export function useStoryReader<TStory, TTitle extends { title: string }>({
 }: StoryReaderOptions<TStory, TTitle>): StoryReaderResult<TStory, TTitle> {
   const key = keyParam ?? "";
   const { titles } = useTitles();
+  const retriesLeft = useRef(MAX_FALLBACK_RETRIES);
 
   const query = useQuery<StoryData<TStory>>({
     queryKey: ["story", basePath, key],
     enabled: Boolean(keyParam),
     retry: 1,
+    refetchInterval: (query) => {
+      if (retriesLeft.current <= 0) return false;
+      const degraded =
+        query.state.data?.isFallback === true ||
+        query.state.status === "error";
+      if (!degraded) return false;
+      retriesLeft.current -= 1;
+      return FALLBACK_RETRY_MS;
+    },
     queryFn: async () => {
       let fetched: TStory | null = null;
       try {

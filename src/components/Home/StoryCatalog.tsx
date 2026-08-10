@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
 import { getStoryById } from "../../services/StoryService";
@@ -11,6 +12,14 @@ import SectionHeading from "./SectionHeading";
 
 const FEATURED_AMOUNT = 3;
 const FEATURED_FETCH_TIMEOUT_MS = 5000;
+const FALLBACK_RETRY_MS = 10_000;
+const MAX_FALLBACK_RETRIES = 10;
+
+interface FeaturedItem {
+  id: number;
+  story: StoryDTO | null;
+  isFallback: boolean;
+}
 
 const PREFERRED_OTHER_AUTHORS = [
   "Horacio Quiroga",
@@ -55,48 +64,49 @@ const StoryCatalog = () => {
     useStoryTitles();
   const { titles: classicTitles } = useClassicTitles();
 
-  const [featured, setFeatured] = useState<StoryDTO[]>([]);
-  const [featuredLoading, setFeaturedLoading] = useState(true);
+  const ids = storyTitles.slice(0, FEATURED_AMOUNT).map((s) => s.id);
+  const retriesLeft = useRef(MAX_FALLBACK_RETRIES);
 
-  useEffect(() => {
-    let active = true;
-    if (storyTitlesLoading) {
-      setFeaturedLoading(true);
-      return;
-    }
-    const ids = storyTitles.slice(0, FEATURED_AMOUNT).map((s) => s.id);
-    if (ids.length === 0) {
-      setFeaturedLoading(false);
-      return;
-    }
-    setFeaturedLoading(true);
-    withTimeout(
-      Promise.all(
-        ids.map(async (id) => {
+  const featuredQuery = useQuery<FeaturedItem[]>({
+    queryKey: ["featured-stories", ids.join(",")],
+    enabled: !storyTitlesLoading && ids.length > 0,
+    queryFn: async () => {
+      const load = Promise.all(
+        ids.map(async (id): Promise<FeaturedItem> => {
           const story = await getStoryById(id).catch(() => null);
-          return story ?? getFallbackStoryById(id) ?? null;
+          return {
+            id,
+            story: story ?? getFallbackStoryById(id) ?? null,
+            isFallback: !story,
+          };
         }),
-      ),
-      FEATURED_FETCH_TIMEOUT_MS,
-    )
-      .then((results) => {
-        if (!active) return;
-        setFeatured(results.filter((s): s is StoryDTO => s !== null));
-        setFeaturedLoading(false);
-      })
-      .catch(() => {
-        if (!active) return;
-        setFeatured(
-          ids
-            .map((id) => getFallbackStoryById(id))
-            .filter((s): s is StoryDTO => s !== undefined),
-        );
-        setFeaturedLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [storyTitles, storyTitlesLoading]);
+      );
+      try {
+        return await withTimeout(load, FEATURED_FETCH_TIMEOUT_MS);
+      } catch {
+        return ids.map((id): FeaturedItem => ({
+          id,
+          story: getFallbackStoryById(id) ?? null,
+          isFallback: true,
+        }));
+      }
+    },
+    refetchInterval: (query) => {
+      if (retriesLeft.current <= 0) return false;
+      const degraded = (query.state.data ?? []).some(
+        (item) => item.isFallback,
+      );
+      if (!degraded) return false;
+      retriesLeft.current -= 1;
+      return FALLBACK_RETRY_MS;
+    },
+  });
+
+  const featuredLoading =
+    storyTitlesLoading || (featuredQuery.isPending && ids.length > 0);
+  const featuredStories = (featuredQuery.data ?? [])
+    .map((item) => item.story)
+    .filter((s): s is StoryDTO => s !== null);
 
   const visibleClassics = pickFeaturedClassics(classicTitles);
 
@@ -117,7 +127,7 @@ const StoryCatalog = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((story, i) => (
+          {featuredStories.map((story, i) => (
             <motion.button
               key={story.id}
               onClick={() => story.id && navigate(`/story/${story.id}`)}
