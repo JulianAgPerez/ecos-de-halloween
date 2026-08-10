@@ -30,7 +30,7 @@ interface StoryReaderProps {
 }
 
 const StoryReader = ({ body }: StoryReaderProps) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLPreElement>(null);
   const [fontSize, setFontSize] = useState(readSavedFontSize);
   const [nightMode, setNightMode] = useState(readSavedNightMode);
 
@@ -98,7 +98,7 @@ const StoryReader = ({ body }: StoryReaderProps) => {
           nightMode ? "night-mode" : ""
         }`}
       >
-        <ScrollingCircle refProp={ref} />
+        <ScrollingCircle targetRef={ref} />
         <pre ref={ref} className="text-lg leading-relaxed sm:text-xl" style={{ fontSize: `${fontSize}%` }}>
           {body}
         </pre>
