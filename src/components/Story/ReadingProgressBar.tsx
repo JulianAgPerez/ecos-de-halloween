@@ -25,7 +25,7 @@ const NIGHT_COLORS = {
   progress: "#e6c58f",
 };
 
-const ScrollingCircle = ({
+const ReadingProgressBar = ({
   targetRef,
   nightMode = false,
 }: {
@@ -35,7 +35,7 @@ const ScrollingCircle = ({
   const { scrollY } = useScroll();
   const [range, setRange] = useState({ start: 0, end: 1 });
   const idleTimer = useRef<number | null>(null);
-  const opacity = useSpring(0.3, { stiffness: 250, damping: 30 });
+  const opacity = useSpring(0.4, { stiffness: 250, damping: 30 });
 
   const { track, progress: progressColor } = nightMode
     ? NIGHT_COLORS
@@ -51,7 +51,7 @@ const ScrollingCircle = ({
   useMotionValueEvent(scrollY, "change", () => {
     opacity.set(1);
     if (idleTimer.current !== null) window.clearTimeout(idleTimer.current);
-    idleTimer.current = window.setTimeout(() => opacity.set(0.3), IDLE_MS);
+    idleTimer.current = window.setTimeout(() => opacity.set(0.4), IDLE_MS);
   });
 
   useLayoutEffect(() => {
@@ -80,38 +80,18 @@ const ScrollingCircle = ({
   });
 
   return (
-    <motion.figure
+    <motion.div
       aria-hidden="true"
       style={{ opacity }}
-      className="fixed bottom-5 right-5 z-20"
+      className="fixed bottom-0 left-0 right-0 z-20 h-[3px]"
     >
-      <motion.svg
-        width="40"
-        height="40"
-        viewBox="0 0 100 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Círculo de fondo (sin progreso) */}
-        <circle
-          cx="50"
-          cy="50"
-          r="45"
-          pathLength="1"
-          stroke={track}
-          strokeWidth="8"
-        />
-        {/* Círculo de progreso (animado) */}
-        <motion.path
-          d="M 50 5 A 45 45 0 1 1 49.99 5"
-          stroke={progressColor}
-          strokeWidth="8"
-          strokeLinecap="round"
-          style={{ pathLength: progress }}
-        />
-      </motion.svg>
-    </motion.figure>
+      <div className="h-full w-full" style={{ backgroundColor: track }} />
+      <motion.div
+        className="absolute inset-y-0 left-0 w-full origin-left"
+        style={{ scaleX: progress, backgroundColor: progressColor }}
+      />
+    </motion.div>
   );
 };
 
-export default ScrollingCircle;
+export default ReadingProgressBar;

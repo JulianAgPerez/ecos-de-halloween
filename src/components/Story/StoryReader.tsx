@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { FaMinus, FaMoon, FaPlus, FaSun } from "react-icons/fa";
-import ScrollingCircle from "./ScrollingCircle";
+import ReadingProgressBar from "./ReadingProgressBar";
 
 const MIN_FONT_SIZE = 70;
 const MAX_FONT_SIZE = 160;
@@ -98,7 +98,7 @@ const StoryReader = ({ body }: StoryReaderProps) => {
           nightMode ? "night-mode" : ""
         }`}
       >
-        <ScrollingCircle targetRef={ref} nightMode={nightMode} />
+        <ReadingProgressBar targetRef={ref} nightMode={nightMode} />
         <pre ref={ref} className="text-lg leading-relaxed sm:text-xl" style={{ fontSize: `${fontSize}%` }}>
           {body}
         </pre>
