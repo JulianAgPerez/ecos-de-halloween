@@ -5,6 +5,7 @@ import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
 import { getStoryById } from "../../services/StoryService";
 import { ClassicStoryTitleDTO, StoryDTO } from "../../types";
+import { getFallbackStoryById } from "../../data/fallbackData";
 import { withTimeout } from "../../utils/withTimeout";
 import SectionHeading from "./SectionHeading";
 
@@ -50,7 +51,8 @@ const pickFeaturedClassics = (
 
 const StoryCatalog = () => {
   const navigate = useNavigate();
-  const { titles: storyTitles } = useStoryTitles();
+  const { titles: storyTitles, isLoading: storyTitlesLoading } =
+    useStoryTitles();
   const { titles: classicTitles } = useClassicTitles();
 
   const [featured, setFeatured] = useState<StoryDTO[]>([]);
@@ -58,6 +60,10 @@ const StoryCatalog = () => {
 
   useEffect(() => {
     let active = true;
+    if (storyTitlesLoading) {
+      setFeaturedLoading(true);
+      return;
+    }
     const ids = storyTitles.slice(0, FEATURED_AMOUNT).map((s) => s.id);
     if (ids.length === 0) {
       setFeaturedLoading(false);
@@ -65,7 +71,12 @@ const StoryCatalog = () => {
     }
     setFeaturedLoading(true);
     withTimeout(
-      Promise.all(ids.map((id) => getStoryById(id).catch(() => null))),
+      Promise.all(
+        ids.map(async (id) => {
+          const story = await getStoryById(id).catch(() => null);
+          return story ?? getFallbackStoryById(id) ?? null;
+        }),
+      ),
       FEATURED_FETCH_TIMEOUT_MS,
     )
       .then((results) => {
@@ -75,12 +86,17 @@ const StoryCatalog = () => {
       })
       .catch(() => {
         if (!active) return;
+        setFeatured(
+          ids
+            .map((id) => getFallbackStoryById(id))
+            .filter((s): s is StoryDTO => s !== undefined),
+        );
         setFeaturedLoading(false);
       });
     return () => {
       active = false;
     };
-  }, [storyTitles]);
+  }, [storyTitles, storyTitlesLoading]);
 
   const visibleClassics = pickFeaturedClassics(classicTitles);
 
