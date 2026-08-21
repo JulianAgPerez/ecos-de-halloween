@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FaGhost } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
+import { getHalloweenTarget } from "../../utils/season";
 
 interface TimeLeft {
   days: number;
@@ -10,17 +11,8 @@ interface TimeLeft {
   seconds: number;
 }
 
-const getTarget = (): Date => {
-  const now = new Date();
-  // Si ya pasamos Halloween (1° de noviembre o después), apuntar al año próximo
-  const startOfNovember = new Date(now.getFullYear(), 10, 1);
-  const year =
-    now >= startOfNovember ? now.getFullYear() + 1 : now.getFullYear();
-  return new Date(year, 9, 31, 0, 0, 0);
-};
-
 const getTimeLeft = (): TimeLeft => {
-  const diff = Math.max(0, getTarget().getTime() - Date.now());
+  const diff = Math.max(0, getHalloweenTarget().getTime() - Date.now());
   return {
     days: Math.floor(diff / 86400000),
     hours: Math.floor(diff / 3600000) % 24,
@@ -45,7 +37,7 @@ const HalloweenCountdown: FC = () => {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-5 py-20 text-center">
+    <div id="countdown" className="mx-auto w-full max-w-4xl px-5 py-20 text-center">
       <SectionHeading icon={FaGhost} size="lg" className="mb-4">
         Hasta que la noche nos llame
       </SectionHeading>
