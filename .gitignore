@@ -28,3 +28,6 @@ dist-ssr
 # Ignorar archivos 
 .tsbuildinfo
 *.tsbuildinfo
+
+# Agent tooling artifacts (skill registry cache)
+.atl/

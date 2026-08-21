@@ -22,12 +22,36 @@ declare global {
   }
 }
 
+const CLOUDINARY_WIDGET_URL = "https://widget.cloudinary.com/v2.0/global/all.js";
+
+let cloudinaryScriptPromise: Promise<void> | null = null;
+
+const loadCloudinaryScript = (): Promise<void> => {
+  if (window.cloudinary) return Promise.resolve();
+  if (cloudinaryScriptPromise) return cloudinaryScriptPromise;
+
+  cloudinaryScriptPromise = new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = CLOUDINARY_WIDGET_URL;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      cloudinaryScriptPromise = null;
+      reject(new Error(`Failed to load ${CLOUDINARY_WIDGET_URL}`));
+    };
+    document.body.appendChild(script);
+  });
+
+  return cloudinaryScriptPromise;
+};
+
 const UploadForm: FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [widgetLoading, setWidgetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -37,11 +61,18 @@ const UploadForm: FC = () => {
     }
   };
 
-  const handleCloudinaryUpload = () => {
+  const handleCloudinaryUpload = async () => {
     setError(null);
     if (!window.cloudinary) {
-      setError("El widget de Cloudinary no está disponible.");
-      return;
+      setWidgetLoading(true);
+      try {
+        await loadCloudinaryScript();
+      } catch {
+        setError("No se pudo cargar el widget de Cloudinary. Intenta de nuevo.");
+        return;
+      } finally {
+        setWidgetLoading(false);
+      }
     }
     const cloudinaryWidget = window.cloudinary.createUploadWidget(
       {
@@ -132,7 +163,7 @@ const UploadForm: FC = () => {
         <button
           type="button"
           onClick={handleCloudinaryUpload}
-          disabled={loading}
+          disabled={loading || widgetLoading}
           className="w-full bg-gradient-to-br from-blue-600 to-blue-900 text-white px-4 py-2 rounded mb-4 hover:from-blue-700 hover:to-blue-800 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Subir imagen desde Cloudinary

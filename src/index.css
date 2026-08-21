@@ -29,7 +29,7 @@ body {
 /* Para body en Story */
 .note-background {
 /*   background-color: #e7d8ae;
- */  background-image: url('/src/assets/images/pergamino.jpg');
+ */  background-image: url('/src/assets/images/pergamino.webp');
   background-size: cover; /* Ajusta la imagen para cubrir todo el div */
   background-repeat: no-repeat; 
   background-position: center; 
