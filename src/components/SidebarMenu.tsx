@@ -1,10 +1,4 @@
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FaBookDead,
@@ -119,7 +113,11 @@ export const SidebarMenu: FC = () => {
     };
   }, [isOpen]);
 
+  const prevIsOpenRef = useRef(isOpen);
   useEffect(() => {
+    const wasOpen = prevIsOpenRef.current;
+    prevIsOpenRef.current = isOpen;
+    if (wasOpen === isOpen) return;
     if (isOpen) {
       closeButtonRef.current?.focus();
     } else {
@@ -169,7 +167,9 @@ export const SidebarMenu: FC = () => {
         ref={toggleButtonRef}
         onClick={toggleMenu}
         title="Abrir menú (M)"
-        aria-label={isOpen ? "Cerrar menú de historias" : "Abrir menú de historias"}
+        aria-label={
+          isOpen ? "Cerrar menú de historias" : "Abrir menú de historias"
+        }
         aria-expanded={isOpen}
         aria-controls="sidebar-panel"
         className="fixed top-5 left-5 bg-gradient-to-br from-purple-600 to-purple-900 text-amber-400 text-2xl p-3 rounded-full hover:from-purple-700 hover:to-purple-800 active:from-purple-900 active:to-purple-950 transition duration-500 ease-in-out shadow-lg z-50"
@@ -253,9 +253,7 @@ export const SidebarMenu: FC = () => {
                   >
                     <FaBookOpen size={18} className="text-purple-400" />
                     <span className="min-w-0 text-left">
-                      <span className="block text-sm">
-                        Continuar leyendo
-                      </span>
+                      <span className="block text-sm">Continuar leyendo</span>
                       <span className="block text-xs text-gray-400 italic truncate">
                         {lastRead.title}
                       </span>
