@@ -1,4 +1,5 @@
 # [Ecos de Halloween] 🎃
+
 <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3Z2emgxbmZlczR3c2s4bjNiMjBwb2FvNzQ4eDMxdDh0bWU5MWlldyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ow7TbhjmovnmhBomuN/giphy.gif" alt="gatito espeluznante" width= "150" />
 
 ## Descripción 📝
@@ -8,6 +9,7 @@ Este proyecto surge de combinar mi pasión por programar, por la escritura y mi 
 Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visitantes pueden leerlos y disfrutar de las funcionalidades interactivas.
 
 ## Características Principales 🌟
+
 - Subir y gestionar cuentos en formato de texto (con opción para importar archivos de Word).
 - Sonido ambiental con los cuentos. 🎶
 - Integración de playlists de Spotify. 🎧
@@ -20,6 +22,10 @@ Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visi
 - **Frontend:**
   - Vite + React
   - Tailwind CSS
+  - TypeScript
+  - React Router
+  - TanStack Query
+  - Axios
   - Framer Motion (para animaciones)
   - API HTML5 de audio
   - Zustand
@@ -33,9 +39,9 @@ Los administradores (yo) pueden subir y gestionar cuentos, mientras que los visi
   - JWT (JSON Web Tokens)
   
 - **Otras Herramientas:**
-  - TypeScript
-  - Spotify SDK (para integración de playlists)
-  - Supabase
+  - Spotify (playlist embebida vía iframe)
   - Cloudinary
+  - Vercel (hosting y Speed Insights)
+  - Supabase
 
 ![Gif-Hallowenezco](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3VvNTE3ODZzczB1YXQ0YjVlZXZmb2U0bjJveGN2MmhkYzJjbHczeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9wG8hpQRkHMoDbCqzu/giphy.gif)
