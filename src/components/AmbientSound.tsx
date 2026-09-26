@@ -17,7 +17,7 @@ const AmbientSound: FC<{ src: string }> = ({ src }) => {
   }, [src, activeSound, isPlaying]);
 
   return (
-    <audio ref={audioRef} loop>
+    <audio ref={audioRef} loop preload="none">
       <source src={src} type="audio/mp3" />
     </audio>
   );

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
@@ -14,6 +14,11 @@ const FEATURED_AMOUNT = 3;
 const FEATURED_FETCH_TIMEOUT_MS = 5000;
 const FALLBACK_RETRY_MS = 10_000;
 const MAX_FALLBACK_RETRIES = 10;
+
+const MotionLink = motion.create(Link);
+
+const CARD_CLASS =
+  "group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60 cursor-pointer";
 
 interface FeaturedItem {
   id: number;
@@ -59,7 +64,6 @@ const pickFeaturedClassics = (
 };
 
 const StoryCatalog = () => {
-  const navigate = useNavigate();
   const { titles: storyTitles, isLoading: storyTitlesLoading } =
     useStoryTitles();
   const { titles: classicTitles } = useClassicTitles();
@@ -104,9 +108,11 @@ const StoryCatalog = () => {
 
   const featuredLoading =
     storyTitlesLoading || (featuredQuery.isPending && ids.length > 0);
-  const featuredStories = (featuredQuery.data ?? [])
-    .map((item) => item.story)
-    .filter((s): s is StoryDTO => s !== null);
+  // El id viene de la query (número garantizado), no del DTO opcional: así el
+  // enlace nunca puede quedar sin `to`.
+  const featuredStories = (featuredQuery.data ?? []).filter(
+    (item): item is FeaturedItem & { story: StoryDTO } => item.story !== null,
+  );
 
   const visibleClassics = pickFeaturedClassics(classicTitles);
 
@@ -127,10 +133,10 @@ const StoryCatalog = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredStories.map((story, i) => (
-            <motion.button
-              key={story.id}
-              onClick={() => story.id && navigate(`/story/${story.id}`)}
+          {featuredStories.map((item, i) => (
+            <MotionLink
+              key={item.id}
+              to={`/story/${item.id}`}
               whileHover={{ scale: 1.04, transition: { duration: 0.15, ease: "easeOut" } }}
               whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
               initial={{ opacity: 0, y: 24 }}
@@ -141,22 +147,22 @@ const StoryCatalog = () => {
               }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
+              className={CARD_CLASS}
             >
               <FaGhost className="mb-3 text-2xl text-purple-400" />
               <h4 className="text-xl font-bold text-white group-hover:text-amber-300">
-                {story.title}
+                {item.story.title}
               </h4>
-              {story.description && (
+              {item.story.description && (
                 <p className="mt-2 flex-1 text-sm text-gray-400 line-clamp-3">
-                  {story.description}
+                  {item.story.description}
                 </p>
               )}
               <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-amber-400">
                 Leer historia{" "}
                 <FaArrowRight className="transition-transform group-hover:translate-x-1" />
               </span>
-            </motion.button>
+            </MotionLink>
           ))}
         </div>
       )}
@@ -171,9 +177,9 @@ const StoryCatalog = () => {
           <SectionHeading icon={FaBookDead}>Clásicos del Terror</SectionHeading>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visibleClassics.map((classic, i) => (
-              <motion.button
+              <MotionLink
                 key={classic.slug}
-                onClick={() => navigate(`/classic/${classic.slug}`)}
+                to={`/classic/${classic.slug}`}
                 whileHover={{ scale: 1.04, transition: { duration: 0.15, ease: "easeOut" } }}
                 whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
                 initial={{ opacity: 0, y: 24 }}
@@ -184,7 +190,7 @@ const StoryCatalog = () => {
                 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
-                className="group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60"
+                className={CARD_CLASS}
               >
                 <FaBookDead className="mb-3 text-2xl text-purple-400" />
                 <h4 className="text-xl font-bold text-white group-hover:text-amber-300">
@@ -197,7 +203,7 @@ const StoryCatalog = () => {
                   Leer clásico{" "}
                   <FaArrowRight className="transition-transform group-hover:translate-x-1" />
                 </span>
-              </motion.button>
+              </MotionLink>
             ))}
           </div>
         </>

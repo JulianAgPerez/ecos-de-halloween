@@ -1,4 +1,4 @@
-import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Quote {
@@ -71,41 +71,33 @@ const QuoteBody: FC<{ text: string; author: string }> = ({ text, author }) => (
 
 const TerrorQuote: FC = () => {
   const [index, setIndex] = useState(0);
-  const [reservedHeight, setReservedHeight] = useState(0);
-  const measureRef = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
 
+  // WCAG 2.2.2: la rotación se pausa al pasar el mouse o al enfocar la sección.
   useEffect(() => {
+    if (paused) return;
     const id = window.setInterval(
       () => setIndex((prev) => (prev + 1) % QUOTES.length),
       ROTATION_MS,
     );
     return () => window.clearInterval(id);
-  }, []);
-
-  useLayoutEffect(() => {
-    const el = measureRef.current;
-    if (!el) return;
-    const update = () => {
-      let max = 0;
-      for (const child of Array.from(el.children)) {
-        max = Math.max(max, child.getBoundingClientRect().height);
-      }
-      setReservedHeight(max);
-    };
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  }, [paused]);
 
   const quote = QUOTES[index];
 
   return (
-    <div className="relative mx-auto w-full max-w-3xl px-5 py-20 text-center">
+    <div
+      className="relative mx-auto grid w-full max-w-3xl px-5 py-20 text-center"
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
+      {/* Todas las citas apiladas en la misma celda del grid: la celda toma la
+          altura de la más alta y reserva el espacio sin medir nada en JS. */}
       <div
-        ref={measureRef}
         aria-hidden="true"
-        className="pointer-events-none invisible absolute inset-x-5 top-20"
+        className="pointer-events-none invisible col-start-1 row-start-1"
       >
         {QUOTES.map((q) => (
           <blockquote key={q.text}>
@@ -114,10 +106,7 @@ const TerrorQuote: FC = () => {
         ))}
       </div>
 
-      <div
-        className="relative flex items-center justify-center"
-        style={{ height: reservedHeight }}
-      >
+      <div className="col-start-1 row-start-1">
         <AnimatePresence mode="wait">
           <motion.blockquote
             key={index}

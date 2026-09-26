@@ -90,13 +90,19 @@ export const SidebarMenu: FC = () => {
   useEffect(() => {
     const handleShortcut = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
+      // El atajo es un atajo de un solo carácter: WCAG 2.1.4 exige que exija
+      // modificador. También se ignora si se está escribiendo o si el foco
+      // está en un control (si no, la "m" de un botón dispara el atajo).
       if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
+        target.tagName === "BUTTON" ||
+        target.tagName === "A" ||
         target.isContentEditable
       ) {
         return;
       }
+      if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
       if (e.key.toLowerCase() === "m") {
         e.preventDefault();
         toggleMenu();
@@ -125,17 +131,10 @@ export const SidebarMenu: FC = () => {
     }
   }, [isOpen]);
 
-  const handleStoryClick = (id: number) => {
-    if (id === 0) {
-      navigate("/");
-    } else {
-      navigate(`/story/${id}`);
-    }
-    closeMenu();
-  };
+  const storyHref = (id: number) => (id === 0 ? "/" : `/story/${id}`);
 
-  const handleClassicClick = (slug: string) => {
-    navigate(`/classic/${slug}`);
+  const handleStoryClick = (id: number) => {
+    navigate(storyHref(id));
     closeMenu();
   };
 
@@ -166,7 +165,7 @@ export const SidebarMenu: FC = () => {
       <button
         ref={toggleButtonRef}
         onClick={toggleMenu}
-        title="Abrir menú (M)"
+        title="Abrir menú (Ctrl+M / Cmd+M)"
         aria-label={
           isOpen ? "Cerrar menú de historias" : "Abrir menú de historias"
         }
@@ -297,7 +296,7 @@ export const SidebarMenu: FC = () => {
                             ))}
                           </ul>
                         ) : filteredStories.length === 0 ? (
-                          <p className="text-gray-500 text-sm text-center py-4">
+                          <p className="text-gray-300 text-sm text-center py-4">
                             {hasQuery
                               ? `Sin resultados para "${query}"`
                               : "Aún no hay historias"}
@@ -308,8 +307,9 @@ export const SidebarMenu: FC = () => {
                               <StoryListItem
                                 key={name.id}
                                 title={name.title}
+                                to={storyHref(name.id)}
                                 active={isStoryActive(name.id)}
-                                onClick={() => handleStoryClick(name.id)}
+                                onClick={closeMenu}
                                 query={query}
                               />
                             ))}
@@ -354,7 +354,7 @@ export const SidebarMenu: FC = () => {
                             ))}
                           </ul>
                         ) : filteredClassics.length === 0 ? (
-                          <p className="text-gray-500 text-sm text-center py-4">
+                          <p className="text-gray-300 text-sm text-center py-4">
                             {hasQuery
                               ? `Sin resultados para "${query}"`
                               : "Aún no hay clásicos"}
@@ -366,8 +366,9 @@ export const SidebarMenu: FC = () => {
                                 key={name.slug}
                                 title={name.title}
                                 author={name.author}
+                                to={`/classic/${name.slug}`}
                                 active={isClassicActive(name.slug)}
-                                onClick={() => handleClassicClick(name.slug)}
+                                onClick={closeMenu}
                                 query={query}
                               />
                             ))}

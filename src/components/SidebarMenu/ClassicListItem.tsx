@@ -1,10 +1,12 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
 import { FaBookDead } from "react-icons/fa";
 import Highlight from "./Highlight";
 
 interface ClassicListItemProps {
   title: string;
   author: string;
+  to: string;
   active: boolean;
   onClick: () => void;
   query: string;
@@ -13,16 +15,18 @@ interface ClassicListItemProps {
 const ClassicListItem: FC<ClassicListItemProps> = ({
   title,
   author,
+  to,
   active,
   onClick,
   query,
 }) => (
   <li>
-    <button
+    <Link
+      to={to}
       data-nav-item
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+      className={`w-full flex cursor-pointer items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
         active
           ? "bg-custom-purple text-amber-300"
           : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
@@ -37,7 +41,7 @@ const ClassicListItem: FC<ClassicListItemProps> = ({
           <Highlight text={author} query={query} />
         </span>
       </span>
-    </button>
+    </Link>
   </li>
 );
 

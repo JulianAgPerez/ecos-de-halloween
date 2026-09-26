@@ -18,7 +18,7 @@ const FloatingEmbers = () => (
     {EMBERS.map((e, i) => (
       <span
         key={i}
-        className="absolute bottom-[-10px] rounded-full bg-orange-500/80 shadow-[0_0_10px_2px_rgba(249,115,22,0.7)]"
+        className="ember-particle absolute bottom-[-10px] rounded-full bg-orange-500/80 shadow-[0_0_10px_2px_rgba(249,115,22,0.7)]"
         style={{
           left: e.left,
           width: e.size,

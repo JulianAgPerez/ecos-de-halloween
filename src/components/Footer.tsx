@@ -8,7 +8,7 @@ function Footer() {
           href="https://www.instagram.com/juli_pereh/"
           target="_blank"
           rel="noopener noreferrer"
-          className="social-icon"
+          aria-label="Instagram de Ecos de Halloween"
         >
           <FaInstagram className="text-amber-400 hover:text-amber-500" />
         </a>
@@ -16,7 +16,7 @@ function Footer() {
           href="https://www.linkedin.com/in/julian-perez-12b368247/"
           target="_blank"
           rel="noopener noreferrer"
-          className="social-icon"
+          aria-label="LinkedIn de Ecos de Halloween"
         >
           <FaLinkedin className="text-amber-400 hover:text-amber-500" />
         </a>

@@ -8,9 +8,11 @@ body {
   }
 
 /* Fondo animado lento (Ken Burns) para páginas de auth y 404 */
-.bg-slow-zoom {
-  animation: slow-zoom 40s ease-in-out infinite alternate;
-  will-change: transform;
+@media (prefers-reduced-motion: no-preference) {
+  .bg-slow-zoom {
+    animation: slow-zoom 40s ease-in-out infinite alternate;
+    will-change: transform;
+  }
 }
 
 @keyframes slow-zoom {
@@ -105,36 +107,42 @@ body {
   }
 }
 
-/* Titulo con parpadeo (flicker) estilo Halloween */
+/* Las ascuas y la araña se animan con el atajo `animation` en style inline, así
+   que para apagarlas hay que ganarle en especificidad con !important. */
+@media (prefers-reduced-motion: reduce) {
+  .ember-particle,
+  .spider-particle {
+    animation: none !important;
+  }
+}
+
+/* Titulo con parpadeo (flicker) estilo Halloween.
+   El resplandor es un text-shadow fijo (se pinta una sola vez) y el parpadeo
+   anima opacity, una propiedad compositable: animar text-shadow en un titulo
+   de text-9xl repintaba el hilo principal en cada ciclo. */
 .halloween-flicker {
   color: #fde68a;
-  animation: halloween-flicker 5s ease-in-out infinite;
+  text-shadow:
+    0 0 12px rgba(251, 191, 36, 0.9),
+    0 0 40px rgba(251, 191, 36, 0.55),
+    0 0 72px rgba(168, 85, 247, 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .halloween-flicker {
+    animation: halloween-flicker 5s ease-in-out infinite;
+  }
 }
 
 @keyframes halloween-flicker {
-  0%, 100% {
-    text-shadow:
-      0 0 8px rgba(251, 191, 36, 0.7),
-      0 0 24px rgba(251, 191, 36, 0.4),
-      0 0 48px rgba(168, 85, 247, 0.35);
+  0%, 50%, 100% {
+    opacity: 1;
   }
   25% {
-    text-shadow:
-      0 0 5px rgba(251, 191, 36, 0.5),
-      0 0 14px rgba(251, 191, 36, 0.3),
-      0 0 32px rgba(168, 85, 247, 0.25);
-  }
-  50% {
-    text-shadow:
-      0 0 12px rgba(251, 191, 36, 0.9),
-      0 0 40px rgba(251, 191, 36, 0.55),
-      0 0 72px rgba(168, 85, 247, 0.45);
+    opacity: 0.7;
   }
   75% {
-    text-shadow:
-      0 0 6px rgba(251, 191, 36, 0.6),
-      0 0 18px rgba(251, 191, 36, 0.35),
-      0 0 40px rgba(168, 85, 247, 0.3);
+    opacity: 0.78;
   }
 }
 

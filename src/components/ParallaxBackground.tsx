@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef, useState } from "react";
+import { FC, ReactNode, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   getBackgroundSrcSet,
@@ -26,7 +26,6 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
   fadeTitle = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [loaded, setLoaded] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -58,10 +57,7 @@ const ParallaxBackground: FC<ParallaxBackgroundProps> = ({
             alt=""
             decoding="async"
             loading="eager"
-            onLoad={() => setLoaded(true)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: loaded ? 1 : 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            fetchPriority="high"
             className="absolute left-0 right-0 top-[-16%] h-[132%] w-full object-cover object-center"
             style={backgroundStyle}
           />

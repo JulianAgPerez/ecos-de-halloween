@@ -18,7 +18,7 @@ const Spider: FC<{ size: number; delay: string; dur: string }> = ({
       animation: `spider-drop ${dur}s ease-in-out ${delay} infinite`,
       willChange: "transform",
     }}
-    className="drop-shadow-[0_0_7px_rgba(168,85,247,0.6)]"
+    className="spider-particle drop-shadow-[0_0_7px_rgba(168,85,247,0.6)]"
   >
     <circle cx="16" cy="14" r="7" fill="#241c44" opacity="0.95" />
     <g stroke="#3a2f66" strokeWidth="1.8" fill="none">

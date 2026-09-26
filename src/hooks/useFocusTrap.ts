@@ -32,15 +32,24 @@ export function useFocusTrap(ref: FocusableRef, active: boolean) {
         return;
       }
 
+      if (e.key === " " || e.key === "Spacebar") {
+        const target = e.target as HTMLElement;
+        // Un <button> ya se activa con Espacio; un <a href> no (WCAG 2.1.1).
+        if (target.tagName !== "A") return;
+        const item = target.closest<HTMLElement>("[data-nav-item]");
+        if (!item) return;
+        e.preventDefault();
+        item.click();
+        return;
+      }
+
       if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
       const items = Array.from(
-        panel.querySelectorAll<HTMLButtonElement>("[data-nav-item]"),
+        panel.querySelectorAll<HTMLElement>("[data-nav-item]"),
       );
       if (items.length === 0) return;
       e.preventDefault();
-      const currentIndex = items.indexOf(
-        document.activeElement as HTMLButtonElement,
-      );
+      const currentIndex = items.indexOf(document.activeElement as HTMLElement);
       if (currentIndex === -1) {
         items[e.key === "ArrowDown" ? 0 : items.length - 1].focus();
         return;

@@ -38,7 +38,7 @@ const AmbientSoundSelector: FC = () => {
         aria-expanded={isOpen}
         className="flex items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-900 p-0.5 overflow-hidden hover:from-purple-700 hover:to-purple-800 active:from-purple-900 active:to-purple-950 transition duration-1000"
       >
-        <span className="px-5 py-2.5 text-amber-600">
+        <span className="px-5 py-2.5 text-amber-300">
           <FaMusic size={20} />
         </span>
       </button>

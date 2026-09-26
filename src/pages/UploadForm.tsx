@@ -24,6 +24,9 @@ declare global {
 
 const CLOUDINARY_WIDGET_URL = "https://widget.cloudinary.com/v2.0/global/all.js";
 
+const ERROR_ID = "upload-error";
+const SUCCESS_ID = "upload-success";
+
 let cloudinaryScriptPromise: Promise<void> | null = null;
 
 const loadCloudinaryScript = (): Promise<void> => {
@@ -122,14 +125,23 @@ const UploadForm: FC = () => {
       <AnimatedBackground />
       <form
         onSubmit={handleSubmit}
+        aria-busy={loading}
         className="relative z-10 w-full max-w-lg bg-custom-purple/95 border border-purple-700 shadow-2xl rounded-lg p-8"
       >
         <h1 className="font-creepster text-4xl text-amber-400 text-center mb-6">
           Subir Cuento
         </h1>
-        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+        {error && (
+          <p id={ERROR_ID} role="alert" className="text-red-400 text-center mb-4">
+            {error}
+          </p>
+        )}
         {success && (
-          <p className="text-green-400 text-center mb-4">
+          <p
+            id={SUCCESS_ID}
+            role="status"
+            className="text-green-400 text-center mb-4"
+          >
             Historia subida con éxito.
           </p>
         )}
@@ -140,10 +152,15 @@ const UploadForm: FC = () => {
           <input
             type="text"
             id="title"
+            name="title"
             placeholder="Título del cuento"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
+            autoComplete="off"
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? ERROR_ID : success ? SUCCESS_ID : undefined}
+            disabled={loading}
+            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400 disabled:opacity-50"
             required
           />
         </div>
@@ -153,10 +170,13 @@ const UploadForm: FC = () => {
           </label>
           <textarea
             id="description"
+            name="description"
             placeholder="Descripción breve"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400"
+            autoComplete="off"
+            disabled={loading}
+            className="w-full p-2 bg-gray-900 border border-purple-800 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-400 disabled:opacity-50"
             rows={3}
           />
         </div>
@@ -182,7 +202,10 @@ const UploadForm: FC = () => {
           <input
             type="file"
             id="file"
+            name="file"
             onChange={handleFileChange}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? ERROR_ID : undefined}
             disabled={loading}
             className="block w-full text-gray-300 file:mr-4 file:px-4 file:py-2 file:rounded file:border-0 file:bg-purple-700 file:text-amber-400 file:cursor-pointer hover:file:bg-purple-800 disabled:opacity-50"
           />

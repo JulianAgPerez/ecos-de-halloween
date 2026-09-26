@@ -31,3 +31,10 @@ dist-ssr
 
 # Agent tooling artifacts (skill registry cache)
 .atl/
+
+# CodeGraph local index (rebuildable, machine-specific)
+.codegraph/
+
+# Documentacion interna de trabajo (auditorias, notas) - no va al repo
+docs/
+

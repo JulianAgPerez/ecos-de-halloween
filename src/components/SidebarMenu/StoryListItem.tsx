@@ -1,9 +1,11 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
 import { FaGhost } from "react-icons/fa";
 import Highlight from "./Highlight";
 
 interface StoryListItemProps {
   title: string;
+  to: string;
   active: boolean;
   onClick: () => void;
   query: string;
@@ -11,16 +13,18 @@ interface StoryListItemProps {
 
 const StoryListItem: FC<StoryListItemProps> = ({
   title,
+  to,
   active,
   onClick,
   query,
 }) => (
   <li>
-    <button
+    <Link
+      to={to}
       data-nav-item
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
+      className={`w-full flex cursor-pointer items-center gap-3 px-3 py-2.5 text-left rounded-lg text-base transition ${
         active
           ? "bg-custom-purple text-amber-300"
           : "text-gray-200 hover:bg-custom-purple hover:text-amber-300"
@@ -30,7 +34,7 @@ const StoryListItem: FC<StoryListItemProps> = ({
       <span className="truncate">
         <Highlight text={title} query={query} />
       </span>
-    </button>
+    </Link>
   </li>
 );
 
