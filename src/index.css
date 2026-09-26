@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Métricas de Creepster (upm 1024: asc 974, desc 223, linegap 0, x-height 751)
+   sobre las de Georgia (x-height 0.4814), para que el h1 del LCP no desplace
+   el CTA al llegar la webfont. Los overrides anulan las métricas propias del
+   fallback, así que el line box es idéntico antes y después del swap. */
+@font-face {
+  font-family: 'Creepster Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('serif');
+  ascent-override: 95.12%;
+  descent-override: 21.78%;
+  line-gap-override: 0%;
+  size-adjust: 152.3%;
+}
+
 body {
     font-family: 'Crimson Text', serif;
     background-color: #141126;

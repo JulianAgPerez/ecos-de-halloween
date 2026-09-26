@@ -12,7 +12,7 @@ export default {
         "home-principal": `url('${HOME_BACKGROUND_URL}')`,
       },
       fontFamily: {
-        creepster: ["'Creepster'", "cursive"],
+        creepster: ["'Creepster'", "'Creepster Fallback'", "cursive"],
       },
       colors: {
         "custom-purple": "#1E193A",
