@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { uploadStoryWithBody } from "../services/UploadFileService";
+import { useSeo } from "../hooks/useSeo";
 import AnimatedBackground from "../components/AnimatedBackground";
 
 interface CloudinaryWidget {
@@ -57,6 +58,12 @@ const UploadForm: FC = () => {
   const [widgetLoading, setWidgetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  useSeo({
+    title: "Subir Cuento",
+    description: "Subí tu cuento de terror a Ecos de Halloween.",
+    noindex: true,
+  });
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {

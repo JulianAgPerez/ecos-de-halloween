@@ -16,6 +16,8 @@ interface StoryReaderOptions<TStory, TTitle extends { title: string }> {
 interface StoryReaderResult<TStory, TTitle> {
   story: TStory | null;
   isFallback: boolean;
+  notFound: boolean;
+  isPending: boolean;
   previous: TTitle | null;
   next: TTitle | null;
   previousPath: string | null;
@@ -25,6 +27,7 @@ interface StoryReaderResult<TStory, TTitle> {
 interface StoryData<T> {
   story: T | null;
   isFallback: boolean;
+  notFound: boolean;
 }
 
 const FETCH_TIMEOUT_MS = 5000;
@@ -57,24 +60,32 @@ export function useStoryReader<TStory, TTitle extends { title: string }>({
       retriesLeft.current -= 1;
       return FALLBACK_RETRY_MS;
     },
-    queryFn: async () => {
+    queryFn: async (): Promise<StoryData<TStory>> => {
+      // Los servicios devuelven null cuando la API respondió y el recurso no
+      // está, y lanzan cuando la petición falló. Esa es la única forma de
+      // distinguir "no existe" (404) de "no se pudo consultar" (respaldo local).
       let fetched: TStory | null = null;
+      let missing = false;
       try {
         fetched = await withTimeout(fetch(key), FETCH_TIMEOUT_MS);
+        missing = !fetched;
       } catch {
-        fetched = null;
+        // La petición falló (red, servidor o timeout), así que no es un 404.
+        missing = false;
       }
-      if (fetched) {
-        return { story: fetched, isFallback: false };
-      }
+
+      if (fetched) return { story: fetched, isFallback: false, notFound: false };
+      if (missing) return { story: null, isFallback: false, notFound: true };
+
       const fb = await fallback(key);
-      return { story: fb ?? null, isFallback: fb !== null };
+      return { story: fb, isFallback: fb !== null, notFound: false };
     },
   });
 
-  const { story, isFallback } = query.data ?? {
+  const { story, isFallback, notFound } = query.data ?? {
     story: null,
     isFallback: false,
+    notFound: false,
   };
 
   const savedFor = useRef<TStory | null>(null);
@@ -95,6 +106,8 @@ export function useStoryReader<TStory, TTitle extends { title: string }>({
   return {
     story,
     isFallback,
+    notFound,
+    isPending: query.isPending,
     previous,
     next,
     previousPath: previous ? pathFor(previous) : null,

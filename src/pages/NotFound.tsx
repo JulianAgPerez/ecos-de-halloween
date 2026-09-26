@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSeo } from "../hooks/useSeo";
 import AnimatedBackground from "../components/AnimatedBackground";
 
 const Figure: FC<{ fill: string; filter: string }> = ({ fill, filter }) => (
@@ -214,6 +215,12 @@ const LostTravelerScene: FC<{ reduce: boolean }> = ({ reduce }) => (
 const NotFound: FC = () => {
   const navigate = useNavigate();
   const reduce = Boolean(useReducedMotion());
+
+  useSeo({
+    title: "Página no encontrada",
+    description: "Los ecos se pierden en la noche...",
+    noindex: true,
+  });
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">

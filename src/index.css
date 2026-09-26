@@ -146,6 +146,111 @@ body {
   }
 }
 
+/* Cargador fantasma: pulso del halo, flotación del fantasma y sombra que se
+   contrae. Vive en CSS para que framer-motion no entre al primer render. */
+.ghost-glow {
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ghost-glow {
+    animation: ghost-glow 3s ease-in-out infinite;
+  }
+
+  .ghost-float {
+    animation: ghost-float 2.8s ease-in-out infinite;
+  }
+
+  .ghost-shadow {
+    animation: ghost-shadow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes ghost-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes ghost-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(2deg);
+  }
+}
+
+@keyframes ghost-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleX(0.8);
+    opacity: 0.3;
+  }
+}
+
+/* Panel lateral del menú. `transform` es una propiedad compuesta: entrar y salir
+   no repinta el contenido. `visibility` mantiene el panel fuera del árbol de
+   accesibilidad recien al terminar la salida (se interpola de forma discreta:
+   sigue visible durante toda la transición y salta a hidden al final). */
+.sidebar-panel {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 300ms ease-in-out,
+    visibility 300ms;
+}
+
+.sidebar-panel[data-state="closed"] {
+  transform: translateX(-100%);
+  visibility: hidden;
+}
+
+.sidebar-overlay {
+  opacity: 1;
+  transition: opacity 200ms ease-in-out;
+}
+
+.sidebar-overlay[data-state="closed"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Secciones plegables del menú. `grid-template-rows: 0fr -> 1fr` es la forma de
+   animar hacia/desde `auto` en CSS puro; el hijo necesita `overflow: hidden` y
+   `min-height: 0` para que la fila en 0fr pueda colapsar de verdad. Mismo truco
+   de `visibility` para que la sección cerrada no sea tabulable. */
+.sidebar-section {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 250ms ease-in-out,
+    opacity 250ms ease-in-out,
+    visibility 250ms;
+}
+
+.sidebar-section[data-state="open"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar-section > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Tarjeta de vidrio compartida por las secciones de Home */
 .glass-card {
   background: rgba(0, 0, 0, 0.3);

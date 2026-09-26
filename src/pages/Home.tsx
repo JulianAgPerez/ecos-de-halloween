@@ -14,7 +14,8 @@ import TerrorQuote from "../components/Home/TerrorQuote";
 import HorrorEasterEggs from "../components/Home/HorrorEasterEggs";
 import WitchJourney from "../components/Home/WitchJourney";
 import ParallaxBackground from "../components/ParallaxBackground";
-import { HOME_BACKGROUND_URL } from "../config";
+import { HOME_BACKGROUND_URL, SITE_DESCRIPTION, SITE_NAME } from "../config";
+import { useSeo } from "../hooks/useSeo";
 import { getDaysUntilHalloween, getSeason, type Season } from "../utils/season";
 
 const DepthHeat: FC = () => {
@@ -46,6 +47,12 @@ const HERO_TITLES: Record<Season, string> = {
 const Home = () => {
   const season = getSeason();
   const daysLeft = getDaysUntilHalloween();
+
+  useSeo({
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    canonicalPath: "/",
+  });
 
   const heroTitle = HERO_TITLES[season];
 

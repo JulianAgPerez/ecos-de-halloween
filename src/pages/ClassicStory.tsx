@@ -1,12 +1,18 @@
+import { lazy } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClassicStoryDTO, ClassicStoryTitleDTO } from "../types";
 import { getClassicStoryById } from "../services/ClassicStoryService";
 import { useClassicTitles } from "../hooks/useTitles";
 import { useStoryReader } from "../hooks/useStoryReader";
+import { useSeo } from "../hooks/useSeo";
 import { saveLastRead } from "../utils/lastRead";
+import { classicBookJsonLd } from "../utils/seo";
+import { SITE_DESCRIPTION, SITE_NAME } from "../config";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
+
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 const fallbackClassic = async (slug: string): Promise<ClassicStoryDTO | null> => {
   const { getClassicStoryFallback } = await import(
@@ -19,7 +25,7 @@ export const ClassicStory = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  const { story, isFallback, previous, next, previousPath, nextPath } =
+  const { story, isFallback, previous, next, previousPath, nextPath, isPending } =
     useStoryReader<ClassicStoryDTO, ClassicStoryTitleDTO>({
       keyParam: slug,
       fetch: (key) => getClassicStoryById(key),
@@ -34,8 +40,29 @@ export const ClassicStory = () => {
       },
     });
 
-  if (!story) {
+  const path = `/classic/${slug ?? ""}`;
+  const byline = story
+    ? `${story.author}${story.year ? ` (${story.year})` : ""}`
+    : "";
+
+  useSeo({
+    title: story?.title ?? (isPending ? "Cargando" : "Página no encontrada"),
+    description: story
+      ? `${story.title}, de ${byline}. Lectura completa en ${SITE_NAME}.`
+      : SITE_DESCRIPTION,
+    canonicalPath: story ? path : undefined,
+    jsonLd: story ? classicBookJsonLd(story, path) : undefined,
+    // El useSeo del padre corre después del de NotFound, así que el 404 real
+    // depende de esta flag y no de la del hijo.
+    noindex: !story,
+  });
+
+  if (isPending) {
     return <GhostLoader />;
+  }
+
+  if (!story) {
+    return <NotFound />;
   }
 
   return (

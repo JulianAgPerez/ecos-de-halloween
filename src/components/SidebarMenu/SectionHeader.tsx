@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { motion } from "framer-motion";
 import { IconType } from "react-icons";
 import { FaChevronDown } from "react-icons/fa";
 
@@ -39,12 +38,13 @@ const SectionHeader: FC<SectionHeaderProps> = ({
       </span>
       <span className="flex items-center gap-2 text-xs text-gray-400">
         {count}
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+        <span
+          className={`transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
         >
           <FaChevronDown size={14} className="text-amber-400" />
-        </motion.span>
+        </span>
       </span>
     </button>
   </>

@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/form", "destination": "/index.html" },
+    { "source": "/story/:id", "destination": "/index.html" },
+    { "source": "/classic/:slug", "destination": "/index.html" }
+  ]
 }

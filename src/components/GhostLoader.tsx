@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
 interface GhostLoaderProps {
   label?: string;
@@ -34,8 +33,6 @@ const GhostSVG: FC<{ size: number }> = ({ size }) => (
 );
 
 const GhostLoader: FC<GhostLoaderProps> = ({ label }) => {
-  const reduce = Boolean(useReducedMotion());
-
   return (
     <div
       role="status"
@@ -45,30 +42,17 @@ const GhostLoader: FC<GhostLoaderProps> = ({ label }) => {
       <span className="sr-only">{label ?? "Cargando"}</span>
 
       <div className="relative flex h-64 w-52 items-end justify-center">
-        <motion.div
+        <div
           aria-hidden="true"
-          className="absolute inset-8 rounded-full bg-purple-500/25 blur-2xl"
-          animate={reduce ? { opacity: 0.5 } : { opacity: [0.3, 0.6, 0.3] }}
-          transition={
-            reduce ? {} : { duration: 3, repeat: Infinity, ease: "easeInOut" }
-          }
+          className="ghost-glow absolute inset-8 rounded-full bg-purple-500/25 blur-2xl"
         />
         <div className="relative flex flex-col items-center">
-          <motion.div
-            animate={reduce ? {} : { y: [0, -16, 0], rotate: [-2, 2, -2] }}
-            transition={
-              reduce ? {} : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
-            }
-          >
+          <div className="ghost-float">
             <GhostSVG size={120} />
-          </motion.div>
-          <motion.div
+          </div>
+          <div
             aria-hidden="true"
-            className="-mt-1 h-3 w-20 rounded-full bg-black/40 blur-[3px]"
-            animate={reduce ? {} : { scaleX: [1, 0.8, 1], opacity: [0.5, 0.3, 0.5] }}
-            transition={
-              reduce ? {} : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
-            }
+            className="ghost-shadow -mt-1 h-3 w-20 rounded-full bg-black/40 blur-[3px]"
           />
         </div>
       </div>

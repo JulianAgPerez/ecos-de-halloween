@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { StoryDTO, StoryTitleDTO } from "../types";
 import { getStoryById } from "../services/StoryService";
 import { useStoryTitles } from "../hooks/useTitles";
 import { useStoryReader } from "../hooks/useStoryReader";
+import { useSeo } from "../hooks/useSeo";
 import { saveLastRead } from "../utils/lastRead";
 import { getOptimizedBackgroundUrl } from "../utils/cloudinary";
+import { userStoryJsonLd } from "../utils/seo";
+import { SITE_DESCRIPTION } from "../config";
 import GhostLoader from "../components/GhostLoader";
 import StoryPageLayout from "../components/Story/StoryPageLayout";
 import ReadingNavigation from "../components/Story/ReadingNavigation";
 
+const NotFound = lazy(() => import("../pages/NotFound"));
+
 const fallbackStory = async (key: string): Promise<StoryDTO | null> => {
-  const { fallbackStories, getFallbackStoryById } = await import(
-    "../data/fallbackData"
-  );
+  const { getFallbackStoryById } = await import("../data/fallbackData");
   const id = parseInt(key, 10);
-  return getFallbackStoryById(id) ?? fallbackStories[0] ?? null;
+  // Sin copia local para este id no hay nada que inventar: se devuelve null y la
+  // vista cae en el 404 en vez de mostrar otra historia.
+  return getFallbackStoryById(id) ?? null;
 };
 
 export const Story = () => {
@@ -24,7 +29,7 @@ export const Story = () => {
   const navigate = useNavigate();
   const [bgReady, setBgReady] = useState(false);
 
-  const { story, previous, next, previousPath, nextPath } =
+  const { story, previous, next, previousPath, nextPath, isPending } =
     useStoryReader<StoryDTO, StoryTitleDTO>({
       keyParam: id,
       fetch: (key) => getStoryById(parseInt(key, 10)),
@@ -34,6 +39,18 @@ export const Story = () => {
       basePath: "/story",
       save: (s) => saveLastRead({ type: "story", id: numericId, title: s.title }),
     });
+
+  const path = `/story/${id ?? ""}`;
+
+  useSeo({
+    title: story?.title ?? (isPending ? "Cargando" : "Página no encontrada"),
+    description: story?.description ?? SITE_DESCRIPTION,
+    canonicalPath: story ? path : undefined,
+    jsonLd: story ? userStoryJsonLd(story, path) : undefined,
+    // El useSeo del padre corre después del de NotFound, así que el 404 real
+    // depende de esta flag y no de la del hijo.
+    noindex: !story,
+  });
 
   useEffect(() => {
     setBgReady(false);
@@ -59,7 +76,15 @@ export const Story = () => {
     };
   }, [story]);
 
-  if (!story || !bgReady) {
+  if (isPending) {
+    return <GhostLoader />;
+  }
+
+  if (!story) {
+    return <NotFound />;
+  }
+
+  if (!bgReady) {
     return <GhostLoader />;
   }
 

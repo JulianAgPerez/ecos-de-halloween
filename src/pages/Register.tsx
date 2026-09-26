@@ -1,11 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthForm from "../components/auth/AuthForm";
 import { registerUser } from "../services/AuthService";
+import { useSeo } from "../hooks/useSeo";
 import useAuthStore from "../store/useAuthStore";
 
 const Register = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+
+  useSeo({
+    title: "Registrarse",
+    description: "Creá tu cuenta en Ecos de Halloween y subí tus cuentos de terror.",
+    noindex: true,
+  });
 
   return (
     <AuthForm
