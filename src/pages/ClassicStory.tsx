@@ -52,8 +52,7 @@ export const ClassicStory = () => {
       : SITE_DESCRIPTION,
     canonicalPath: story ? path : undefined,
     jsonLd: story ? classicBookJsonLd(story, path) : undefined,
-    // El useSeo del padre corre después del de NotFound, así que el 404 real
-    // depende de esta flag y no de la del hijo.
+    // El useSeo del padre corre después del de NotFound: manda esta flag.
     noindex: !story,
   });
 

@@ -7,7 +7,7 @@ import {
   FaSearch,
   FaTimes,
 } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useClassicTitles, useStoryTitles } from "../hooks/useTitles";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useSearchTitles } from "../hooks/useSearchTitles";
@@ -38,6 +38,8 @@ export const SidebarMenu: FC = () => {
   } = useClassicTitles();
 
   const [isOpen, setIsOpen] = useState(false);
+  // Montaje único: la transición de salida necesita el panel en el DOM.
+  const [hasOpened, setHasOpened] = useState(false);
   const [lastRead, setLastRead] = useState(() => getLastRead());
   const { query, setQuery, filteredStories, filteredClassics, hasQuery } =
     useSearchTitles(storyNames, classicNames);
@@ -45,11 +47,11 @@ export const SidebarMenu: FC = () => {
     stories: boolean;
     classics: boolean;
   }>({ stories: true, classics: true });
-  const navigate = useNavigate();
   const location = useLocation();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+  const isPanelMounted = isOpen || hasOpened;
 
   useFocusTrap(panelRef, isOpen);
 
@@ -58,6 +60,7 @@ export const SidebarMenu: FC = () => {
     setQuery("");
   }, [setQuery]);
   const toggleMenu = useCallback(() => {
+    setHasOpened(true);
     setIsOpen((prev) => !prev);
     setQuery("");
   }, [setQuery]);
@@ -89,9 +92,8 @@ export const SidebarMenu: FC = () => {
   useEffect(() => {
     const handleShortcut = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      // El atajo es un atajo de un solo carácter: WCAG 2.1.4 exige que exija
-      // modificador. También se ignora si se está escribiendo o si el foco
-      // está en un control (si no, la "m" de un botón dispara el atajo).
+      // Atajo de un solo carácter: WCAG 2.1.4 exige modificador. Se ignora
+      // escribiendo o con el foco en un control, o la "m" de un botón lo dispara.
       if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
@@ -132,19 +134,7 @@ export const SidebarMenu: FC = () => {
 
   const storyHref = (id: number) => (id === 0 ? "/" : `/story/${id}`);
 
-  const handleStoryClick = (id: number) => {
-    navigate(storyHref(id));
-    closeMenu();
-  };
-
-  const handleLastReadClick = () => {
-    if (!lastRead) return;
-    const route = lastReadRoute(lastRead);
-    if (route) {
-      navigate(route);
-      closeMenu();
-    }
-  };
+  const lastReadHref = lastRead ? lastReadRoute(lastRead) : null;
 
   useEffect(() => {
     if (isOpen) {
@@ -175,193 +165,198 @@ export const SidebarMenu: FC = () => {
         ☰
       </button>
 
-      {/* El panel queda siempre montado y se muestra/esconde con CSS: si se
-          montara al abrir, useFocusTrap y el foco inicial verían un ref vacío. */}
-      <div
-        onClick={closeMenu}
-        data-state={isOpen ? "open" : "closed"}
-        className="sidebar-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-        aria-hidden="true"
-      />
-      <div
-        id="sidebar-panel"
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menú de historias"
-        data-state={isOpen ? "open" : "closed"}
-        className="sidebar-panel fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-gray-900 border-r border-purple-800/50 shadow-lg z-50 flex flex-col"
-      >
-        <div className="flex items-start justify-between px-5 pt-6 pb-4 border-b border-gray-700/60">
-          <h2 className="text-3xl text-amber-400 font-creepster">
-            Cuentos de Terror
-          </h2>
-          <button
-            ref={closeButtonRef}
+      {/* Los refs se adjuntan en commit, antes que los efectos: useFocusTrap los ve. */}
+      {isPanelMounted && (
+        <>
+          <div
             onClick={closeMenu}
-            aria-label="Cerrar menú"
-            className="p-2 -m-1 text-amber-400 hover:text-white hover:bg-purple-800/40 rounded-full transition"
+            data-state={isOpen ? "open" : "closed"}
+            className="sidebar-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            aria-hidden="true"
+          />
+          <div
+            id="sidebar-panel"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de historias"
+            data-state={isOpen ? "open" : "closed"}
+            className="sidebar-panel fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-gray-900 border-r border-purple-800/50 shadow-lg z-50 flex flex-col"
           >
-            <FaTimes size={20} />
-          </button>
-        </div>
-
-        <div className="shrink-0 px-4 pt-4 pb-3 border-b border-gray-700/60">
-          <label className="relative block mb-3">
-            <FaSearch
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-            />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar historias o autores..."
-              aria-label="Buscar historias"
-              className="w-full bg-custom-purple border border-purple-700 rounded-lg pl-9 pr-3 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
-            />
-          </label>
-
-          <button
-            onClick={() => handleStoryClick(0)}
-            aria-current={location.pathname === "/" ? "page" : undefined}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border ${
-              location.pathname === "/"
-                ? "text-amber-300 bg-custom-purple border-purple-400/60"
-                : "text-amber-400 hover:bg-custom-purple hover:text-amber-300 border-purple-800/40"
-            }`}
-          >
-            <FaHome size={18} className="text-purple-400" />
-            Home
-          </button>
-
-          {lastRead && (
-            <button
-              data-nav-item
-              onClick={handleLastReadClick}
-              aria-label={`Continuar leyendo ${lastRead.title}`}
-              className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border border-purple-800/40 text-amber-300 hover:bg-custom-purple hover:text-amber-200"
-            >
-              <FaBookOpen size={18} className="text-purple-400" />
-              <span className="min-w-0 text-left">
-                <span className="block text-sm">Continuar leyendo</span>
-                <span className="block text-xs text-gray-400 italic truncate">
-                  {lastRead.title}
-                </span>
-              </span>
-            </button>
-          )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-4 pb-10 pt-3">
-          <section aria-labelledby="my-stories-heading" className="mb-6">
-            <SectionHeader
-              headingId="my-stories-heading"
-              listId="stories-list"
-              label="Mis Historias"
-              icon={FaGhost}
-              count={filteredStories.length}
-              open={storiesOpen}
-              onToggle={() => toggleSection("stories")}
-            />
-
-            <div
-              id="stories-list"
-              data-state={storiesOpen ? "open" : "closed"}
-              className="sidebar-section"
-            >
-              <div>
-                {isFallback && (
-                  <p className="text-yellow-500 text-xs text-center mb-3">
-                    ⚠️ Modo sin conexión
-                  </p>
-                )}
-
-                {isStoriesLoading ? (
-                  <ul className="space-y-1">
-                    {[0, 1, 2].map((i) => (
-                      <StorySkeleton key={i} />
-                    ))}
-                  </ul>
-                ) : filteredStories.length === 0 ? (
-                  <p className="text-gray-300 text-sm text-center py-4">
-                    {hasQuery
-                      ? `Sin resultados para "${query}"`
-                      : "Aún no hay historias"}
-                  </p>
-                ) : (
-                  <ul className="divide-y divide-gray-700/60">
-                    {filteredStories.map((name) => (
-                      <StoryListItem
-                        key={name.id}
-                        title={name.title}
-                        to={storyHref(name.id)}
-                        active={isStoryActive(name.id)}
-                        onClick={closeMenu}
-                        query={query}
-                      />
-                    ))}
-                  </ul>
-                )}
-              </div>
+            <div className="flex items-start justify-between px-5 pt-6 pb-4 border-b border-gray-700/60">
+              <h2 className="text-3xl text-amber-400 font-creepster">
+                Cuentos de Terror
+              </h2>
+              <button
+                ref={closeButtonRef}
+                onClick={closeMenu}
+                aria-label="Cerrar menú"
+                className="p-2 -m-1 text-amber-400 hover:text-white hover:bg-purple-800/40 rounded-full transition"
+              >
+                <FaTimes size={20} />
+              </button>
             </div>
-          </section>
 
-          <section aria-labelledby="classics-heading">
-            <SectionHeader
-              headingId="classics-heading"
-              listId="classics-list"
-              label="Clásicos del Terror"
-              icon={FaBookDead}
-              count={filteredClassics.length}
-              open={classicsOpen}
-              onToggle={() => toggleSection("classics")}
-            />
+            <div className="shrink-0 px-4 pt-4 pb-3 border-b border-gray-700/60">
+              <label className="relative block mb-3">
+                <FaSearch
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Buscar historias o autores..."
+                  aria-label="Buscar historias"
+                  className="w-full bg-custom-purple border border-purple-700 rounded-lg pl-9 pr-3 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40"
+                />
+              </label>
 
-            <div
-              id="classics-list"
-              data-state={classicsOpen ? "open" : "closed"}
-              className="sidebar-section"
-            >
-              <div>
-                {isClassicFallback && (
-                  <p className="text-yellow-500 text-xs text-center mb-3">
-                    ⚠️ Clásicos sin conexión
-                  </p>
-                )}
+              <Link
+                to="/"
+                onClick={closeMenu}
+                aria-current={location.pathname === "/" ? "page" : undefined}
+                className={`w-full flex cursor-pointer items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border ${
+                  location.pathname === "/"
+                    ? "text-amber-300 bg-custom-purple border-purple-400/60"
+                    : "text-amber-400 hover:bg-custom-purple hover:text-amber-300 border-purple-800/40"
+                }`}
+              >
+                <FaHome size={18} className="text-purple-400" />
+                Home
+              </Link>
 
-                {isClassicsLoading ? (
-                  <ul className="space-y-1">
-                    {[0, 1, 2].map((i) => (
-                      <StorySkeleton key={i} />
-                    ))}
-                  </ul>
-                ) : filteredClassics.length === 0 ? (
-                  <p className="text-gray-300 text-sm text-center py-4">
-                    {hasQuery
-                      ? `Sin resultados para "${query}"`
-                      : "Aún no hay clásicos"}
-                  </p>
-                ) : (
-                  <ul className="divide-y divide-gray-700/60">
-                    {filteredClassics.map((name) => (
-                      <ClassicListItem
-                        key={name.slug}
-                        title={name.title}
-                        author={name.author}
-                        to={`/classic/${name.slug}`}
-                        active={isClassicActive(name.slug)}
-                        onClick={closeMenu}
-                        query={query}
-                      />
-                    ))}
-                  </ul>
-                )}
-              </div>
+              {lastReadHref && (
+                <Link
+                  to={lastReadHref}
+                  data-nav-item
+                  onClick={closeMenu}
+                  aria-label={`Continuar leyendo ${lastRead?.title}`}
+                  className="w-full mt-2 flex cursor-pointer items-center gap-3 px-3 py-2.5 rounded-lg text-lg transition border border-purple-800/40 text-amber-300 hover:bg-custom-purple hover:text-amber-200"
+                >
+                  <FaBookOpen size={18} className="text-purple-400" />
+                  <span className="min-w-0 text-left">
+                    <span className="block text-sm">Continuar leyendo</span>
+                    <span className="block text-xs text-gray-400 italic truncate">
+                      {lastRead?.title}
+                    </span>
+                  </span>
+                </Link>
+              )}
             </div>
-            </section>
+
+            <div className="flex-1 overflow-y-auto px-4 pb-10 pt-3">
+              <section aria-labelledby="my-stories-heading" className="mb-6">
+                <SectionHeader
+                  headingId="my-stories-heading"
+                  listId="stories-list"
+                  label="Mis Historias"
+                  icon={FaGhost}
+                  count={filteredStories.length}
+                  open={storiesOpen}
+                  onToggle={() => toggleSection("stories")}
+                />
+
+                <div
+                  id="stories-list"
+                  data-state={storiesOpen ? "open" : "closed"}
+                  className="sidebar-section"
+                >
+                  <div>
+                    {isFallback && (
+                      <p className="text-yellow-500 text-xs text-center mb-3">
+                        ⚠️ Modo sin conexión
+                      </p>
+                    )}
+
+                    {isStoriesLoading ? (
+                      <ul className="space-y-1">
+                        {[0, 1, 2].map((i) => (
+                          <StorySkeleton key={i} />
+                        ))}
+                      </ul>
+                    ) : filteredStories.length === 0 ? (
+                      <p className="text-gray-300 text-sm text-center py-4">
+                        {hasQuery
+                          ? `Sin resultados para "${query}"`
+                          : "Aún no hay historias"}
+                      </p>
+                    ) : (
+                      <ul className="divide-y divide-gray-700/60">
+                        {filteredStories.map((name) => (
+                          <StoryListItem
+                            key={name.id}
+                            title={name.title}
+                            to={storyHref(name.id)}
+                            active={isStoryActive(name.id)}
+                            onClick={closeMenu}
+                            query={query}
+                          />
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              <section aria-labelledby="classics-heading">
+                <SectionHeader
+                  headingId="classics-heading"
+                  listId="classics-list"
+                  label="Clásicos del Terror"
+                  icon={FaBookDead}
+                  count={filteredClassics.length}
+                  open={classicsOpen}
+                  onToggle={() => toggleSection("classics")}
+                />
+
+                <div
+                  id="classics-list"
+                  data-state={classicsOpen ? "open" : "closed"}
+                  className="sidebar-section"
+                >
+                  <div>
+                    {isClassicFallback && (
+                      <p className="text-yellow-500 text-xs text-center mb-3">
+                        ⚠️ Clásicos sin conexión
+                      </p>
+                    )}
+
+                    {isClassicsLoading ? (
+                      <ul className="space-y-1">
+                        {[0, 1, 2].map((i) => (
+                          <StorySkeleton key={i} />
+                        ))}
+                      </ul>
+                    ) : filteredClassics.length === 0 ? (
+                      <p className="text-gray-300 text-sm text-center py-4">
+                        {hasQuery
+                          ? `Sin resultados para "${query}"`
+                          : "Aún no hay clásicos"}
+                      </p>
+                    ) : (
+                      <ul className="divide-y divide-gray-700/60">
+                        {filteredClassics.map((name) => (
+                          <ClassicListItem
+                            key={name.slug}
+                            title={name.title}
+                            author={name.author}
+                            to={`/classic/${name.slug}`}
+                            active={isClassicActive(name.slug)}
+                            onClick={closeMenu}
+                            query={query}
+                          />
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
-        </div>
+        </>
+      )}
     </div>
   );
 };

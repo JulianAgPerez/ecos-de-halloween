@@ -5,7 +5,6 @@ export const SPOTIFY_PLAYLIST_ID = "7q9TpbY2TtoZYJqeH2pT4e";
 
 export const SITE_NAME = "Ecos de Halloween";
 
-// La misma voz que el sitio. Se replica en index.html porque el HTML inicial no
-// puede importar este módulo: si se edita una, hay que editar la otra.
+// Replicada en index.html: el HTML inicial no puede importar este módulo.
 export const SITE_DESCRIPTION =
   "Cuentos de terror clásicos y relatos de la comunidad, con sonidos de ambiente y fondos para leer en la oscuridad.";

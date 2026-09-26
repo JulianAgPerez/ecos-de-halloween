@@ -18,8 +18,7 @@ const NotFound = lazy(() => import("../pages/NotFound"));
 const fallbackStory = async (key: string): Promise<StoryDTO | null> => {
   const { getFallbackStoryById } = await import("../data/fallbackData");
   const id = parseInt(key, 10);
-  // Sin copia local para este id no hay nada que inventar: se devuelve null y la
-  // vista cae en el 404 en vez de mostrar otra historia.
+  // Sin copia local no hay nada que inventar: mejor el 404 que otra historia.
   return getFallbackStoryById(id) ?? null;
 };
 
@@ -47,8 +46,7 @@ export const Story = () => {
     description: story?.description ?? SITE_DESCRIPTION,
     canonicalPath: story ? path : undefined,
     jsonLd: story ? userStoryJsonLd(story, path) : undefined,
-    // El useSeo del padre corre después del de NotFound, así que el 404 real
-    // depende de esta flag y no de la del hijo.
+    // El useSeo del padre corre después del de NotFound: manda esta flag.
     noindex: !story,
   });
 

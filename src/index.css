@@ -107,8 +107,7 @@ body {
   }
 }
 
-/* Las ascuas y la araña se animan con el atajo `animation` en style inline, así
-   que para apagarlas hay que ganarle en especificidad con !important. */
+/* Se animan desde style inline, así que apagarlas exige !important. */
 @media (prefers-reduced-motion: reduce) {
   .ember-particle,
   .spider-particle {
@@ -116,10 +115,7 @@ body {
   }
 }
 
-/* Titulo con parpadeo (flicker) estilo Halloween.
-   El resplandor es un text-shadow fijo (se pinta una sola vez) y el parpadeo
-   anima opacity, una propiedad compositable: animar text-shadow en un titulo
-   de text-9xl repintaba el hilo principal en cada ciclo. */
+/* Animar text-shadow en text-9xl repintaba el hilo principal: se anima opacity. */
 .halloween-flicker {
   color: #fde68a;
   text-shadow:
@@ -146,8 +142,7 @@ body {
   }
 }
 
-/* Cargador fantasma: pulso del halo, flotación del fantasma y sombra que se
-   contrae. Vive en CSS para que framer-motion no entre al primer render. */
+/* En CSS para que framer-motion no entre al primer render. */
 .ghost-glow {
   opacity: 0.45;
 }
@@ -198,46 +193,41 @@ body {
   }
 }
 
-/* Panel lateral del menú. `transform` es una propiedad compuesta: entrar y salir
-   no repinta el contenido. `visibility` mantiene el panel fuera del árbol de
-   accesibilidad recien al terminar la salida (se interpola de forma discreta:
-   sigue visible durante toda la transición y salta a hidden al final). */
+/* Entrar es `animation` porque corre en el elemento recién insertado; salir es
+   `transition` porque necesita el elemento ya montado. */
 .sidebar-panel {
-  transform: translateX(0);
-  visibility: visible;
-  transition:
-    transform 300ms ease-in-out,
-    visibility 300ms;
-}
-
-.sidebar-panel[data-state="closed"] {
   transform: translateX(-100%);
   visibility: hidden;
 }
 
-.sidebar-overlay {
-  opacity: 1;
-  transition: opacity 200ms ease-in-out;
+.sidebar-panel[data-state="open"] {
+  transform: translateX(0);
+  visibility: visible;
+  transition: none;
 }
 
+@keyframes sidebar-slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* `visibility` y no solo `opacity: 0`, o el backdrop-blur sigue compositándose. */
 .sidebar-overlay[data-state="closed"] {
   opacity: 0;
-  pointer-events: none;
+  visibility: hidden;
 }
 
-/* Secciones plegables del menú. `grid-template-rows: 0fr -> 1fr` es la forma de
-   animar hacia/desde `auto` en CSS puro; el hijo necesita `overflow: hidden` y
-   `min-height: 0` para que la fila en 0fr pueda colapsar de verdad. Mismo truco
-   de `visibility` para que la sección cerrada no sea tabulable. */
+/* Único truco CSS para animar hacia/desde `auto`; el hijo necesita
+   `overflow: hidden` y `min-height: 0` para que la fila en 0fr colapse. */
 .sidebar-section {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
   visibility: hidden;
-  transition:
-    grid-template-rows 250ms ease-in-out,
-    opacity 250ms ease-in-out,
-    visibility 250ms;
 }
 
 .sidebar-section[data-state="open"] {
@@ -249,6 +239,31 @@ body {
 .sidebar-section > * {
   min-height: 0;
   overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-panel {
+    transition:
+      transform 300ms ease-in-out,
+      visibility 300ms;
+  }
+
+  .sidebar-panel[data-state="open"] {
+    animation: sidebar-slide-in 300ms ease-in-out;
+  }
+
+  .sidebar-overlay {
+    transition:
+      opacity 200ms ease-in-out,
+      visibility 200ms;
+  }
+
+  .sidebar-section {
+    transition:
+      grid-template-rows 250ms ease-in-out,
+      opacity 250ms ease-in-out,
+      visibility 250ms;
+  }
 }
 
 /* Tarjeta de vidrio compartida por las secciones de Home */

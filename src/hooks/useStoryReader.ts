@@ -61,16 +61,13 @@ export function useStoryReader<TStory, TTitle extends { title: string }>({
       return FALLBACK_RETRY_MS;
     },
     queryFn: async (): Promise<StoryData<TStory>> => {
-      // Los servicios devuelven null cuando la API respondió y el recurso no
-      // está, y lanzan cuando la petición falló. Esa es la única forma de
-      // distinguir "no existe" (404) de "no se pudo consultar" (respaldo local).
+      // null = 404 real; un throw = no se pudo consultar, va al respaldo local.
       let fetched: TStory | null = null;
       let missing = false;
       try {
         fetched = await withTimeout(fetch(key), FETCH_TIMEOUT_MS);
         missing = !fetched;
       } catch {
-        // La petición falló (red, servidor o timeout), así que no es un 404.
         missing = false;
       }
 

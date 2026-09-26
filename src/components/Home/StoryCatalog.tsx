@@ -108,8 +108,7 @@ const StoryCatalog = () => {
 
   const featuredLoading =
     storyTitlesLoading || (featuredQuery.isPending && ids.length > 0);
-  // El id viene de la query (número garantizado), no del DTO opcional: así el
-  // enlace nunca puede quedar sin `to`.
+  // El id viene de la query (número garantizado), no del DTO opcional.
   const featuredStories = (featuredQuery.data ?? []).filter(
     (item): item is FeaturedItem & { story: StoryDTO } => item.story !== null,
   );

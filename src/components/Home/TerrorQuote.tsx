@@ -73,7 +73,6 @@ const TerrorQuote: FC = () => {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  // WCAG 2.2.2: la rotación se pausa al pasar el mouse o al enfocar la sección.
   useEffect(() => {
     if (paused) return;
     const id = window.setInterval(
@@ -93,10 +92,8 @@ const TerrorQuote: FC = () => {
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      {/* Todas las citas apiladas en la misma celda del grid: la celda toma la
-          altura de la más alta y reserva el espacio sin medir nada en JS.
-          El contenedor interior también debe ser grid, si no los 12 blockquote
-          fluyen en bloque y la celda mide la suma de las 12 alturas. */}
+      {/* Reserva la altura de la cita más alta. El contenedor interior también
+          debe ser grid: si no, los 12 blockquote fluyen y suman sus alturas. */}
       <div
         aria-hidden="true"
         className="pointer-events-none invisible grid col-start-1 row-start-1"

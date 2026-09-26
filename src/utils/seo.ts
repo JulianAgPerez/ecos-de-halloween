@@ -1,12 +1,10 @@
 import { ClassicStoryDTO, StoryDTO } from "../types";
 
-// El dominio no está declarado en ningún lado, así que las URLs absolutas se
-// derivan del origen real en el que se está sirviendo la app.
+// No hay dominio declarado en el proyecto, sale del origen real.
 export const absoluteUrl = (path: string): string =>
   new URL(path, window.location.origin).toString();
 
-// Solo se declara lo que se puede sacar del dato. Las historias de la comunidad
-// no tienen autor en el DTO, así que no se inventa.
+// El DTO de historias de la comunidad no trae autor, así que no se declara.
 export const classicBookJsonLd = (story: ClassicStoryDTO, path: string) => ({
   "@context": "https://schema.org",
   "@type": "Book",

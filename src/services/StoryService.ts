@@ -12,9 +12,7 @@ export const getStoryById = async (id: number): Promise<StoryDTO | null> => {
     const response = await api.get<StoryDTO>(`/api/stories/${id}`);
     return response.data;
   } catch (error) {
-    // Un 404 significa que la historia no existe, así que se devuelve null y la
-    // vista puede mostrar el 404. Cualquier otro error es un fallo real: tiene
-    // que llegar al llamador para que pruebe con la copia local.
+    // null = no existe; cualquier otro error se propaga para el respaldo local.
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       return null;
     }

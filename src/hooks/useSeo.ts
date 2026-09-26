@@ -57,8 +57,7 @@ export const useSeo = ({
   noindex,
   jsonLd,
 }: SeoProps) => {
-  // Serializado para que el efecto no se dispare en cada render: el llamador
-  // reconstruye el objeto, pero su contenido es estable.
+  // Serializado: el llamador reconstruye el objeto en cada render.
   const jsonLdText = jsonLd ? JSON.stringify(jsonLd) : null;
 
   useEffect(() => {

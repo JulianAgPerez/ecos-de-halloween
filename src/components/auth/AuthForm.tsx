@@ -57,8 +57,8 @@ const AuthForm: FC<AuthFormProps> = ({
     }
   };
 
-  // El form queda montado durante el envío: si se desmonta, el error aparece
-  // sobre un formulario que el lector de pantalla nunca vio enviada.
+  // El form queda montado al enviar: si se desmonta, el error aterriza en un
+  // formulario que el lector de pantalla nunca vio enviado.
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4">
       <AnimatedBackground />
