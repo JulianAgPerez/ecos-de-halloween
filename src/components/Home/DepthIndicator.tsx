@@ -15,7 +15,9 @@ const DepthIndicator = () => {
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     const step = Math.min(LAYERS.length - 1, Math.floor(value * LAYERS.length));
-    setActive(step);
+    // El rótulo visible y el aria-live exigen estado discreto; devolver el
+    // mismo `step` hace que React descarte el render en los frames sin cambio.
+    setActive((prev) => (prev === step ? prev : step));
   });
 
   return (

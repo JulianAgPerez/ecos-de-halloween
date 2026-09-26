@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import witchGif from "../../assets/images/witch-gif.gif";
+import { useVisible } from "../../hooks/useVisible";
 
 const WITCH_SIZE = 64;
 
@@ -28,6 +29,7 @@ const DraggableWitch: FC = () => (
 const WitchJourney: FC = () => {
   const { scrollY, scrollYProgress } = useScroll();
   const reduce = Boolean(useReducedMotion());
+  const [ref, visible] = useVisible<HTMLDivElement>();
 
   const viewportHeight = useMotionValue(window.innerHeight);
 
@@ -55,9 +57,12 @@ const WitchJourney: FC = () => {
   const containerTop = useTransform(viewportHeight, (vh) => vh * 1.8);
 
   return (
+    // `h-16 w-16` mantiene la caja del observador con área aunque la bruja no
+    // esté montada: un rect vacío nunca intersecta y el gate nunca abriría.
     <motion.div
+      ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 z-30"
+      className="pointer-events-none absolute left-1/2 z-30 h-16 w-16"
       style={{
         top: containerTop,
         x: reduce ? 0 : anchoredX,
@@ -65,9 +70,11 @@ const WitchJourney: FC = () => {
         opacity: reduce ? 1 : anchoredOpacity,
       }}
     >
-      <div className="pointer-events-auto">
-        <DraggableWitch />
-      </div>
+      {visible && (
+        <div className="pointer-events-auto">
+          <DraggableWitch />
+        </div>
+      )}
     </motion.div>
   );
 };

@@ -3,7 +3,8 @@ import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import useSoundStore from "../store/useSoundStore";
 
 const VolumeButton: FC = () => {
-  const { isPlaying, toggleSound } = useSoundStore();
+  const isPlaying = useSoundStore((state) => state.isPlaying);
+  const toggleSound = useSoundStore((state) => state.toggleSound);
 
   return (
     <button

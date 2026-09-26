@@ -1,3 +1,6 @@
+import { FC } from "react";
+import { useVisible } from "../../hooks/useVisible";
+
 const EMBERS = [
   { left: "8%", delay: "0s", duration: "11s", size: 6 },
   { left: "18%", delay: "2.5s", duration: "14s", size: 4 },
@@ -10,25 +13,31 @@ const EMBERS = [
   { left: "92%", delay: "1.5s", duration: "14s", size: 7 },
 ];
 
-const FloatingEmbers = () => (
-  <div
-    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
-    aria-hidden="true"
-  >
-    {EMBERS.map((e, i) => (
-      <span
-        key={i}
-        className="ember-particle absolute bottom-[-10px] rounded-full bg-orange-500/80 shadow-[0_0_10px_2px_rgba(249,115,22,0.7)]"
-        style={{
-          left: e.left,
-          width: e.size,
-          height: e.size,
-          animation: `ember-rise ${e.duration} linear ${e.delay} infinite`,
-          willChange: "transform",
-        }}
-      />
-    ))}
-  </div>
-);
+const FloatingEmbers: FC = () => {
+  const [ref, visible] = useVisible<HTMLDivElement>();
+
+  return (
+    <div
+      ref={ref}
+      data-anim={visible ? "on" : "off"}
+      className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+      aria-hidden="true"
+    >
+      {EMBERS.map((e, i) => (
+        <span
+          key={i}
+          className="ember-particle absolute bottom-[-10px] rounded-full bg-orange-500/80 shadow-[0_0_10px_2px_rgba(249,115,22,0.7)]"
+          style={{
+            left: e.left,
+            width: e.size,
+            height: e.size,
+            animation: `ember-rise ${e.duration} linear ${e.delay} infinite`,
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default FloatingEmbers;

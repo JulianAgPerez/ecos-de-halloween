@@ -22,9 +22,11 @@ const DepthHeat: FC = () => {
   const { scrollYProgress } = useScroll();
   const heatOpacity = useTransform(scrollYProgress, [0.55, 1], [0, 0.55]);
   return (
+    // Sin `will-change` el gradiente a viewport completo se repinta en cada
+    // frame de scroll; promovido se pinta una vez y la opacidad compone en GPU.
     <motion.div
       aria-hidden="true"
-      style={{ opacity: heatOpacity }}
+      style={{ opacity: heatOpacity, willChange: "opacity" }}
       className="pointer-events-none fixed inset-0 z-30 bg-gradient-to-t from-red-900/80 via-orange-950/40 to-transparent"
     />
   );

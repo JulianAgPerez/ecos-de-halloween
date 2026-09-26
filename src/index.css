@@ -287,3 +287,11 @@ body {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
+
+/* Gate de visibilidad: el contenedor observado marca data-anim y las 11
+   animaciones infinitas se pausan cuando no está en pantalla. El !important
+   hace falta porque el atajo `animation` se declara en style inline. */
+[data-anim="off"],
+[data-anim="off"] * {
+  animation-play-state: paused !important;
+}

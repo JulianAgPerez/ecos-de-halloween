@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FaGhost } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
+import { useVisible } from "../../hooks/useVisible";
 import { getHalloweenTarget } from "../../utils/season";
 
 interface TimeLeft {
@@ -29,15 +30,23 @@ const UNITS: { key: keyof TimeLeft; label: string }[] = [
 ];
 
 const HalloweenCountdown: FC = () => {
+  const [ref, visible] = useVisible<HTMLDivElement>();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(getTimeLeft);
 
   useEffect(() => {
+    if (!visible) return;
+    // El reloj quedó congelado mientras el bloque no estaba en pantalla.
+    setTimeLeft(getTimeLeft());
     const id = window.setInterval(() => setTimeLeft(getTimeLeft()), 1000);
     return () => window.clearInterval(id);
-  }, []);
+  }, [visible]);
 
   return (
-    <div id="countdown" className="mx-auto w-full max-w-4xl px-5 py-20 text-center">
+    <div
+      id="countdown"
+      ref={ref}
+      className="mx-auto w-full max-w-4xl px-5 py-20 text-center"
+    >
       <SectionHeading icon={FaGhost} size="lg" className="mb-4">
         Hasta que la noche nos llame
       </SectionHeading>

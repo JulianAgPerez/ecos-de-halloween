@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useVisible } from "../../hooks/useVisible";
 
 const SPIDERS = [
   { left: "20%", top: "40%", delay: "0s", dur: "3.5s", size: 28 },
@@ -32,17 +33,23 @@ const Spider: FC<{ size: number; delay: string; dur: string }> = ({
   </svg>
 );
 
-const HorrorEasterEggs: FC = () => (
-  <div
-    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
-    aria-hidden="true"
-  >
-    {SPIDERS.map((s, i) => (
-      <span key={i} className="absolute" style={{ left: s.left, top: s.top }}>
-        <Spider size={s.size} delay={s.delay} dur={s.dur} />
-      </span>
-    ))}
-  </div>
-);
+const HorrorEasterEggs: FC = () => {
+  const [ref, visible] = useVisible<HTMLDivElement>();
+
+  return (
+    <div
+      ref={ref}
+      data-anim={visible ? "on" : "off"}
+      className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+      aria-hidden="true"
+    >
+      {SPIDERS.map((s, i) => (
+        <span key={i} className="absolute" style={{ left: s.left, top: s.top }}>
+          <Spider size={s.size} delay={s.delay} dur={s.dur} />
+        </span>
+      ))}
+    </div>
+  );
+};
 
 export default HorrorEasterEggs;

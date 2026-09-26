@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useVisible } from "../../hooks/useVisible";
 
 interface Quote {
   text: string;
@@ -70,22 +71,24 @@ const QuoteBody: FC<{ text: string; author: string }> = ({ text, author }) => (
 );
 
 const TerrorQuote: FC = () => {
+  const [ref, visible] = useVisible<HTMLDivElement>();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || !visible) return;
     const id = window.setInterval(
       () => setIndex((prev) => (prev + 1) % QUOTES.length),
       ROTATION_MS,
     );
     return () => window.clearInterval(id);
-  }, [paused]);
+  }, [paused, visible]);
 
   const quote = QUOTES[index];
 
   return (
     <div
+      ref={ref}
       className="relative mx-auto grid w-full max-w-3xl px-5 py-20 text-center"
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}

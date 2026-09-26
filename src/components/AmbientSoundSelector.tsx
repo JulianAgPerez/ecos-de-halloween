@@ -6,7 +6,8 @@ import useSoundStore from "../store/useSoundStore";
 const AmbientSoundSelector: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
-  const { activeSound, setActiveSound } = useSoundStore();
+  const activeSound = useSoundStore((state) => state.activeSound);
+  const setActiveSound = useSoundStore((state) => state.setActiveSound);
 
   useEffect(() => {
     if (!isOpen) return;

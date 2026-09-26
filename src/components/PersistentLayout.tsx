@@ -7,7 +7,9 @@ import useSoundStore from "../store/useSoundStore";
 import VolumeButton from "../components/VolumeButton";
 
 const PersistentLayout = () => {
-  const { addSound, activeSound, setActiveSound } = useSoundStore();
+  const addSound = useSoundStore((state) => state.addSound);
+  const activeSound = useSoundStore((state) => state.activeSound);
+  const setActiveSound = useSoundStore((state) => state.setActiveSound);
 
   useEffect(() => {
     const allSounds = Object.values(sounds);
