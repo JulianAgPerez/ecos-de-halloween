@@ -47,7 +47,7 @@ const HalloweenCountdown: FC = () => {
       ref={ref}
       className="mx-auto w-full max-w-4xl px-5 py-20 text-center"
     >
-      <SectionHeading icon={FaGhost} size="lg" className="mb-4">
+      <SectionHeading as="h2" icon={FaGhost} size="lg" className="mb-4">
         Hasta que la noche nos llame
       </SectionHeading>
       <p className="mb-10 text-lg text-orange-200/80">

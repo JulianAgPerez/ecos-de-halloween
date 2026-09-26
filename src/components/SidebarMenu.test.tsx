@@ -108,4 +108,20 @@ describe("SidebarMenu", () => {
       "/",
     );
   });
+
+  // jsdom no implementa la semántica de `inert`: se verifica el atributo.
+  it("deja el toggle inert mientras el panel está abierto", async () => {
+    const user = userEvent.setup();
+    renderMenu();
+    const toggle = () =>
+      screen.getByRole("button", { name: /menú de historias/i });
+
+    expect(toggle()).not.toHaveAttribute("inert");
+
+    await user.click(toggle());
+    expect(toggle()).toHaveAttribute("inert");
+
+    await user.keyboard("{Escape}");
+    expect(toggle()).not.toHaveAttribute("inert");
+  });
 });

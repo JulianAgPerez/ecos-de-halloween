@@ -58,7 +58,7 @@ const buildPortraitTransformations = (width: number): string =>
     "fl_progressive",
   ].join(",");
 
-export const getPortraitBackgroundUrl = (
+const getPortraitBackgroundUrl = (
   url: string,
   width: number,
 ): string => {

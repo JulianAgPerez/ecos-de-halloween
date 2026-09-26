@@ -49,7 +49,9 @@ const TRIVIA: Trivia[] = [
 
 const HalloweenTrivia: FC = () => (
   <div className="mx-auto w-full max-w-6xl px-5 py-16">
-    <SectionHeading className="mb-8">¿Sabías que...?</SectionHeading>
+    <SectionHeading as="h2" className="mb-8">
+      ¿Sabías que...?
+    </SectionHeading>
 
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {TRIVIA.map((item, i) => {

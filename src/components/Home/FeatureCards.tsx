@@ -44,7 +44,9 @@ const FEATURES: Feature[] = [
 
 const FeatureCards: FC = () => (
   <div className="mx-auto w-full max-w-6xl px-5 py-16">
-    <SectionHeading className="mb-8">Una experiencia inmersiva</SectionHeading>
+    <SectionHeading as="h2" className="mb-8">
+      Una experiencia inmersiva
+    </SectionHeading>
 
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {FEATURES.map((feature, i) => {
@@ -58,7 +60,7 @@ const FeatureCards: FC = () => (
             <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-purple-500/20 text-amber-400">
               <Icon size={24} />
             </span>
-            <h4 className="text-lg font-bold text-white">{feature.title}</h4>
+            <h3 className="text-lg font-bold text-white">{feature.title}</h3>
             <p className="mt-2 text-sm text-gray-400">{feature.description}</p>
           </Reveal>
         );

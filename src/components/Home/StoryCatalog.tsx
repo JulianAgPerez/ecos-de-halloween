@@ -117,7 +117,9 @@ const StoryCatalog = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-16">
-      <SectionHeading icon={FaGhost}>Historias destacadas</SectionHeading>
+      <SectionHeading as="h2" icon={FaGhost}>
+        Historias destacadas
+      </SectionHeading>
 
       {featuredLoading ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -149,9 +151,9 @@ const StoryCatalog = () => {
               className={CARD_CLASS}
             >
               <FaGhost className="mb-3 text-2xl text-purple-400" />
-              <h4 className="text-xl font-bold text-white group-hover:text-amber-300">
+              <h3 className="text-xl font-bold text-white group-hover:text-amber-300">
                 {item.story.title}
-              </h4>
+              </h3>
               {item.story.description && (
                 <p className="mt-2 flex-1 text-sm text-gray-400 line-clamp-3">
                   {item.story.description}
@@ -173,7 +175,9 @@ const StoryCatalog = () => {
             <FaBookOpen className="text-purple-500" />
             <div className="h-px flex-1 bg-purple-800/50" />
           </div>
-          <SectionHeading icon={FaBookDead}>Clásicos del Terror</SectionHeading>
+          <SectionHeading as="h2" icon={FaBookDead}>
+            Clásicos del Terror
+          </SectionHeading>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visibleClassics.map((classic, i) => (
               <MotionLink
@@ -192,9 +196,9 @@ const StoryCatalog = () => {
                 className={CARD_CLASS}
               >
                 <FaBookDead className="mb-3 text-2xl text-purple-400" />
-                <h4 className="text-xl font-bold text-white group-hover:text-amber-300">
+                <h3 className="text-xl font-bold text-white group-hover:text-amber-300">
                   {classic.title}
-                </h4>
+                </h3>
                 <span className="mt-2 flex-1 text-sm italic text-gray-400">
                   {classic.author}
                 </span>

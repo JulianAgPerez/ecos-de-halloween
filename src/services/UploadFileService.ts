@@ -7,7 +7,7 @@ const getAuthHeaders = (): Record<string, string> => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const createStoryService = async (
+const createStoryService = async (
   storyData: Omit<StoryDTO, "id">
 ): Promise<number> => {
   const response = await api.post<StoryDTO>("/api/stories", storyData, {
@@ -17,7 +17,7 @@ export const createStoryService = async (
   return response.data.id!;
 };
 
-export const uploadBodyService = async (
+const uploadBodyService = async (
   file: File,
   storyId: number
 ): Promise<string> => {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { withTimeout } from "./withTimeout";
 
 describe("withTimeout", () => {
@@ -13,5 +13,16 @@ describe("withTimeout", () => {
     await expect(withTimeout(new Promise(() => {}), 50)).rejects.toThrow(
       "timeout",
     );
+  });
+  it("clears the timer when the promise wins the race", async () => {
+    vi.useFakeTimers();
+    try {
+      await expect(withTimeout(Promise.resolve("ok"), 5000)).resolves.toBe(
+        "ok",
+      );
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

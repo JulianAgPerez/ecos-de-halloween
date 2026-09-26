@@ -83,7 +83,6 @@ const Home = () => {
 
   return (
     <div className="relative">
-      <h1 className="sr-only">Ecos de Halloween</h1>
       <DepthIndicator />
       <DepthHeat />
       <WitchJourney />
@@ -94,9 +93,9 @@ const Home = () => {
           imageUrl={HOME_BACKGROUND_URL}
           title={
             <div className="flex flex-col items-center gap-6 px-4 text-center">
-              <span className="halloween-flicker font-creepster text-6xl font-bold block md:text-9xl">
+              <h1 className="halloween-flicker font-creepster text-6xl font-bold block md:text-9xl">
                 {heroTitle}
-              </span>
+              </h1>
               <a
                 href="#countdown"
                 onClick={handleCountdownClick}

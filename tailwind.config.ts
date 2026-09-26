@@ -1,4 +1,5 @@
 import { HOME_BACKGROUND_URL } from "./src/config";
+import { getOptimizedBackgroundUrl } from "./src/utils/cloudinary";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -9,7 +10,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "home-principal": `url('${HOME_BACKGROUND_URL}')`,
+        "home-principal": `url('${getOptimizedBackgroundUrl(HOME_BACKGROUND_URL)}')`,
       },
       fontFamily: {
         creepster: ["'Creepster'", "'Creepster Fallback'", "cursive"],

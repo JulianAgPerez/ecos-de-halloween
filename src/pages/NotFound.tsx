@@ -226,10 +226,10 @@ const NotFound: FC = () => {
     <div className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <AnimatedBackground />
       <div className="relative z-10 flex w-full flex-col items-center">
-        <h1 className="sr-only">Página no encontrada</h1>
-        <p className="font-creepster text-9xl text-amber-400 [text-shadow:0_0_20px_rgba(251,191,36,0.6)]">
-          404
-        </p>
+        <h1 className="font-creepster text-9xl text-amber-400 [text-shadow:0_0_20px_rgba(251,191,36,0.6)]">
+          <span aria-hidden="true">404</span>
+          <span className="sr-only">Página no encontrada</span>
+        </h1>
         <div
           className="relative mx-auto mt-2 w-full max-w-xl overflow-hidden rounded-xl border border-purple-900/40"
           style={{ aspectRatio: "320 / 220" }}

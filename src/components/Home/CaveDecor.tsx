@@ -1,9 +1,5 @@
 import { FC } from "react";
 
-interface CaveDecorProps {
-  density?: "light" | "medium" | "heavy";
-}
-
 const STALACTITES = [
   { left: "0%", w: 90, h: 170 },
   { left: "10%", w: 55, h: 240 },
@@ -57,57 +53,50 @@ const Spike: FC<SpikeProps> = ({ left, w, h }) => (
   </svg>
 );
 
-const CaveDecor = ({ density = "medium" }: CaveDecorProps) => {
-  const stalactiteCount =
-    density === "light" ? 5 : density === "heavy" ? STALACTITES.length : 8;
-  const stalagmiteCount =
-    density === "light" ? 3 : density === "heavy" ? STALAGMITES.length : 4;
+const CaveDecor = () => (
+  <div
+    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+    aria-hidden="true"
+  >
+    <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_40%,rgba(147,51,234,0.16),transparent_70%)]" />
 
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
-      aria-hidden="true"
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_40%,rgba(147,51,234,0.16),transparent_70%)]" />
+    {STALACTITES.slice(0, 8).map((s, i) => (
+      <Spike key={`t-${i}`} left={s.left} w={s.w} h={s.h} />
+    ))}
 
-      {STALACTITES.slice(0, stalactiteCount).map((s, i) => (
-        <Spike key={`t-${i}`} left={s.left} w={s.w} h={s.h} />
-      ))}
-
-      <div className="absolute inset-x-0 bottom-0 h-64">
-        {STALAGMITES.slice(0, stalagmiteCount).map((s, i) => (
-          <div
-            key={`g-${i}`}
-            className="absolute bottom-0"
-            style={{
-              left: s.left,
-              width: s.w,
-              height: s.h,
-              transform: "scaleY(-1)",
-              filter: "drop-shadow(0 6px 6px rgba(0,0,0,0.6))",
-            }}
+    <div className="absolute inset-x-0 bottom-0 h-64">
+      {STALAGMITES.slice(0, 4).map((s, i) => (
+        <div
+          key={`g-${i}`}
+          className="absolute bottom-0"
+          style={{
+            left: s.left,
+            width: s.w,
+            height: s.h,
+            transform: "scaleY(-1)",
+            filter: "drop-shadow(0 6px 6px rgba(0,0,0,0.6))",
+          }}
+        >
+          <svg
+            viewBox="0 0 80 160"
+            preserveAspectRatio="none"
+            className="h-full w-full"
           >
-            <svg
-              viewBox="0 0 80 160"
-              preserveAspectRatio="none"
-              className="h-full w-full"
-            >
-              <path
-                d="M40,0 L60,70 Q40,160 40,160 Q40,160 20,70 Z"
-                fill="#0d0b1c"
-                opacity="0.9"
-              />
-              <path
-                d="M40,0 L50,60 Q40,120 40,130 Q40,120 30,60 Z"
-                fill="#191531"
-                opacity="0.6"
-              />
-            </svg>
-          </div>
-        ))}
-      </div>
+            <path
+              d="M40,0 L60,70 Q40,160 40,160 Q40,160 20,70 Z"
+              fill="#0d0b1c"
+              opacity="0.9"
+            />
+            <path
+              d="M40,0 L50,60 Q40,120 40,130 Q40,120 30,60 Z"
+              fill="#191531"
+              opacity="0.6"
+            />
+          </svg>
+        </div>
+      ))}
     </div>
-  );
-};
+  </div>
+);
 
 export default CaveDecor;

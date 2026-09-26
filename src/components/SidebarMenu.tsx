@@ -24,6 +24,10 @@ const StorySkeleton: FC = () => (
   </li>
 );
 
+// El toggle y el panel quedan fuera de la región inert: es la única forma de
+// dejar inerte todo lo de afuera sin apagar el drawer.
+export const APP_CONTENT_ID = "app-content";
+
 export const SidebarMenu: FC = () => {
   const {
     titles: storyNames,
@@ -117,6 +121,19 @@ export const SidebarMenu: FC = () => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // Antes del efecto de foco: al cerrar hay que quitar `inert` del toggle antes
+  // de moverle el foco.
+  useEffect(() => {
+    const appContent = document.getElementById(APP_CONTENT_ID);
+    const toggle = toggleButtonRef.current;
+    appContent?.toggleAttribute("inert", isOpen);
+    toggle?.toggleAttribute("inert", isOpen);
+    return () => {
+      appContent?.removeAttribute("inert");
+      toggle?.removeAttribute("inert");
     };
   }, [isOpen]);
 

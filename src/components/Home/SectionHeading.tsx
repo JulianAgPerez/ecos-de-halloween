@@ -13,6 +13,7 @@ interface SectionHeadingProps {
   children: ReactNode;
   className?: string;
   size?: keyof typeof SIZES;
+  as?: "h2" | "h3" | "h4";
 }
 
 const SectionHeading: FC<SectionHeadingProps> = ({
@@ -20,14 +21,17 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   children,
   className = "",
   size = "md",
+  as: Heading = "h3",
 }) => (
   <Reveal className={`mb-6 ${className}`} amount={0.5} y={12}>
-    <h3 className={`font-creepster text-center text-amber-400 ${SIZES[size]}`}>
+    <Heading
+      className={`font-creepster text-center text-amber-400 ${SIZES[size]}`}
+    >
       {Icon && (
         <Icon className="mr-3 inline-block -translate-y-0.5 text-purple-400" />
       )}
       {children}
-    </h3>
+    </Heading>
   </Reveal>
 );
 

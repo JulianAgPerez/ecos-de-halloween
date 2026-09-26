@@ -5,7 +5,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import SidebarMenu from "../components/SidebarMenu";
+import SidebarMenu, { APP_CONTENT_ID } from "../components/SidebarMenu";
 import Footer from "../components/Footer";
 import PersistentLayout from "../components/PersistentLayout";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -32,27 +32,30 @@ const AppRoutes: FC = () => {
     <Router>
       <ScrollToTop />
       <SidebarMenu />
-      <Suspense fallback={<GhostLoader />}>
-        <Routes>
-          <Route path="/" element={<PersistentLayout />}>
-            <Route index element={<Home />} />
-            <Route
-              path="/form"
-              element={
-                <ProtectedRoute>
-                  <UploadForm />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/story/:id" element={<Story />} />
-            <Route path="/classic/:slug" element={<ClassicStory />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </Suspense>
-      <Footer />
+      {/* Región que el menú marca inert mientras el drawer está abierto. */}
+      <div id={APP_CONTENT_ID}>
+        <Suspense fallback={<GhostLoader />}>
+          <Routes>
+            <Route path="/" element={<PersistentLayout />}>
+              <Route index element={<Home />} />
+              <Route
+                path="/form"
+                element={
+                  <ProtectedRoute>
+                    <UploadForm />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/story/:id" element={<Story />} />
+              <Route path="/classic/:slug" element={<ClassicStory />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </Suspense>
+        <Footer />
+      </div>
     </Router>
   );
 };
