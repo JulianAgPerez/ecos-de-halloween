@@ -24,8 +24,6 @@ const StorySkeleton: FC = () => (
   </li>
 );
 
-// El toggle y el panel quedan fuera de la región inert: es la única forma de
-// dejar inerte todo lo de afuera sin apagar el drawer.
 export const APP_CONTENT_ID = "app-content";
 
 export const SidebarMenu: FC = () => {
