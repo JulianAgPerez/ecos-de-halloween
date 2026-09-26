@@ -94,13 +94,15 @@ const TerrorQuote: FC = () => {
       onBlur={() => setPaused(false)}
     >
       {/* Todas las citas apiladas en la misma celda del grid: la celda toma la
-          altura de la más alta y reserva el espacio sin medir nada en JS. */}
+          altura de la más alta y reserva el espacio sin medir nada en JS.
+          El contenedor interior también debe ser grid, si no los 12 blockquote
+          fluyen en bloque y la celda mide la suma de las 12 alturas. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none invisible col-start-1 row-start-1"
+        className="pointer-events-none invisible grid col-start-1 row-start-1"
       >
         {QUOTES.map((q) => (
-          <blockquote key={q.text}>
+          <blockquote key={q.text} className="col-start-1 row-start-1">
             <QuoteBody text={q.text} author={q.author} />
           </blockquote>
         ))}
