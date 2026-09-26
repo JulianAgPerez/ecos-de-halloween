@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# /form exige autenticacion y responde con un redirect a /login: no hay nada
+# que indexar ahi y solo gasta presupuesto de rastreo.
+Disallow: /form
+
+Sitemap: https://ecos-de-halloween.vercel.app/sitemap.xml
