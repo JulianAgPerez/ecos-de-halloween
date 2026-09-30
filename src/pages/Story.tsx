@@ -90,6 +90,13 @@ export const Story = () => {
     <StoryPageLayout
       title={story.title}
       backgroundImageUrl={story.backgroundImageUrl}
+      meta={
+        story.author ? (
+          <p className="text-center text-gray-300 text-xl mt-2">
+            {story.author}
+          </p>
+        ) : undefined
+      }
       body={story.body}
       footer={
         <ReadingNavigation

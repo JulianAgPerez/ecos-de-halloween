@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { FaMinus, FaMoon, FaPlus, FaSun } from "react-icons/fa";
+import DOMPurify from "dompurify";
 import ReadingProgressBar from "./ReadingProgressBar";
 
 const MIN_FONT_SIZE = 70;
@@ -25,14 +26,81 @@ const readSavedNightMode = (): boolean => {
   }
 };
 
+// El editor no es una frontera de confianza: `POST /api/stories` es público y
+// cualquiera puede mandar HTML arbitrario con curl. Acá va el allowlist.
+const ALLOWED_TAGS = [
+  "p",
+  "br",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "s",
+  "del",
+  "h2",
+  "h3",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "code",
+  "pre",
+  "hr",
+  "a",
+];
+
+// Solo `href` entra: `target` y `rel` se reescriben después, para que un
+// `rel="opener"` inyectado no sobreviva al allowlist.
+const ALLOWED_ATTR = ["href"];
+
+// El default de DOMPurify también acepta `tel:`, `cid:` y `xmpp:`; un cuento
+// solo enlaza http(s) y mailto.
+const ALLOWED_URI_REGEXP =
+  /^(?:https?:|mailto:|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i;
+
+DOMPurify.addHook("afterSanitizeAttributes", (node) => {
+  if (node.tagName !== "A") return;
+  node.setAttribute("target", "_blank");
+  node.setAttribute("rel", "noopener noreferrer");
+});
+
+const sanitizeBody = (body: string): string =>
+  DOMPurify.sanitize(body, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    ALLOWED_URI_REGEXP,
+    ALLOW_DATA_ATTR: false,
+    ALLOW_ARIA_ATTR: false,
+    KEEP_CONTENT: true,
+  });
+
+// Los clásicos llegan como prosa plana y los cuentos nuevos como HTML. Este corte
+// decide cómo se maqueta, nunca si se sanitiza: la rama de texto nunca
+// interpreta HTML y la de HTML siempre pasa por DOMPurify.
+const HTML_BODY_PATTERN =
+  /<(p|br|h2|h3|ul|ol|li|blockquote|strong|em|b|i|s|del|code|pre|hr|a)(\s[^>]*)?\/?>/i;
+
+const looksLikeHtml = (body: string): boolean => HTML_BODY_PATTERN.test(body);
+
 interface StoryReaderProps {
   body: string;
 }
 
 const StoryReader = ({ body }: StoryReaderProps) => {
-  const ref = useRef<HTMLPreElement>(null);
+  // El cuerpo cambia de etiqueta según sea HTML o prosa, así que el ref se
+  // resuelve por callback: un `useRef<HTMLElement>` no es asignable al `ref` de
+  // un `<div>` ni al de un `<pre>` porque son tipos distintos, no superclases.
+  const ref = useRef<HTMLElement | null>(null);
+  const setRef = useCallback((node: HTMLElement | null) => {
+    ref.current = node;
+  }, []);
   const [fontSize, setFontSize] = useState(readSavedFontSize);
   const [nightMode, setNightMode] = useState(readSavedNightMode);
+  const isHtml = looksLikeHtml(body);
+  const safeBody = useMemo(() => (isHtml ? sanitizeBody(body) : ""), [
+    isHtml,
+    body,
+  ]);
 
   const changeFontSize = (delta: number) => {
     setFontSize((prev) => {
@@ -40,7 +108,7 @@ const StoryReader = ({ body }: StoryReaderProps) => {
       try {
         localStorage.setItem(FONT_SIZE_KEY, String(next));
       } catch {
-        // storage not available
+        // localStorage puede lanzar en modo privado: la preferencia es un extra.
       }
       return next;
     });
@@ -51,7 +119,7 @@ const StoryReader = ({ body }: StoryReaderProps) => {
       try {
         localStorage.setItem(NIGHT_MODE_KEY, prev ? "off" : "on");
       } catch {
-        // storage not available
+        // localStorage puede lanzar en modo privado: la preferencia es un extra.
       }
       return !prev;
     });
@@ -99,9 +167,22 @@ const StoryReader = ({ body }: StoryReaderProps) => {
         }`}
       >
         <ReadingProgressBar targetRef={ref} nightMode={nightMode} />
-        <pre ref={ref} className="text-lg leading-relaxed sm:text-xl" style={{ fontSize: `${fontSize}%` }}>
-          {body}
-        </pre>
+        {isHtml ? (
+          <div
+            ref={setRef}
+            className="story-body"
+            style={{ fontSize: `${fontSize}%` }}
+            dangerouslySetInnerHTML={{ __html: safeBody }}
+          />
+        ) : (
+          <pre
+            ref={setRef}
+            className="text-lg leading-relaxed sm:text-xl"
+            style={{ fontSize: `${fontSize}%` }}
+          >
+            {body}
+          </pre>
+        )}
       </div>
     </section>
   );
