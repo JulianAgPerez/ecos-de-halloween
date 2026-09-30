@@ -6,6 +6,7 @@ import {
   FaHome,
   FaSearch,
   FaTimes,
+  FaUsers,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { useClassicTitles, useStoryTitles } from "../hooks/useTitles";
@@ -16,6 +17,7 @@ import { lastReadRoute } from "../utils/lastReadRoute";
 import SectionHeader from "./SidebarMenu/SectionHeader";
 import StoryListItem from "./SidebarMenu/StoryListItem";
 import ClassicListItem from "./SidebarMenu/ClassicListItem";
+import SubmitStoryCta from "./SubmitStoryCta";
 
 const StorySkeleton: FC = () => (
   <li className="animate-pulse flex items-center gap-3 p-3">
@@ -43,12 +45,19 @@ export const SidebarMenu: FC = () => {
   // Montaje único: la transición de salida necesita el panel en el DOM.
   const [hasOpened, setHasOpened] = useState(false);
   const [lastRead, setLastRead] = useState(() => getLastRead());
-  const { query, setQuery, filteredStories, filteredClassics, hasQuery } =
-    useSearchTitles(storyNames, classicNames);
+  const {
+    query,
+    setQuery,
+    filteredStories,
+    filteredCommunity,
+    filteredClassics,
+    hasQuery,
+  } = useSearchTitles(storyNames, classicNames);
   const [openSections, setOpenSections] = useState<{
     stories: boolean;
+    community: boolean;
     classics: boolean;
-  }>({ stories: true, classics: true });
+  }>({ stories: true, community: true, classics: true });
   const location = useLocation();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -67,7 +76,7 @@ export const SidebarMenu: FC = () => {
     setQuery("");
   }, [setQuery]);
 
-  const toggleSection = (key: "stories" | "classics") =>
+  const toggleSection = (key: "stories" | "community" | "classics") =>
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
   useEffect(() => {
@@ -162,6 +171,7 @@ export const SidebarMenu: FC = () => {
     location.pathname === `/classic/${slug}`;
 
   const storiesOpen = hasQuery || openSections.stories;
+  const communityOpen = hasQuery || openSections.community;
   const classicsOpen = hasQuery || openSections.classics;
 
   return (
@@ -242,6 +252,18 @@ export const SidebarMenu: FC = () => {
                 Home
               </Link>
 
+              {/* Sin `data-nav-item`: es un destino fijo, no parte de la lista
+                  de cuentos que se recorre con las flechas. */}
+              <SubmitStoryCta
+                variant="menu"
+                onClick={closeMenu}
+                className={`mt-2 border ${
+                  location.pathname === "/upload-story"
+                    ? "border-purple-400/60 bg-custom-purple"
+                    : "border-purple-800/40 hover:bg-custom-purple"
+                }`}
+              />
+
               {lastReadHref && (
                 <Link
                   to={lastReadHref}
@@ -300,6 +322,53 @@ export const SidebarMenu: FC = () => {
                     ) : (
                       <ul className="divide-y divide-gray-700/60">
                         {filteredStories.map((name) => (
+                          <StoryListItem
+                            key={name.id}
+                            title={name.title}
+                            to={storyHref(name.id)}
+                            active={isStoryActive(name.id)}
+                            onClick={closeMenu}
+                            query={query}
+                          />
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              <section aria-labelledby="community-heading" className="mb-6">
+                <SectionHeader
+                  headingId="community-heading"
+                  listId="community-list"
+                  label="Comunidad"
+                  icon={FaUsers}
+                  count={filteredCommunity.length}
+                  open={communityOpen}
+                  onToggle={() => toggleSection("community")}
+                />
+
+                <div
+                  id="community-list"
+                  data-state={communityOpen ? "open" : "closed"}
+                  className="sidebar-section"
+                >
+                  <div>
+                    {isStoriesLoading ? (
+                      <ul className="space-y-1">
+                        {[0, 1, 2].map((i) => (
+                          <StorySkeleton key={i} />
+                        ))}
+                      </ul>
+                    ) : filteredCommunity.length === 0 ? (
+                      <p className="text-gray-300 text-sm text-center py-4">
+                        {hasQuery
+                          ? `Sin resultados para "${query}"`
+                          : "Todavía no hay cuentos de la comunidad"}
+                      </p>
+                    ) : (
+                      <ul className="divide-y divide-gray-700/60">
+                        {filteredCommunity.map((name) => (
                           <StoryListItem
                             key={name.id}
                             title={name.title}

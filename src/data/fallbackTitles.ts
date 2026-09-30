@@ -1,5 +1,5 @@
 import { StoryTitleDTO } from "../types";
 
 export const fallbackTitles: StoryTitleDTO[] = [
-  { id: 2, title: "En la oscuridad" },
+  { id: 2, title: "En la oscuridad", mine: true },
 ];

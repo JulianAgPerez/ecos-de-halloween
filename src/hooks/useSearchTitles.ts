@@ -4,8 +4,9 @@ import { sortByTitle } from "../utils/sortTitles";
 
 interface SearchTitlesResult {
   query: string;
-  setQuery: (query: string) => void;
+  setQuery: (q: string) => void;
   filteredStories: StoryTitleDTO[];
+  filteredCommunity: StoryTitleDTO[];
   filteredClassics: ClassicStoryTitleDTO[];
   hasQuery: boolean;
 }
@@ -20,7 +21,15 @@ export function useSearchTitles(
   const hasQuery = normalizedQuery.length > 0;
 
   const filteredStories = useMemo(() => {
-    const sorted = sortByTitle(stories);
+    const sorted = sortByTitle(stories).filter((story) => story.mine);
+    if (!hasQuery) return sorted;
+    return sorted.filter((story) =>
+      story.title.toLowerCase().includes(normalizedQuery),
+    );
+  }, [stories, normalizedQuery, hasQuery]);
+
+  const filteredCommunity = useMemo(() => {
+    const sorted = sortByTitle(stories).filter((story) => !story.mine);
     if (!hasQuery) return sorted;
     return sorted.filter((story) =>
       story.title.toLowerCase().includes(normalizedQuery),
@@ -37,5 +46,12 @@ export function useSearchTitles(
     );
   }, [classics, normalizedQuery, hasQuery]);
 
-  return { query, setQuery, filteredStories, filteredClassics, hasQuery };
+  return {
+    query,
+    setQuery,
+    filteredStories,
+    filteredCommunity,
+    filteredClassics,
+    hasQuery,
+  };
 }

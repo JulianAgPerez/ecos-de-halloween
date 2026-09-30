@@ -2,6 +2,7 @@ export interface StoryTitleDTO{
     id: number;
     title: string;
     description?: string;
+    mine: boolean;
 }
 
 export interface ClassicStoryTitleDTO {
@@ -30,5 +31,6 @@ export interface StoryDTO {
     description?: string;
     audioUrl?: string;
     backgroundImageUrl?: string;
+    author?: string;
     body: string;
 }
