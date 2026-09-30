@@ -4,6 +4,7 @@ import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
 import { ClassicStoryTitleDTO } from "../../types";
 import SectionHeading from "./SectionHeading";
+import SubmitStoryCta from "../SubmitStoryCta";
 
 const FEATURED_AMOUNT = 3;
 
@@ -155,6 +156,8 @@ const StoryCatalog = () => {
           </div>
         </>
       )}
+
+      <SubmitStoryCta variant="banner" className="mt-14" />
     </div>
   );
 };

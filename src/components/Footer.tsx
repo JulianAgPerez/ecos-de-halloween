@@ -1,8 +1,29 @@
+import { Link } from "react-router-dom";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
 
 function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-4 mt-auto">
+      <nav aria-label="Navegación del sitio">
+        <ul className="flex justify-center items-center gap-6 mb-4">
+          <li>
+            <Link
+              to="/"
+              className="text-amber-400 hover:text-amber-300 transition"
+            >
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/upload-story"
+              className="text-amber-400 hover:text-amber-300 transition"
+            >
+              Enviar tu cuento
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <div className="flex justify-center items-center space-x-6">
         <a
           href="https://www.instagram.com/juli_pereh/"

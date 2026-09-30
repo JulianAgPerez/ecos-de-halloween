@@ -8,7 +8,6 @@ import {
 import SidebarMenu, { APP_CONTENT_ID } from "../components/SidebarMenu";
 import Footer from "../components/Footer";
 import PersistentLayout from "../components/PersistentLayout";
-import ProtectedRoute from "../components/ProtectedRoute";
 import GhostLoader from "../components/GhostLoader";
 
 const Home = lazy(() => import("../pages/Home"));
@@ -21,12 +20,13 @@ const NotFound = lazy(() => import("../pages/NotFound"));
 
 const ScrollToTop: FC = () => {
   const { pathname } = useLocation();
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname]);
+
   return null;
 };
-
 const AppRoutes: FC = () => {
   return (
     <Router>
@@ -38,14 +38,8 @@ const AppRoutes: FC = () => {
           <Routes>
             <Route path="/" element={<PersistentLayout />}>
               <Route index element={<Home />} />
-              <Route
-                path="/form"
-                element={
-                  <ProtectedRoute>
-                    <UploadForm />
-                  </ProtectedRoute>
-                }
-              />
+              {/* Pública a propósito: se puede enviar un cuento sin registro. */}
+              <Route path="/upload-story" element={<UploadForm />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/story/:id" element={<Story />} />
