@@ -78,6 +78,168 @@ body {
   color: #f0e4c0;
 }
 
+/* Superficie de escritura: mismo pergamino que `.note-background`, pero el
+   contenido es HTML, así que no aplica la regla `pre`. */
+.story-surface {
+  min-height: 18rem;
+  background-image: url('/src/assets/images/pergamino.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 20px;
+  border: 1px solid #b9a475;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  box-shadow: inset 0 0 50px rgba(74, 58, 30, 0.15);
+  color: #3f3a30;
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  outline: none;
+  overflow-wrap: break-word;
+}
+
+.story-surface:focus {
+  border-color: #d9b36b;
+}
+
+.story-surface > p:first-child,
+.story-surface > h2:first-child,
+.story-surface > h3:first-child {
+  margin-top: 0;
+}
+
+/* Pista de estado vacío: el párrafo vacío siempre es el primero, así que alcanza
+   con un pseudo-elemento. `pointer-events: none` deja pasar el clic. */
+.story-editor--empty .story-surface > p:first-child::before {
+  content: 'Contá tu terror acá.';
+  color: #7a6a4d;
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* Cuerpo de un cuento enviado desde el editor, ya sanitizado. */
+.story-body {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #3f3a30;
+}
+
+@media (min-width: 640px) {
+  .story-body {
+    font-size: 1.25rem;
+  }
+}
+
+/* Editor y lector muestran el mismo HTML, así que comparten selectores en vez
+   de duplicar reglas: si se separan, el autor escribe formateado que después
+   no se ve igual. Hace falta explícitamente porque el preflight de Tailwind
+   pone `list-style: none` en ul/ol. */
+.story-body p,
+.story-surface p {
+  margin: 0 0 1em;
+}
+
+.story-body > :last-child,
+.story-surface > :last-child {
+  margin-bottom: 0;
+}
+
+.story-body h2,
+.story-body h3,
+.story-surface h2,
+.story-surface h3 {
+  font-family: 'Creepster', 'Creepster Fallback', cursive;
+  line-height: 1.25;
+  margin: 1.4em 0 0.6em;
+}
+
+.story-body h2,
+.story-surface h2 {
+  font-size: 1.6em;
+}
+
+.story-body h3,
+.story-surface h3 {
+  font-size: 1.3em;
+}
+
+.story-body ul,
+.story-body ol,
+.story-surface ul,
+.story-surface ol {
+  margin: 0 0 1em 1.5em;
+}
+
+.story-body ul,
+.story-surface ul {
+  list-style: disc;
+}
+
+.story-body ol,
+.story-surface ol {
+  list-style: decimal;
+}
+
+/* El `list-style-position` por defecto deja el marcador pegado al texto. */
+.story-body li::marker,
+.story-surface li::marker {
+  color: #7a5c17;
+}
+
+.story-body li,
+.story-surface li {
+  margin-bottom: 0.35em;
+}
+
+.story-body blockquote,
+.story-surface blockquote {
+  margin: 0 0 1em;
+  padding-left: 1em;
+  border-left: 3px solid #b9a475;
+  font-style: italic;
+}
+
+.story-body a,
+.story-surface a {
+  color: #7a5c17;
+  text-decoration: underline;
+}
+
+.story-body a:hover,
+.story-surface a:hover {
+  color: #5c450f;
+}
+
+.story-body hr,
+.story-surface hr {
+  margin: 1.6em 0;
+  border: 0;
+  border-top: 1px solid #b9a475;
+}
+
+.story-body code,
+.story-surface code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.note-background.night-mode .story-body,
+.note-background.night-mode .story-surface {
+  color: #f0e4c0;
+}
+
+.note-background.night-mode .story-body blockquote,
+.note-background.night-mode .story-surface blockquote {
+  border-color: #6b5a45;
+}
+
+.note-background.night-mode .story-body a,
+.note-background.night-mode .story-surface a {
+  color: #e6c58f;
+}
+
 /* Ascuas ascendiendo en el inframundo */
 @keyframes ember-rise {
   0% {
