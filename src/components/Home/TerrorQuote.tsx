@@ -58,7 +58,7 @@ const QUOTES: Quote[] = [
   },
 ];
 
-const ROTATION_MS = 8000;
+const ROTATION_MS = 6000;
 
 const QUOTE_TEXT_CLASS = "text-xl italic leading-relaxed text-gray-300 md:text-2xl";
 const QUOTE_AUTHOR_CLASS = "mt-4 text-sm uppercase tracking-widest text-amber-400";
@@ -73,28 +73,20 @@ const QuoteBody: FC<{ text: string; author: string }> = ({ text, author }) => (
 const TerrorQuote: FC = () => {
   const [ref, visible] = useVisible<HTMLDivElement>();
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused || !visible) return;
+    if (!visible) return;
     const id = window.setInterval(
       () => setIndex((prev) => (prev + 1) % QUOTES.length),
       ROTATION_MS,
     );
     return () => window.clearInterval(id);
-  }, [paused, visible]);
+  }, [visible]);
 
   const quote = QUOTES[index];
 
   return (
-    <div
-      ref={ref}
-      className="relative mx-auto grid w-full max-w-3xl px-5 py-20 text-center"
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
+    <div ref={ref} className="relative mx-auto grid w-full max-w-3xl px-5 py-20 text-center">
       {/* Reserva la altura de la cita más alta. El contenedor interior también
           debe ser grid: si no, los 12 blockquote fluyen y suman sus alturas. */}
       <div
