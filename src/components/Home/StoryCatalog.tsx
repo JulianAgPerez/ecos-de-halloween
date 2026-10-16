@@ -1,30 +1,16 @@
-import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
 import { FaBookDead, FaGhost, FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { useClassicTitles, useStoryTitles } from "../../hooks/useTitles";
-import { getStoryById } from "../../services/StoryService";
-import { ClassicStoryTitleDTO, StoryDTO } from "../../types";
-import { getFallbackStoryById } from "../../data/fallbackData";
-import { withTimeout } from "../../utils/withTimeout";
+import { ClassicStoryTitleDTO } from "../../types";
 import SectionHeading from "./SectionHeading";
 
 const FEATURED_AMOUNT = 3;
-const FEATURED_FETCH_TIMEOUT_MS = 5000;
-const FALLBACK_RETRY_MS = 10_000;
-const MAX_FALLBACK_RETRIES = 10;
 
 const MotionLink = motion.create(Link);
 
 const CARD_CLASS =
   "group glass-card flex flex-col p-6 text-left shadow-lg transition hover:border-amber-400/60 cursor-pointer";
-
-interface FeaturedItem {
-  id: number;
-  story: StoryDTO | null;
-  isFallback: boolean;
-}
 
 const PREFERRED_OTHER_AUTHORS = [
   "Horacio Quiroga",
@@ -68,50 +54,8 @@ const StoryCatalog = () => {
     useStoryTitles();
   const { titles: classicTitles } = useClassicTitles();
 
-  const ids = storyTitles.slice(0, FEATURED_AMOUNT).map((s) => s.id);
-  const retriesLeft = useRef(MAX_FALLBACK_RETRIES);
-
-  const featuredQuery = useQuery<FeaturedItem[]>({
-    queryKey: ["featured-stories", ids.join(",")],
-    enabled: !storyTitlesLoading && ids.length > 0,
-    queryFn: async () => {
-      const load = Promise.all(
-        ids.map(async (id): Promise<FeaturedItem> => {
-          const story = await getStoryById(id).catch(() => null);
-          return {
-            id,
-            story: story ?? getFallbackStoryById(id) ?? null,
-            isFallback: !story,
-          };
-        }),
-      );
-      try {
-        return await withTimeout(load, FEATURED_FETCH_TIMEOUT_MS);
-      } catch {
-        return ids.map((id): FeaturedItem => ({
-          id,
-          story: getFallbackStoryById(id) ?? null,
-          isFallback: true,
-        }));
-      }
-    },
-    refetchInterval: (query) => {
-      if (retriesLeft.current <= 0) return false;
-      const degraded = (query.state.data ?? []).some(
-        (item) => item.isFallback,
-      );
-      if (!degraded) return false;
-      retriesLeft.current -= 1;
-      return FALLBACK_RETRY_MS;
-    },
-  });
-
-  const featuredLoading =
-    storyTitlesLoading || (featuredQuery.isPending && ids.length > 0);
-  // El id viene de la query (número garantizado), no del DTO opcional.
-  const featuredStories = (featuredQuery.data ?? []).filter(
-    (item): item is FeaturedItem & { story: StoryDTO } => item.story !== null,
-  );
+  const featuredLoading = storyTitlesLoading;
+  const featuredStories = storyTitles.slice(0, FEATURED_AMOUNT);
 
   const visibleClassics = pickFeaturedClassics(classicTitles);
 
@@ -134,10 +78,10 @@ const StoryCatalog = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredStories.map((item, i) => (
+          {featuredStories.map((story, i) => (
             <MotionLink
-              key={item.id}
-              to={`/story/${item.id}`}
+              key={story.id}
+              to={`/story/${story.id}`}
               whileHover={{ scale: 1.04, transition: { duration: 0.15, ease: "easeOut" } }}
               whileTap={{ scale: 0.98, transition: { duration: 0.12 } }}
               initial={{ opacity: 0, y: 24 }}
@@ -152,11 +96,11 @@ const StoryCatalog = () => {
             >
               <FaGhost className="mb-3 text-2xl text-purple-400" />
               <h3 className="text-xl font-bold text-white group-hover:text-amber-300">
-                {item.story.title}
+                {story.title}
               </h3>
-              {item.story.description && (
+              {story.description && (
                 <p className="mt-2 flex-1 text-sm text-gray-400 line-clamp-3">
-                  {item.story.description}
+                  {story.description}
                 </p>
               )}
               <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-amber-400">
